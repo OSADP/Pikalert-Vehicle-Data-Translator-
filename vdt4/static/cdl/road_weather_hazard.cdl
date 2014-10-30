@@ -1,0 +1,67 @@
+netcdf road_segment_assessment {
+
+dimensions:
+	rec_num = 73000; // 73 lead-times * 1000 sites 
+	
+variables:
+	
+	double  time_nominal(rec_num);
+                time_nominal:long_name = "valid time nominal";
+		time_nominal:_FillValue = -9999;
+                time_nominal:units = "seconds since 1970-01-01 00 UTC";
+
+	int road_segment_id(rec_num);
+		road_segment_id:long_name = "road segment id" ;	
+		road_segment_id:_FillValue = -9999;
+	
+	int num_probe_msg(rec_num);
+		num_probe_msg:long_name = "number of probe (mobile) messages processed" ;	
+		num_probe_msg:_FillValue = -9999;
+	
+	short precip_type(rec_num);
+		precip_type:long_name = "derived precip type field";
+		precip_type:_FillValue = -9999s;
+		precip_type:flag_values = 0, 1, 2, 3 ;
+		precip_type:flag_meanings = "none rain mix snow" ; 
+ 	
+        float precip_type_confidence(rec_num);
+		precip_type_confidence:long_name = "derived precip type confidence field (0-1)";
+		precip_type_confidence:_FillValue = -9999;
+ 	
+        short precip_intensity(rec_num);
+		precip_intensity:long_name = "derived precip intensity field";
+		precip_intensity:_FillValue = -9999s;
+		precip_intensity:flag_values = 0, 1, 2, 3, 4 ;
+		precip_intensity:flag_meanings = "none light moderate heavy road_splash" ; 
+ 		
+        float precip_intensity_confidence(rec_num);
+		precip_intensity_confidence:long_name = "derived precip intensity confidence field (0-1)";
+		precip_intensity_confidence:_FillValue = -9999;
+	
+        short pavement_condition(rec_num);
+		pavement_condition:long_name = "derived pavement condition field";
+		pavement_condition:_FillValue = -9999s;
+		pavement_condition:flag_values = 0, 1, 2, 3, 4, 5, 6, 7;
+		pavement_condition:flag_meanings = "dry wet snow_covered ice_covered hydroplane black_ice dry_wet dry_frozen" ;
+	
+	float pavement_condition_confidence(rec_num);
+		pavement_condition_confidence:long_name = "derived pavement condition confidence field (0-1)";
+		pavement_condition_confidence:_FillValue = -9999;
+	
+	short visibility(rec_num) ;
+                visibility:long_name = "derived visibility field";
+                visibility:_FillValue = -9999s;
+                visibility:flag_values = 0, 1, 2, 3, 4, 5, 6, 7, 8;
+		visibility:flag_meanings = "normal low heavy_rain heavy_snow blowing_snow fog haze dust smoke";
+	
+	float visibility_confidence(rec_num) ;
+                visibility_confidence:long_name = "derived visibility confidence field (0-1)" ;
+                visibility_confidence:_FillValue = -9999;
+	
+	short pavement_slickness(rec_num);
+		pavement_slickness:long_name = "derived pavement slickness field";
+		pavement_slickness:_FillValue = -9999s;
+		pavement_slickness:flag_values = 0, 1;
+		pavement_slickness:flag_meanings = "normal slick" ;
+	
+}

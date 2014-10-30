@@ -1,0 +1,67 @@
+#*    *    *    *    *   *    command to be executed                                                                                              
+#-    -    -    -    -   -                                                                                                                        
+#|    |    |    |    |   |                                                                                                                        
+#|    |    |    |    |   +- Year (optional)                                                                                                       
+#|    |    |    |    +----- day of week (0 - 6) (Sunday=0)                                                                                        
+#|    |    |    +---------- month (1 - 12)
+#|    |    +--------------- day of month (1 - 31)
+#|    +-------------------- hour (0 - 23)
+#+------------------------- min (0 - 59)
+
+SHELL=/bin/csh
+MAILTO=""
+
+### Minnesota ###
+
+# Run vdt4 for MN and rwh for MN
+*/5 * * * * vii_ep.py vii_config run_vdt4_mn.py ep_run_rwh_mn.py 300 >& /dev/null
+
+# Run probe_to_json for MN
+01,06,11,16,21,26,31,36,41,46,51,56 * * * * csh -c "probe_to_json.py -l /d1/vii/data/log/probe_to_json_mn backend_sys_path_dev mn 300 >& /dev/null"
+
+# Run rwa_to_json for Minnesota
+01,06,11,16,21,26,31,36,41,46,51,56 * * * * csh -c "rwa_to_json.py -l /d1/mdss_view/log/rwa_to_json_mn backend_sys_path mn 300 >& /dev/null"
+
+# Run create_district_alerts for MN
+22 * * * * ep.py -s .epl -E 600 -L /d1/vii/data/lock/run_create_district_alerts_minnesota.lock -l /d1/vii/data/log/run_create_district_alerts_minnesota run_create_district_alerts.py minnesota > /dev/null
+
+# Create VDT output for Minnesota in csv format and put on the ftp server each day for the previous day's data
+0 5 * * * csh -c "run_cdf_to_csv.py -l $VII_DATA/log/run_cdf_to_csv_mn /d2/vii/data/static/config/ `date -d yesterday +\%Y\%m\%d` /d2/vii/data/processed/mn_vdt_output/ /var/autofs/mnt/ftp/restricted/ftp_vdt/root/download/minnesota/csv_output/ >& /dev/null"
+
+### Michigan ###
+
+# Run ingest through RWH for MI
+* * * * * ep_run_mi_processes.py >& /dev/null
+
+### Nevada ###
+
+# Run vdt4 for NV and rwh for NV
+*/15 * * * * vii_ep.py vii_config run_vdt4_nv.py ep_run_rwh_nv.py 900 >& /dev/null
+
+# Run probe_to_json for NV
+01,16,31,46 * * * * csh -c "probe_to_json.py -l /d1/vii/data/log/probe_to_json_nv backend_sys_path_dev nv 900 >& /dev/null"
+
+# Run rwa_to_json for NV
+01,16,31,46 * * * * csh -c "rwa_to_json.py -l /d1/mdss_view/log/rwa_to_json_nv backend_sys_path nv 900 >& /dev/null"
+
+# Run create_district_alerts for NV
+24 * * * * ep.py -s .epl -E 600 -L /d1/vii/data/lock/run_create_district_alerts_nevada.lock -l /d1/vii/data/log/run_create_district_alerts_nevada run_create_district_alerts.py nevada > /dev/null
+
+# Create VDT output for Nevada in csv format and put on the ftp server each day for the previous day's data
+0 5 * * * csh -c "run_cdf_to_csv.py -l $VII_DATA/log/run_cdf_to_csv_nv /d2/vii/data/static/config/ `date -d yesterday +\%Y\%m\%d` /d2/vii/data/processed/nv_vdt_output/ /var/autofs/mnt/ftp/restricted/ftp_vdt/root/download/nevada/csv_output/ >& /dev/null"
+
+### Other ###
+
+# Run rtma_grib2_to_netcdf
+59 * * * * csh -c "rtma_grib2_to_netcdf.py -l $VII_DATA/log/rtma_grib2_to_netcdf >& /dev/null"
+
+# Run cdf_to_csv_dicast at 5 minutes after the hour (concatenates csv data from all three states)
+#
+05 * * * * vii_ep.py vii_config ep_run_cdf_to_csv_dicast.py 300 >& /dev/null
+
+
+### Clean up ###
+0 * * * * csh -c "fclean.py -v -p $VII_DATA -l $VII_DATA/log/fclean $VII_DATA/static/config/fclean_vii.conf"
+
+
+# DO NOT DELETE THIS LINE

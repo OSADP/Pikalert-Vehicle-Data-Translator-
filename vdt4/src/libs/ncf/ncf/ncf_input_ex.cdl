@@ -1,0 +1,77 @@
+// *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=* 
+// ** Copyright UCAR (c) 1992 - 2010 
+// ** University Corporation for Atmospheric Research(UCAR) 
+// ** National Center for Atmospheric Research(NCAR) 
+// ** Research Applications Laboratory(RAL) 
+// ** P.O.Box 3000, Boulder, Colorado, 80307-3000, USA 
+// ** 2010/10/7 23:12:33 
+// *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=* 
+netcdf ncf_input_ex {
+dimensions:
+	recNum = UNLIMITED ; // (8 currently)
+	id_len = 4 ;
+	num_score = 4 ;
+variables:
+	double creation_time ;
+		creation_time:long_name = "time at which file was created" ;
+		creation_time:units = "seconds since 1970-1-1 00:00" ;
+	double reftime ;
+		reftime:long_name = "truncated product reference time" ;
+		reftime:units = "seconds since 1970-1-1 00:00" ;
+	double valtime ;
+		valtime:long_name = "truncated product valid time" ;
+		valtime:units = "seconds since 1970-1-1 00:00" ;
+	char station_id(recNum, id_len) ;
+		station_id:long_name = "Station id" ;
+		station_id:reference = "sfmetar_sa.tbl" ;
+	float latitude(recNum) ;
+		latitude:long_name = "Station latitude" ;
+		latitude:standard_name = "latitude" ;
+		latitude:valid_range = -90., 90. ;
+		latitude:units = "degrees_north" ;
+		latitude:reference = "sfmetar_sa.tbl" ;
+	float longitude(recNum) ;
+		longitude:long_name = "Station longitude" ;
+		longitude:standard_name = "longitude" ;
+		longitude:valid_range = -180., 180. ;
+		longitude:units = "degrees_east" ;
+		longitude:reference = "sfmetar_sa.tbl" ;
+	float elevation(recNum) ;
+		elevation:long_name = "Station elevation" ;
+		elevation:standard_name = "surface_elevation" ;
+		elevation:units = "feet" ;
+		elevation:positive = "up" ;
+		elevation:reference = "sfmetar_sa.tbl" ;
+	int ceiling_score(recNum, num_score) ;
+		ceiling_score:long_name = "ceiling_score" ;
+		ceiling_score:_FillValue = -99999 ;
+		ceiling_score:units = "" ;
+	int visibility_score(recNum, num_score) ;
+		visibility_score:long_name = "visibility_score" ;
+		visibility_score:_FillValue = -99999 ;
+		visibility_score:units = "" ;
+
+// global attributes:
+		:title = "Scoring Data from NCV" ;
+		:version = 1. ;
+		:processor = "" ;
+		:Conventions = "Unidata Observation Dataset v1.0" ;
+		:standard_name_vocabulary = "CF-1.0" ;
+		:description = "Scoring data for NCV forecast module" ;
+		:time_coordinate = "time_observation" ;
+		:cdm_datatype = "Station" ;
+		:stationDimension = "station" ;
+		:station_id = "station_id" ;
+		:station_description = "station_description" ;
+		:latitude_coordinate = "latitude" ;
+		:longitude_coordinate = "longitude" ;
+		:elevation_coordinate = "elevation" ;
+		:geospatial_lat_max = "90.0" ;
+		:geospatial_lat_min = "-90.0" ;
+		:geospatial_lon_max = "360.0" ;
+		:geospatial_lon_min = "0.0" ;
+		:time_coverage_start = "1143762300" ;
+		:time_coverage_end = "1143848640" ;
+		:observationDimension = "recNum" ;
+		:notes = "" ;
+}

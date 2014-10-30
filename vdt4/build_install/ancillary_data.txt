@@ -1,0 +1,76 @@
+The ancillary data we use is:
+
+--- NSSL radar data
+
+The user would need to download and install LDM from Unidata. This data comes through the WMO feed. They will need to get in touch with NSSL to get the C++ mrms code. 
+
+The contact is Dr. Heather Grams at Heather.Moser@noaa.gov.  Here is some documentation that may be useful:
+
+A Google document entitled "NMQ Update Summer 2013: Important User Information":
+https://docs.google.com/document/d/1Op3uETOtd28YqZffgvEGoIj0qU6VU966iT_QNUOmqn4/edit?usp=sharing
+
+It includes a link to the MRMS code:
+ftp://ftp.nssl.noaa.gov/users/langston/MRMS_REFERENCE/MRMS_to_CFncdf-1.1.tar.gz
+
+We get the NMQ Product: Base Refl (BREF) 2-min tiled data.  It is derived from the 3D mosaic.
+
+You will need to work with the providers of the NSSL radar data to have them add ALLOW statement in their ldmd.conf files for your
+server.
+
+Here is the entry we have in our pqact.conf file for the data you're interested in:
+
+WMO     ^/data/realtime/mrms_binary/tile([0-9]{1})/base_refl/BASE_REFL.([0-9]{8}).([0-9]{4})([0-9]{2}).gz       FILE    /d2/vii/data/raw/radar/bref/binary/mosaic2d/\2/BASE_REFL.2d.tile\1.\2.\3.gz
+
+Here is the entry we have in our ldmd.conf file for the data you're interested in:
+
+REQUEST	WMO	"BASE_REFL"					129.15.110.182
+
+
+We can provide you with the python script we use to call that code and convert the data to netcdf format.
+
+
+--- RTMA data
+
+http://www.nco.ncep.noaa.gov/pmb/products/rtma/#RTMA
+
+We get the 2.5km files of the format:
+rtma2p5.tccz.2dvaranl_ndfd.grb2
+rtma2p5.tccz.2dvarges_ndfd.grb2
+
+We can provide you with the python script we use to convert the data to netcdf format.
+
+
+--- METAR data
+
+The user would need to download and install LDM from Unidata. This data comes through the WMO feed. We should be able to provide you the script that converts the LDM data to netcdf format.
+
+You will need to work with the providers of the METAR data to have them add ALLOW statement in their ldmd.conf files for your server.
+
+Here is the entry we have in our pqact.conf file for the data you're interested in:
+WMO	^S[AP].* .... ([0-3][0-9])([0-2][0-9])([0-5][0-9])	FILE	/d2/vii/data/raw/metar/ascii/(\1:yyyy)(\1:mm)\1_\2.metar
+
+The ldmd.conf file is somewhat more tricky.  RAL has a central server for LDM data and each project requests data from this local server. When we want to get data via the ldm with speak with our LDM contact who adds the data to central ldmd.conf file.  They add ALLOW statements for our project's machines and we add REQUEST statements from the local server.  The METAR provider should be able to help you with the request line for your ldmd.conf file.
+
+--- RWIS data
+
+The user would need to download and install LDM from Unidata. This data comes through the FSL3 feed.
+
+You will need to work with the providers of the METAR data to have them add ALLOW statement in their ldmd.conf files for your server.
+
+Here is the entry we have in our pqact.conf file for the data you're interested in:
+
+FSL3	^FSL.CompressedNetCDF.MADIS.mesonet1.(........)_(....)	FILE	-close -overwrite data/dec_data/tmp/madis.\1.\2.nc.gz
+FSL3	^FSL.CompressedNetCDF.MADIS.mesonet1.(........)_(....)	EXEC	csh -c "gzip -df data/dec_data/tmp/madis.\1.\2.nc.gz;mkdir -p data/dec_data/obs/madis/\1;mv data/dec_data/tmp/madis.\1.\2.nc data/dec_data/obs/madis/\1/"
+
+Here is the entry we have in our ldmd.conf file for the data you're interested in:
+
+REQUEST FSL3    "^FSL\.CompressedNetCDF\.MADIS\.mesonet1"    ldm.madis-data.noaa.gov
+
+--- probe data
+
+The user would need to obtain this data from the states.
+
+
+We also use road segment data and climatology data. The road segment files and climatology files are included in this package in the vdt4/static/cdl directory.
+
+

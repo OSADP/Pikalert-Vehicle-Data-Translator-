@@ -1,0 +1,369 @@
+ netcdf short_vii_probe {
+
+dimensions:
+	rec_num = UNLIMITED ;
+	vehicle_id_len = 32;
+	source_id_len = 32;	
+
+variables:
+ 
+	double obs_time(rec_num) ;
+		// This field is not in the xml-message. It is calculated
+		// from full_pos_utc_time_year,...,full_pos_utc_time_second.
+		obs_time:long_name = "observation time" ;
+		obs_time:units = "seconds since 1970-1-1 00:00" ;
+	
+	double rec_time(rec_num) ;
+		// This field is not in the xml-message. It is calculated 
+		// from directory/timestamped filename.
+		rec_time:long_name = "received time" ;
+		rec_time:units = "seconds since 1970-1-1 00:00" ;
+         
+	double latitude(rec_num) ;
+		//the "fullPos.lat" element in xml-message
+		//CONVERSION: xml-value * 1/8,000,000 in degrees
+		latitude:long_name = "obs latitude" ;
+		latitude:standard_name = "latitude" ;
+		latitude:valid_range = -90., 90. ;
+		latitude:units = "degrees_north" ;
+		latitude:_FillValue = -9999.d ;
+
+	double longitude(rec_num) ;
+		//the "fullPos.longitude" element in xml-message
+		//CONVERSION: xml-value * 1/8,000,000 in degrees
+		longitude:long_name = "obs longitude" ;
+		longitude:standard_name = "longitude" ;
+		longitude:valid_range = -180., 180. ;
+		longitude:units = "degrees_east" ;
+		longitude:_FillValue = -9999.d ;
+       
+	float elevation (rec_num);
+		//the "fullPos.elevation" element in xml-message
+		//CONVERSION: xml-value * 0.1 - 1000
+		elevation:long_name ="Elevation";
+		elevation:valid_range = -1000, 10000 ;
+		elevation:units = "m" ;
+		elevation:_FillValue = -9999.f;
+
+	char vehicle_id(rec_num, vehicle_id_len);
+	     vehicle_id:long_name = "Vehicle Identifier";
+
+	char source_id(rec_num, source_id_len);
+	     source_id:long_name = "Source Identifier";
+				    
+	float speed (rec_num);
+		//the "fullPos.speed" element in xml-message
+		//CONVSERION: xml-value * 0.01 in m/s.
+		speed:long_name ="Vehicle Speed";
+		speed:valid_range = -327.65, 327.65;
+		speed:units = "m/s" ;
+		speed:_FillValue = -9999.f;
+
+	short brake_status(rec_num);
+		//the "brakes.status" element in xml-message
+		//VII POC DSRC Msg:
+		//BrakeAppliedStatus ::= BIT STRING {
+		//                  -- B'0000  "All Off"
+		//bit0   (0),       -- B'1000  Right Rear Active
+		//bit1   (1),       -- B'0100  Right Front Active
+		//bit2   (2),       -- B'0010  Left Rear Active
+		//bit3   (3)        -- B'0001  Left Front Active
+		//                  -- B'1111  "All On"
+		//                  -- Note: these are integer values that correspond to the bit position 
+		//                  with bit 0 being the left most bit and bit 7 being the right most bit.
+		//}
+		//all_off   = 0;
+		//rr_active = 8;  // 0000 1000
+		//rf_active = 4;  // 0000 0100
+		//lr_active = 2;  // 0000 0010
+		//lf_active = 1;  // 0000 0001
+		//all_on    = 15  // 0000 1111
+		brake_status:long_name = "Brake Applied Status";
+		brake_status:_FillValue = -9999s;
+		brake_status:all_off   = 0;
+		brake_status:rr_active = 8;  
+		brake_status:rf_active = 4;
+		brake_status:lr_active = 2;
+		brake_status:lf_active = 1;
+		brake_status:all_on    = 15;
+	
+	short brake_boost(rec_num);
+		//the "brakes.boost" element in xml-message
+		//0 - notEquipped
+		//1 - turned OFF
+		//2 - turned ON
+		brake_boost:long_name = "Brake Boost Applied Status";
+		brake_boost:_FillValue = -9999s;
+		brake_boost:notEquipped = 0;
+		brake_boost:OFF = 1;
+		brake_boost:ON = 2;
+
+	short wiper_status(rec_num);
+		//the "wipers.frontstatus" element in xml-message
+		//notEquipped = 0;
+		//off = 1;
+		//intermittent = 2;
+		//low = 3;
+		//high = 4;
+		//washer = 5;
+		//automaticPresent = 255; // Auto wipper equipped
+		wiper_status:long_name = "Front Wiper Status";
+		wiper_status:_FillValue = -9999s;
+		wiper_status:notEquipped = 0;
+		wiper_status:off = 1;
+		wiper_status:intermittent = 2;
+		wiper_status:low = 3;
+		wiper_status:high = 4;
+		wiper_status:washer = 5;
+		wiper_status:automaticPresent = 255;
+	
+	short air_temp(rec_num);
+		//the "airTemp" element in xml-message 
+		//CONVERSION: xml-value - 40 in Celsius.
+		air_temp:long_name = "Ambient Air Temperature";
+		air_temp:standard_name = "Temperature";
+		air_temp:valid_range = -40, 151;
+		air_temp:units ="Celsius";
+		air_temp:_FillValue = -9999s;
+
+	short bar_pressure (rec_num);
+		//the "barPress" element in xml-message 
+		//CONVERSION: (xml-value * 2) + 580 in hPa:
+		bar_pressure:long_name = "Barometric Pressure";
+		bar_pressure:valid_range = 580, 1090;
+		bar_pressure:units = "hPa";
+		bar_pressure:_FillValue = -9999s;
+	
+	short trac(rec_num);
+		//the "trac" element in xml-message
+		//VII POC DSRC Msg:
+		//TractionControlState ::= ENUMERATED {
+		//notEquipped (0), -- B'00  Not Equipped 
+		//off         (1), -- B'01  Off
+		//on          (2), -- B'10  On
+		//engaged     (3)  -- B'11  Engaged
+		//}    -- Encoded as a 2 bit value
+		//notEquipped = 0;
+		//off = 1;
+		//on = 2;
+		//engaged = 3;
+		trac:long_name = "Traction Control State";
+		trac:_FillValue = -9999s;	
+		trac:notEquipped = 0;
+		trac:off = 1;
+		trac:on = 2;
+		trac:engaged = 3;
+	    
+	short stab(rec_num);
+		//the "stab" element in xml-message
+		//VII POC DSRC Msg:
+		//StabilityControlStatus ::= ENUMERATED {
+		//notEquipped (0), --B'00  Not Equipped 
+		//off         (1), --B'01  Turned Off
+		//on          (2), --B'10  Turned On
+		//engaged     (3)  --B'11  Active\Engaged
+		//}   -- Encoded as a 2 bit value
+		//notEquipped = 0;
+		//off = 1;
+		//on = 2;
+		//engaged = 3;
+		stab:long_name = "Stability Control Status";
+		stab:_FillValue = -9999s;
+		stab:notEquipped = 0;
+		stab:off = 1;
+		stab:on = 2;
+		stab:engaged = 3;
+		
+	short abs(rec_num);
+		//the "abs" element in xml-message
+		//VII POC DSRC Msg:
+		//AntiLockBrakeStatus ::= ENUMERATED {
+		//notEquipped (0), -- B'00  Not Equipped (need to remove "Not Equipped")
+		//off         (1), -- B'01  Off
+		//on          (2), -- B'10  On
+		//engaged     (3)  -- B'11  Engaged
+		//} -- Encoded as a 2 bit value
+		//notEquipped = 0;
+		//off = 1;
+		//on = 2;
+		//engaged = 3;
+		abs:long_name = "Anti-lock Brake Status";
+		abs:_FillValue = -9999s;
+		abs:notEquipped = 0;
+		abs:off = 1;
+		abs:on = 2;
+		abs:engaged = 3;
+		
+	short lights (rec_num);
+		//the "lights" element in xml-message
+		//lights:parkingLightsOn = 128;         -- B'1000-0000
+		//lights:fogLightOn = 64;               -- B'0100-0000  
+		//lights:daytimeRunningLightsOn = 32;   -- B'0010-0000  
+		//lights:automaticLightControlOn = 16;  -- B'0001-0000
+		//lights:rightTurnSignalOn = 8;         -- B'0000-1000
+		//lights:leftTurnSignalOn = 4;          -- B'0000-0100
+		//lights:highBeamHeadlightsOn = 2;      -- B'0000-0010
+		//lights:lowBeamHeadlightsOn = 1;       -- B'0000-0001
+		//lights:hazardSignalOn = 24;           -- B'0001-1000
+		//lights:allLightsOff = 0;              -- B'0000-0000  
+		//Example:'bit5,bit6,bit7'= 0000-0111 = 7 = leftTurnSignalOn, highBeamHeadlightsOn,lowBeamHeadlightsOn
+		// in % and as int. See description above
+		lights:long_name = "Exterior Lights";
+		lights:_FillValue = -9999s;
+		lights:parkingLightsOn = 128;
+		lights:fogLightOn = 64;
+		lights:daytimeRunningLightsOn = 32;   
+		lights:automaticLightControlOn = 16;
+		lights:rightTurnSignalOn = 8;
+		lights:leftTurnSignalOn = 4;
+		lights:highBeamHeadlightsOn = 2;
+		lights:lowBeamHeadlightsOn = 1;
+		lights:hazardSignalOn = 24;
+		lights:allLightsOff =  0;	
+		
+	int psn (rec_num);
+		//the "psn" element in xml-message
+		//VII POC DSRC Msg:
+		//ProbeSegmentNumber ::= INTEGER (1..65535 )	   
+		psn:long_name = "Probe Segment Number";
+		psn:valid_range = 1, 65535;
+		psn:_FillValue = -9999;
+	
+ 	float heading (rec_num);
+		//the "fullPos.heading" element in xml-message 
+		//CONVERSION: xml-value * 0.00549 in degrees
+		//VII POC DSRC Msg:
+		//Heading ::= INTEGER (0..65535) -- LSB of 0.00549 degrees
+		//ES: 65535 * 0.00549 = 360
+		heading:long_name ="Heading";
+		heading:valid_range = 0, 360 ;
+		heading:units = "degrees" ;
+		heading:_FillValue = -9999.f ;
+
+	float yaw_rate (rec_num);
+		//the "yaw" element in xml-message 
+		//CONVERSION: xml-value * 0.01 in degrees/second
+		//VII POC DSRC Msg:
+		//YawRate ::= INTEGER (0..65535) -- LSB unit
+		yaw_rate:long_name ="Yaw Rate";
+		yaw_rate:valid_range = 0.0, 655.35;
+		yaw_rate:units="degrees per second";
+		yaw_rate:_FillValue = -9999.f;
+	
+	float hoz_accel_long (rec_num);
+		//the "hozAccelLong" element in xml-message 
+		//CONVERSION: xml-value * 0.01 in m/s^2
+		//VII POC DSRC Msg:
+		//Acceleration ::= INTEGER (-2000..2000) -- LSB units are 0.01 m/s^2 
+ 		hoz_accel_long:long_name = "Longitudinal Acceleration";
+		hoz_accel_long:valid_range = -20.0, 20.0;
+		hoz_accel_long:units = "m/s^2";
+		hoz_accel_long:_FillValue = -9999.f;
+       
+	float hoz_accel_lat (rec_num);
+		//the "hozAccelLat" element in xml-message 
+		//CONVERSION: xml-value * 0.01 in m/s^2
+		//VII POC DSRC Msg:
+		//Acceleration ::= INTEGER (-2000..2000) -- LSB units are 0.01 m/s^2 
+		hoz_accel_lat:long_name = "Lateral Acceleration";
+		hoz_accel_lat:valid_range = -20.0, 20.0;
+		hoz_accel_lat:units = "m/s^2";
+		hoz_accel_lat:_FillValue = -9999.f;
+	
+	short tire_pressure_lf (rec_num);
+		//the "tirePress.lf" element in xml-message
+		//VII POC DSRC Msg:
+		//lf   INTEGER (1..255),   --Tire Pressure in PSI for the Left Front Tire
+		//0 = Data Not Available\Not Equipped
+		tire_pressure_lf:long_name = "Tire Pressure in PSI for the Left Front Tire";
+		tire_pressure_lf:units = "PSI";
+		tire_pressure_lf:_Fillvalue = -9999s;
+			
+	short tire_pressure_rf (rec_num);
+		//the "tirePress.rf" element in xml-message	
+		//VII POC DSRC Msg:
+		//rf   INTEGER (1..255),   --Tire Pressure in PSI for the Right Front Tire
+		//0 = Data Not Available\Not Equipped
+		tire_pressure_rf:long_name = "Tire Pressure in PSI for the Right Front Tire";
+		tire_pressure_rf:units = "PSI";
+		tire_pressure_rf:_Fillvalue = -9999s;
+		 
+	short tire_pressure_lr (rec_num);
+		//the "tirePress.lr" element in xml-message
+		//VII POC DSRC Msg:
+		//lr   INTEGER (1..255),   --Tire Pressure in PSI for the Left Rear Tire
+		//0 = Data Not Available\Not Equipped
+		tire_pressure_lr:long_name = "Tire Pressure in PSI for the Left Rear Tire";
+		tire_pressure_lr:units = "PSI";
+		tire_pressure_lr:_Fillvalue = -9999s;
+		
+	short tire_pressure_rr (rec_num);
+		//the "tirePress.rr" element in xml-message
+		//VII POC DSRC Msg:
+		//rr   INTEGER (1..255),   --Tire Pressure in PSI for the Right Rear Tire
+		//0 = Data Not Available\Not Equipped
+		tire_pressure_rr:long_name = "Tire Pressure in PSI for the Right Rear Tire";
+		tire_pressure_rr:units = "PSI";
+		tire_pressure_rr:_Fillvalue = -9999s;
+	
+	short tire_pressure_sp (rec_num);
+		//the "tirePress.sp" element in xml-message
+		//VII POC DSRC Msg:
+		//rr   INTEGER (1..255),   --Tire Pressure in PSI for the Spare Tire
+		//0 = Data Not Available\Not Equipped		
+		tire_pressure_sp:long_name = "Tire Pressure in PSI for the Spare Tire";
+		tire_pressure_sp:units = "PSI";
+		tire_pressure_sp:_Fillvalue = -9999s;
+	
+	float steering_angle(rec_num);
+		//the "steering.angle" element in xml-message 
+		//CONVERSION: xml-value * 0.02 in degrees
+		//VII POC DSRC Msg:
+		//SteeringWheelAngle ::= INTEGER (-32767..32768) 
+		//-- LSB units of 0.02 degrees.  
+		//-- a range of 655.36 degrees each way
+		//-- (1.82 full rotations in either direction)
+		steering_angle:long_name = "Steering Wheel Angle";
+		steering_angle:valid_range = -655.36, 655.36;
+		steering_angle:units ="degrees";
+		steering_angle:_FillValue = -9999.f;
+
+	short steering_rate(rec_num);
+		//the "steering.rate" element in xml-message 
+		//CONVERSION: xml-value * 3 in degrees/second
+		//VII POC DSRC Msg:
+		//SteeringWheelAngleRateOfChange ::= INTEGER (-127..127) 
+	   	//-- LSB is 3 degrees per second 
+		steering_rate:long_name = "Steering Wheel Angle Rate of Change";
+		steering_rate:valid_range = -381, 381;
+		steering_rate:units ="degrees/second";
+		steering_rate:_FillValue = -9999s;	
+
+        float air_temp2 (rec_num) ;
+	      air_temp2:long_name = "ambient air temperature";
+	      air_temp2:standard_name = "air_temperature2";
+	      air_temp2:valid_range = -40, 151;
+	      air_temp2:units ="Celsius";
+	      air_temp2:_FillValue = -9999.f;
+
+        float dew_temp (rec_num) ;
+	      dew_temp:long_name = "dew temperature";
+	      dew_temp:standard_name = "dew_temperature";
+	      dew_temp:valid_range = -40, 151;
+	      dew_temp:units ="Celsius";
+	      dew_temp:_FillValue = -9999.f;
+
+        float humidity (rec_num) ;
+	      humidity:long_name = "humidity";
+	      humidity:standard_name = "humidity";
+	      humidity:valid_range = 0, 100;
+	      humidity:units ="percent";
+	      humidity:_FillValue = -9999.f;
+
+        float surface_temp (rec_num) ;
+	      surface_temp:long_name = "surface temperature";
+	      surface_temp:standard_name = "surface_temperature";
+	      surface_temp:valid_range = -40, 151;
+	      surface_temp:units ="Celsius";
+	      surface_temp:_FillValue = -9999.f;
+}

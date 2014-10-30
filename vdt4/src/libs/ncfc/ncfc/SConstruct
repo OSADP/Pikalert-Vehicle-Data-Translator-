@@ -1,0 +1,59 @@
+
+import os
+env = Environment(CPPPATH=[os.environ["RAL_INC_DIR"],
+os.environ["LOCAL_INC_DIR"]], CCFLAGS=os.environ["RAL_CCFLAGS"], LIBPATH=[os.environ["RAL_LIB_DIR"], os.environ["LOCAL_LIB_DIR"]])
+env["INSTALLPATH"] = os.environ["RAL_BIN_DIR"]
+    
+rename_fields = env.Program("rename_fields", [
+    "rename_fields.cc"
+    ],
+    LIBS=[
+    "ncfc",
+    "netcdf"
+    ])
+
+
+test_var_input = env.Program("test_var_input", [
+    "test_var_input.cc"
+    ],
+    LIBS=[
+    "ncfc",
+    "netcdf"
+    ])
+
+
+test_put_variables = env.Program("test_append_variables", [
+    "test_append_variables.cc"
+    ],
+    LIBS=[
+    "ncfc",
+    "netcdf"
+    ])
+
+
+test_put_variables = env.Program("test_put_variables", [
+    "test_put_variables.cc"
+    ],
+    LIBS=[
+    "ncfc",
+    "netcdf"
+    ])
+
+
+test_get_variables = env.Program("test_get_variables", [
+    "test_get_variables.cc"
+    ],
+    LIBS=[
+    "ncfc",
+    "netcdf"
+    ])
+
+
+
+test_get_var_info = env.Program("test_get_var_info", [
+    "test_get_var_info.cc"
+    ],
+    LIBS=[
+    "ncfc",
+    "netcdf"
+    ])

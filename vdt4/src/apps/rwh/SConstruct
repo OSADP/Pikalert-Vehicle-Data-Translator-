@@ -1,0 +1,55 @@
+# For c-shell users: in you .cshrc set the following
+# 
+# on sentinel:
+# setenv LOCAL_ROOT /home/linden
+# setenv LOCAL_INC_DIR ${LOCAL_ROOT}/include
+# setenv LOCAL_LIB_DIR ${LOCAL_ROOT}/lib
+# setenv LOCAL_BIN_DIR ${LOCAL_ROOT}/bin
+#
+## setenv RAL_INC_DIR /d2/local/include
+## setenv RAL_LIB_DIR /d2/local/lib
+#
+# setenv RAL_CCFLAGS "-Wall -g -O -static"  in /home/linden/needed_env_vars
+
+# Requires:
+# libs/nfc
+# libs/ncfc
+# libs/nextcast/nxncf
+# libs/nextcast/site_list
+
+import os
+
+env = Environment(
+        CPPPATH=[".", "/usr/include", os.environ["NETCDF_INC_DIR"], os.environ["HDF_INC_DIR"], os.environ["LOCAL_INC_DIR"], os.environ["RAL_INC_DIR"]], 
+        CCFLAGS=os.environ["RAL_CCFLAGS"], 
+        LIBPATH=["/usr/lib", os.environ["NETCDF_LIB_DIR"], os.environ["HDF_LIB_DIR"], os.environ["LOCAL_LIB_DIR"], os.environ["RAL_LIB_DIR"]] )
+
+
+rwh = env.Program(
+    "rwh", [
+    "arguments.cc",
+    "config_reader.cc",
+    "main.cc",
+    "ncfc_utils.cc",
+    "stat_utils.cc",
+    "site_vars_fcst_data.cc",
+    "process.cc"  
+    ],
+    LIBS=[
+    "libconfig++",
+    "log",
+    "rwx",
+    "vdt4",
+    "ncfc",
+    "ncf",
+    "site_list",
+    "netcdf_c++4",
+    "netcdf_c++",
+    "netcdf",
+    "hdf5_hl",
+    "hdf5",
+    "boost_filesystem",
+    "boost_system"])
+
+env.Install(os.environ["LOCAL_BIN_DIR"], "rwh")
+env.Alias("install", [os.environ["LOCAL_BIN_DIR"]])

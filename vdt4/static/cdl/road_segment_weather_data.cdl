@@ -1,0 +1,36 @@
+netcdf road_segment_assessment {
+
+dimensions:
+	rec_num = UNLIMITED; 
+	
+variables:
+
+        short all_hazards(rec_num) ;
+                all_hazards:long_name = "all hazards" ;
+                all_hazards:flag_values = 14, 15, 16, 17, 18, 19 ;
+                all_hazards:flag_meanings = "no_hazards heavy_rain_hazard low_visibility_hazard heavy_snow_hazard heavy_freezing_mix_hazard slippery_roads_hazard";
+                all_hazards:_FillValue = -9999s ;
+
+	short pavement_condition (rec_num);
+		pavement_condition:long_name = "derived pavement condition field";
+		pavement_condition:_FillValue = -9999s;
+		pavement_condition:flag_values = 5, 6, 7, 8, 9;
+		pavement_condition:flag_meanings = "dry wet road_splash snow_covered slick_pavement" ;
+
+	short precipitation (rec_num);
+		precipitation:long_name = "derived precipitation field";
+		precipitation:_FillValue = -9999s;
+		precipitation:flag_values = 0, 1, 2, 3, 4 ;
+		precipitation:flag_meanings = "none rain heavy_rain frozen heavy_frozen" ; 
+ 
+	int road_segment_id (rec_num);
+		road_segment_id:long_name = "road segment id" ;	
+		road_segment_id:_FillValue = -9999;
+	
+        short visibility(rec_num) ;
+                visibility:long_name = "derived visibility field" ;
+                visibility:_FillValue = -9999s ;
+                visibility:flag_values = 10, 11, 12, 13;
+		visibility:flag_meanings = "vis_heavy_rain vis_blowing_snow vis_low vis_normal";
+    
+}

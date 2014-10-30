@@ -1,0 +1,550 @@
+ netcdf probe_message_qc {
+
+dimensions:
+	rec_num = UNLIMITED ; 
+	source_id_len = 32;
+	vehicle_id_len = 32;
+	
+variables:
+ 
+	short abs(rec_num);
+		abs:long_name = "anti-lock brake status";
+		abs:_FillValue = -9999s;
+		abs:flag_values = 0, 1, 2, 3 ;
+		abs:flag_meanings = "not_equipped off on engaged";
+	
+	short abs_range_qc_passed(rec_num) ;
+ 	      	abs_range_qc_passed:long_name = "qc-flag for abs range test";
+		abs_range_qc_passed:_FillValue = 255s ;
+
+	short air_temp(rec_num);
+		air_temp:long_name = "ambient air temperature";
+		air_temp:standard_name = "air_temperature";
+		air_temp:valid_range = -40, 151;
+		air_temp:units ="Celsius";
+		air_temp:_FillValue = -9999s;
+	
+	short air_temp_cat_passed(rec_num);
+        	air_temp_cat_passed:long_name = "qc-flag for air temperature combined algorithm test";
+		air_temp_cat_passed:_FillValue = 255;
+
+	float air_temp_cat_confidence(rec_num);
+        	air_temp_cat_confidence:long_name = "confidence for air temperature combined algorithm test";
+		air_temp_cat_confidence:_FillValue = -9999.f;
+
+	short air_temp_crt_passed(rec_num);
+        	air_temp_crt_passed:long_name = "qc-flag for air temperature climate range test";
+		air_temp_crt_passed:_FillValue = 255;
+        
+    	short air_temp_mat_passed(rec_num); 
+        	air_temp_mat_passed:long_name = "qc-flag for air temperature model analysis test";
+		air_temp_mat_passed:_FillValue = 255s ;
+
+    	short air_temp_nst_passed(rec_num);
+        	air_temp_nst_passed:long_name = "qc-flag for air temperature nearest surface station test";
+		air_temp_nst_passed:_FillValue = 255s ;
+
+    	short air_temp_nvt_passed(rec_num);
+        	air_temp_nvt_passed:long_name = "qc-flag for air temperature neighboring vehicle test";
+		air_temp_nvt_passed:_FillValue = 255s ;
+
+    	short air_temp_persist_passed(rec_num);
+        	air_temp_persist_passed:long_name = "qc-flag for air temperature persistence test";
+		air_temp_persist_passed:_FillValue = 255s ;
+
+	short air_temp_range_qc_passed(rec_num);
+        	air_temp_range_qc_passed:long_name = "qc-flag for air temperature sensor range test";
+		air_temp_range_qc_passed:_FillValue = 255;
+
+    	short air_temp_sdt_passed(rec_num);
+        	air_temp_sdt_passed:long_name = "qc-flag for air temperature standard deviation test";
+		air_temp_sdt_passed:_FillValue = 255s ;
+    
+    	short air_temp_spatial_barnes_passed(rec_num);
+        	air_temp_spatial_barnes_passed:long_name = "qc-flag for air temperature spatial barnes test";
+		air_temp_spatial_barnes_passed:_FillValue = 255s ;
+            
+    	short air_temp_spatial_iqr_passed(rec_num);
+        	air_temp_spatial_iqr_passed:long_name = "qc-flag for air temperature spatial iqr test";
+		air_temp_spatial_iqr_passed:_FillValue = 255s ;
+            
+    	short air_temp_step_passed(rec_num);
+        	air_temp_step_passed:long_name = "qc-flag for air temperature time step test";
+		air_temp_step_passed:_FillValue = 255s ;
+            
+        float air_temp2 (rec_num) ;
+		air_temp2:long_name = "ambient air temperature";
+		air_temp2:standard_name = "air_temperature2";
+		air_temp2:valid_range = -40, 151;
+		air_temp2:units ="Celsius";
+   	       	air_temp2:_FillValue = -9999.f;
+
+        short air_temp2_cat_passed (rec_num) ;
+        	air_temp2_cat_passed:long_name = "qc-flag for air temperature2 combined algorithm test";
+		air_temp2_cat_passed:_FillValue = 255; 
+    
+	float air_temp2_cat_confidence(rec_num);
+        	air_temp2_cat_confidence:long_name = "confidence for air temperature2 combined algorithm test";
+		air_temp2_cat_confidence:_FillValue = -9999.f;
+
+        short air_temp2_crt_passed (rec_num) ;
+        	air_temp2_crt_passed:long_name = "qc-flag for air temperature2 climate range test";
+		air_temp2_crt_passed:_FillValue = 255; 
+    
+        short air_temp2_mat_passed (rec_num) ;
+        	air_temp2_mat_passed:long_name = "qc-flag for air temperature2 model analysis test";
+		air_temp2_mat_passed:_FillValue = 255s ;
+	    
+        short air_temp2_nst_passed (rec_num) ;
+		air_temp2_nst_passed:_FillValue = 255s ;
+        	air_temp2_nst_passed:long_name = "qc-flag for air temperature2 nearest surface station test";
+
+        short air_temp2_nvt_passed (rec_num) ;
+		air_temp2_nvt_passed:_FillValue = 255s ;
+        	air_temp2_nvt_passed:long_name = "qc-flag for air temperature2 neighboring vehicle test";
+
+    	short air_temp2_persist_passed(rec_num);
+        	air_temp2_persist_passed:long_name = "qc-flag for air temperature2 persistence test";
+		air_temp2_persist_passed:_FillValue = 255s ;
+
+        short air_temp2_range_qc_passed (rec_num) ;
+        	air_temp2_range_qc_passed:long_name = "qc-flag for air temperature2 sensor range test";
+		air_temp2_range_qc_passed:_FillValue = 255; 
+    
+        short air_temp2_sdt_passed (rec_num) ;
+        	air_temp2_sdt_passed:long_name = "qc-flag for air temperature2 standard deviation test";
+		air_temp2_sdt_passed:_FillValue = 255s ;
+
+    	short air_temp2_spatial_barnes_passed(rec_num);
+        	air_temp2_spatial_barnes_passed:long_name = "qc-flag for air temperature2 spatial barnes test";
+		air_temp2_spatial_barnes_passed:_FillValue = 255s ;
+            
+    	short air_temp2_spatial_iqr_passed(rec_num);
+        	air_temp2_spatial_iqr_passed:long_name = "qc-flag for air temperature2 spatial iqr test";
+		air_temp2_spatial_iqr_passed:_FillValue = 255s ;
+            
+    	short air_temp2_step_passed(rec_num);
+        	air_temp2_step_passed:long_name = "qc-flag for air temperature2 time step test";
+		air_temp2_step_passed:_FillValue = 255s ;
+            
+	short bar_pressure(rec_num);
+	   	bar_pressure:long_name = "barometric pressure";
+	   	bar_pressure:valid_range = 580, 1090;
+	   	bar_pressure:units = "mb";
+	   	bar_pressure:_FillValue = -9999s;
+	
+	short bar_press_cat_passed(rec_num);
+        	bar_press_cat_passed:long_name = "qc-flag for barometric pressure combined algorithm test";
+		bar_press_cat_passed:_FillValue = 255;
+    
+	float bar_press_cat_confidence(rec_num);
+        	bar_press_cat_confidence:long_name = "confidence for barometric pressure combined algorithm test";
+		bar_press_cat_confidence:_FillValue = -9999.f;
+
+	short bar_press_crt_passed(rec_num);
+        	bar_press_crt_passed:long_name = "qc-flag for barometric pressure climate range test";
+		bar_press_crt_passed:_FillValue = 255;
+    
+    	short bar_press_mat_passed(rec_num);
+        	bar_press_mat_passed:long_name = "qc-flag for barometric pressure model analysis test";
+		bar_press_mat_passed:_FillValue = 255s ;
+
+    	short bar_press_nst_passed(rec_num);
+        	bar_press_nst_passed:long_name = "qc-flag for barometric pressure nearest surface stations test";
+		bar_press_nst_passed:_FillValue = 255s ;
+    
+    	short bar_press_nvt_passed(rec_num);
+        	bar_press_nvt_passed:long_name = "qc-flag for barometric pressure neighboring vehicle test";
+		bar_press_nvt_passed:_FillValue = 255s ;
+    
+    	short bar_press_persist_passed(rec_num);
+        	bar_press_persist_passed:long_name = "qc-flag for barometric pressure persistence test";
+		bar_press_persist_passed:_FillValue = 255s ;
+
+	short bar_press_range_qc_passed(rec_num);
+        	bar_press_range_qc_passed:long_name = "qc-flag for barometric pressure sensor range test";
+		bar_press_range_qc_passed:_FillValue = 255;
+    
+    	short bar_press_sdt_passed(rec_num);
+        	bar_press_sdt_passed:long_name = "qc-flag for barometric pressure standard deviation test";
+		bar_press_sdt_passed:_FillValue = 255s ;
+    
+    	short bar_press_spatial_barnes_passed(rec_num);
+        	bar_press_spatial_barnes_passed:long_name = "qc-flag for barometric pressure spatial barnes test";
+		bar_press_spatial_barnes_passed:_FillValue = 255s ;
+            
+    	short bar_press_spatial_iqr_passed(rec_num);
+        	bar_press_spatial_iqr_passed:long_name = "qc-flag for barometric pressure spatial iqr test";
+		bar_press_spatial_iqr_passed:_FillValue = 255s ;
+            
+    	short bar_press_step_passed(rec_num);
+        	bar_press_step_passed:long_name = "qc-flag for barometric pressure time step test";
+		bar_press_step_passed:_FillValue = 255s ;
+            
+    	short brake_boost(rec_num);
+        	brake_boost:long_name = "brake boost applied status";
+        	brake_boost:_FillValue = -9999s;
+		brake_boost:flag_values = 0, 1, 2;
+		brake_boost:flag_meanings = "not_equipped off on" ;
+
+    	short brake_boost_range_qc_passed(rec_num) ;
+        	brake_boost_range_qc_passed:long_name = "qc-flag for brake boost range test";
+		brake_boost_range_qc_passed:_FillValue = 255s ;
+    
+	short brake_status(rec_num);
+        	brake_status:long_name = "brake applied status";
+        	brake_status:_FillValue = -9999s;
+		brake_status:flag_values = 0, 1, 2, 4, 8, 15;
+		brake_status:flag_meanings = "all_off lf_active lr_active rf_active rr_active all_on" ;
+    
+    	short brake_status_range_qc_passed(rec_num) ;
+        	brake_status_range_qc_passed:long_name = "qc-flag for brake status range test";    
+		brake_status_range_qc_passed:_FillValue = 255s ;
+
+    	short cloud_mask(rec_num);
+        	cloud_mask:long_name = "cloud mask from satellite grid";
+		cloud_mask:flag_values = 0, 1 ;
+		cloud_mask:flag_meanings = "off on" ;
+		cloud_mask:_FillValue = -9999s;
+
+        float humidity (rec_num) ;
+	      humidity:long_name = "humidity";
+	      humidity:standard_name = "humidity";
+	      humidity:valid_range = 0, 100;
+	      humidity:units ="percent";
+	      humidity:_FillValue = -9999.f;
+
+        float dew_temp (rec_num) ;
+    	        dew_temp:long_name = "dew temperature";
+    	        dew_temp:standard_name = "dew_temperature";
+    	        dew_temp:valid_range = -40, 151;
+    	        dew_temp:units ="Celsius";
+    	        dew_temp:_FillValue = -9999.f;
+
+	short dew_temp_cat_passed(rec_num);
+        	dew_temp_cat_passed:long_name = "qc-flag for dew temperature combined algorithm test";
+		dew_temp_cat_passed:_FillValue = 255;
+
+	float dew_temp_cat_confidence(rec_num);
+        	dew_temp_cat_confidence:long_name = "confidence for dew temperature combined algorithm test";
+		dew_temp_cat_confidence:_FillValue = -9999.f;
+
+        short dew_temp_crt_passed (rec_num) ;
+        	dew_temp_crt_passed:long_name = "qc-flag for dew temperature climate range test";
+		dew_temp_crt_passed:_FillValue = 255s ;
+
+    	short dew_temp_mat_passed(rec_num); 
+        	dew_temp_mat_passed:long_name = "qc-flag for dew temperature model analysis test";
+		dew_temp_mat_passed:_FillValue = 255s ;
+
+        short dew_temp_nst_passed (rec_num) ;
+        	dew_temp_nst_passed:long_name = "qc-flag for dew temperature nearest surface station test";
+		dew_temp_nst_passed:_FillValue = 255s ;
+
+    	short dew_temp_nvt_passed(rec_num);
+        	dew_temp_nvt_passed:long_name = "qc-flag for dew temperature neighboring vehicle test";
+		dew_temp_nvt_passed:_FillValue = 255s ;
+
+    	short dew_temp_persist_passed(rec_num);
+        	dew_temp_persist_passed:long_name = "qc-flag for dew temperature persistence test";
+		dew_temp_persist_passed:_FillValue = 255s ;
+
+        short dew_temp_range_qc_passed (rec_num) ;
+        	dew_temp_range_qc_passed:long_name = "qc-flag for dew temperature sensor range test";
+		dew_temp_range_qc_passed:_FillValue = 255s ;
+
+    	short dew_temp_sdt_passed(rec_num);
+        	dew_temp_sdt_passed:long_name = "qc-flag for dew temperature standard deviation test";
+		dew_temp_sdt_passed:_FillValue = 255s ;
+    
+    	short dew_temp_spatial_barnes_passed(rec_num);
+        	dew_temp_spatial_barnes_passed:long_name = "qc-flag for dew temperature spatial barnes test";
+		dew_temp_spatial_barnes_passed:_FillValue = 255s ;
+            
+    	short dew_temp_spatial_iqr_passed(rec_num);
+        	dew_temp_spatial_iqr_passed:long_name = "qc-flag for dew temperature spatial iqr test";
+		dew_temp_spatial_iqr_passed:_FillValue = 255s ;
+            
+    	short dew_temp_step_passed(rec_num);
+        	dew_temp_step_passed:long_name = "qc-flag for dew temperature time step test";
+		dew_temp_step_passed:_FillValue = 255s ;
+
+	float elevation (rec_num);
+		elevation:long_name ="elevation";
+		elevation:valid_range = -1000, 10000 ;
+		elevation:units = "m" ;
+		elevation:_FillValue = -9999.f;
+						    
+ 	float heading (rec_num);
+  	    	heading:long_name ="heading";
+		heading:valid_range = 0, 360 ;
+		heading:units = "degrees" ;
+		heading:_FillValue = -9999.f ;
+		
+	short heading_range_qc_passed(rec_num) ;
+ 	      	heading_range_qc_passed:long_name = "qc-flag for heading range test";
+		heading_range_qc_passed:_FillValue = 255s ;
+
+	float hoz_accel_lat (rec_num);
+		hoz_accel_lat:long_name = "horizontal lateral acceleration";
+		hoz_accel_lat:valid_range = -19.66976, 19.66976;
+		hoz_accel_lat:units = "m/s^2";
+		hoz_accel_lat:_FillValue = -9999.f;
+	
+	short hoz_accel_lat_range_qc_passed(rec_num) ;
+ 	      	hoz_accel_lat_range_qc_passed:long_name = "qc-flag for horizontal acceleration lateral range test";
+		hoz_accel_lat_range_qc_passed:_FillValue = 255s ;
+			
+	float hoz_accel_long (rec_num);
+ 		hoz_accel_long:long_name = "horizontal longitudinal acceleration";
+		hoz_accel_long:valid_range = -19.66976, 19.66976;
+		hoz_accel_long:units = "m/s^2";
+		hoz_accel_long:_FillValue = -9999.f;
+	
+	short hoz_accel_long_range_qc_passed(rec_num) ;
+ 	      	hoz_accel_long_range_qc_passed:long_name = "qc-flag for horizontal acceleration longitudinal range test";
+		hoz_accel_long_range_qc_passed:_FillValue = 255s ;
+       
+	double latitude(rec_num) ;
+		latitude:long_name = "obs latitude" ;
+		latitude:standard_name = "latitude" ;
+		latitude:valid_range = -90., 90. ;
+		latitude:units = "degrees_north" ;
+		latitude:_FillValue = -9999.d ;
+    
+        short latitude_dft_passed (rec_num) ;
+        	latitude_dft_passed:long_name = "qc-flag for latitude data filtering test";
+		latitude_dft_passed:_FillValue = 255s ;
+
+	double longitude(rec_num) ;
+		longitude:long_name = "obs longitude" ;
+		longitude:standard_name = "longitude" ;
+		longitude:valid_range = -180., 180. ;
+		longitude:units = "degrees_east" ;
+		longitude:_FillValue = -9999.d ;
+      
+        short longitude_dft_passed (rec_num) ;
+        	longitude_dft_passed:long_name = "qc-flag for longitude data filtering test";
+		longitude_dft_passed:_FillValue = 255s ;
+
+	short lights (rec_num);
+		lights:long_name = "exterior lights";
+		lights:_FillValue = -9999s;
+		lights:flag_values = 0, 1, 2, 4, 8, 16, 24, 32, 64, 128 ;
+		lights:flag_meanings = "all_lights_off low_beam_headlights_on high_beam_headlights_on left_turn_signal_on right_turn_signal_on automatic_light_control_on hazard_signal_on daytime_running_lights_on fog_light_on parking_lights_on" ;
+	
+	short lights_range_qc_passed(rec_num) ;
+ 	      	lights_range_qc_passed:long_name = "qc-flag for headlights range test";
+		lights_range_qc_passed:_FillValue = 255s ;
+			
+	float model_air_temp(rec_num);
+	   	model_air_temp:long_name = "air temperature from the model data";
+       	        model_air_temp:standard_name = "model_air_temperature";
+       		model_air_temp:valid_range = -40, 151;
+       		model_air_temp:units ="Celsius";
+       		model_air_temp:_FillValue = -9999.f;
+	
+	float model_dewpoint(rec_num);
+	   	model_dewpoint:long_name = "dewpoint from the model data";
+       	        model_dewpoint:standard_name = "model_dewpoint";
+       		model_dewpoint:valid_range = -40, 151;
+       		model_dewpoint:units ="Celsius";
+       		model_dewpoint:_FillValue = -9999.f;
+	
+    	float model_bar_press(rec_num);
+        	model_bar_press:long_name = "barometric pressure from the model data";
+        	model_bar_press:valid_range = 580, 1090;
+        	model_bar_press:units = "mb";
+        	model_bar_press:_FillValue = -9999.f;        
+        		
+	float nss_air_temp_mean(rec_num);
+		nss_air_temp_mean:long_name = "mean air temperature for the nearest surface stations";
+	   	nss_air_temp_mean:valid_range = -40, 151;
+	   	nss_air_temp_mean:units ="Celsius";
+		nss_air_temp_mean:_FillValue = -9999.f;
+	
+    	float nss_bar_press_mean(rec_num);
+        	nss_bar_press_mean:long_name = "mean barometric pressure for the nearest surface stations";
+        	nss_bar_press_mean:valid_range = 580, 1090;
+        	nss_bar_press_mean:units = "mb";
+        	nss_bar_press_mean:_FillValue = -9999.f;
+    
+    	float nss_dew_temp_mean(rec_num);
+        	nss_dew_temp_mean:long_name = "mean dew temp. for the nearest surface stations";
+	   	nss_dew_temp_mean:valid_range = -40, 151;
+	   	nss_dew_temp_mean:units ="Celsius";
+		nss_dew_temp_mean:_FillValue = -9999.f;
+
+    	float nss_hourly_precip_mean(rec_num);
+        	nss_hourly_precip_mean:long_name = "mean hourly precip for the nearest surface stations";
+        	nss_hourly_precip_mean:valid_range = 0, 30;
+        	nss_hourly_precip_mean:units ="cc";
+         	nss_hourly_precip_mean:_FillValue = -9999.f;
+       
+    	float nss_prevail_vis_mean(rec_num);
+		nss_prevail_vis_mean:long_name = "mean prevailing vis. for the nearest surface stations";
+		nss_prevail_vis_mean:valid_min = 0 ;
+		nss_prevail_vis_mean:units ="km";
+		nss_prevail_vis_mean:_FillValue = -9999.f;
+
+    	float nss_wind_dir_mean(rec_num);
+        	nss_wind_dir_mean:long_name = "mean wind_dir for the nearest surface stations";
+        	nss_wind_dir_mean:valid_range = 0, 360;
+        	nss_wind_dir_mean:units ="degrees";
+         	nss_wind_dir_mean:_FillValue = -9999.f;
+       
+    	float nss_wind_speed_mean(rec_num);
+        	nss_wind_speed_mean:long_name = "mean wind_speed for the nearest surface stations";
+		nss_wind_speed_mean:valid_range = 0, 45;
+		nss_wind_speed_mean:units ="m/s";
+ 		nss_wind_speed_mean:_FillValue = -9999.f;
+       
+	double obs_time(rec_num) ;
+		obs_time:long_name = "observation time" ;
+		obs_time:units = "seconds since 1970-1-1 00:00" ;
+
+    	float radar_ref(rec_num);
+        	radar_ref:long_name = "base reflectivity from radar grid";
+        	radar_ref:valid_range = -25, 70 ;
+        	radar_ref:units = "dBZ" ;
+        	radar_ref:_FillValue = -9999.f;
+        
+    	short radar_precip_flag(rec_num);
+        	radar_precip_flag:long_name = "precip from radar grid";
+        	radar_precip_flag:_FillValue = -9999s;
+       
+    	short radar_precip_type(rec_num);
+        	radar_precip_type:long_name = "precip type from radar grid";
+		radar_precip_type:flag_values = -1, 0, 1, 3 ;
+		radar_precip_type:flag_meanings = "no_radar_coverage no_precipitation liquid frozen" ;
+		radar_precip_type:_FillValue = -9999s;
+
+	double rec_time(rec_num) ;
+		rec_time:long_name = "received time" ;
+		rec_time:units = "seconds since 1970-1-1 00:00" ;
+
+ 	int road_segment_id (rec_num);
+ 		road_segment_id:long_name = "road segment identifier" ;
+		road_segment_id:_FillValue = -9999;
+ 	 	
+	float speed (rec_num);
+		speed:long_name ="vehicle speed";
+		speed:valid_range = -328.12736, 328.12736;
+		speed:units = "m/s" ;
+		speed:_FillValue = -9999.f;
+						
+	short speed_range_qc_passed(rec_num);
+		speed_range_qc_passed:long_name = "qc-flag for speed range test";
+		speed_range_qc_passed:_FillValue = 255s ;
+
+	short stab(rec_num);
+		stab:long_name = "stability control status";
+		stab:_FillValue = -9999s;
+		stab:flag_values = 0, 1, 2, 3 ;
+		stab:flag_meanings = "not_equpped off on engaged" ;
+		
+	short stab_range_qc_passed(rec_num) ;
+ 	      	stab_range_qc_passed:long_name = "qc-flag for stability control range test";
+		stab_range_qc_passed:_FillValue = 255s ;
+
+	float steering_angle(rec_num);
+		steering_angle:long_name = "steering wheel angle";
+		steering_angle:valid_range = -655.36, 655.36;
+		steering_angle:units ="degrees";
+		steering_angle:_FillValue = -9999.f;
+	
+	short steering_angle_range_qc_passed(rec_num) ;
+ 	      	steering_angle_range_qc_passed:long_name = "qc-flag for steering angle range test";
+		steering_angle_range_qc_passed:_FillValue = 255s ;
+
+	short steering_rate(rec_num);
+		steering_rate:long_name = "steering wheel angle rate of change";
+		steering_rate:valid_range = -381, 381;
+		steering_rate:units ="degrees/second";
+		steering_rate:_FillValue = -9999s;
+	
+	short steering_rate_range_qc_passed(rec_num);
+ 	      	steering_rate_range_qc_passed:long_name = "qc-flag for steering rate range test";
+		steering_rate_range_qc_passed:_FillValue = 255s ;
+
+        float surface_temp (rec_num) ;
+    	       surface_temp:long_name = "surface temperature";
+    	       surface_temp:standard_name = "surface_temperature";
+    	       surface_temp:valid_range = -40, 151;
+    	       surface_temp:units ="Celsius";
+    	       surface_temp:_FillValue = -9999.f;
+
+        short surface_temp_cat_passed (rec_num) ;
+        	surface_temp_cat_passed:long_name = "qc-flag for surface temperature combined algorithm test";
+		surface_temp_cat_passed:_FillValue = 255s ;
+
+	float surface_temp_cat_confidence(rec_num);
+        	surface_temp_cat_confidence:long_name = "confidence for surface temperature combined algorithm test";
+		surface_temp_cat_confidence:_FillValue = -9999.f;
+
+        short surface_temp_crt_passed (rec_num) ;
+        	surface_temp_crt_passed:long_name = "qc-flag for surface temperature climate range test";
+		surface_temp_crt_passed:_FillValue = 255s ;
+
+        short surface_temp_nvt_passed (rec_num) ;
+        	surface_temp_nvt_passed:long_name = "qc-flag for surface temperature neighboring vehicle test";
+		surface_temp_nvt_passed:_FillValue = 255s ;
+
+    	short surface_temp_persist_passed(rec_num);
+        	surface_temp_persist_passed:long_name = "qc-flag for surface temperature persistence test";
+		surface_temp_persist_passed:_FillValue = 255s ;
+
+        short surface_temp_range_qc_passed (rec_num) ;
+        	surface_temp_range_qc_passed:long_name = "qc-flag for surface temperature sensor range test";
+		surface_temp_range_qc_passed:_FillValue = 255s ;
+
+    	short surface_temp_sdt_passed(rec_num);
+        	surface_temp_sdt_passed:long_name = "qc-flag for surface temperature standard deviation test";
+		surface_temp_sdt_passed:_FillValue = 255s ;
+    
+    	short surface_temp_spatial_barnes_passed(rec_num);
+        	surface_temp_spatial_barnes_passed:long_name = "qc-flag for surface temperature spatial barnes test";
+		surface_temp_spatial_barnes_passed:_FillValue = 255s ;
+            
+    	short surface_temp_spatial_iqr_passed(rec_num);
+        	surface_temp_spatial_iqr_passed:long_name = "qc-flag for surface temperature spatial iqr test";
+		surface_temp_spatial_iqr_passed:_FillValue = 255s ;
+            
+    	short surface_temp_step_passed(rec_num);
+        	surface_temp_step_passed:long_name = "qc-flag for surface temperature time step test";
+		surface_temp_step_passed:_FillValue = 255s ;
+            
+	short trac(rec_num);
+		trac:long_name = "traction control state";
+		trac:_FillValue = -9999s;
+		trac:flag_values = 0, 1, 2, 3 ;
+		trac:flag_meanings = "not_equpped off on engaged" ;	
+	
+	short trac_range_qc_passed(rec_num) ;   
+ 	      	trac_range_qc_passed:long_name = "qc-flag for traction control range test";
+		trac_range_qc_passed:_FillValue = 255s ;
+
+	char vehicle_id(rec_num, vehicle_id_len);
+	     vehicle_id:long_name = "Vehicle Identifier";
+
+    	short wiper_status(rec_num);
+        	//automaticPresent = 255; // Auto wipper equipped
+        	wiper_status:long_name = "front wiper status";
+        	wiper_status:_FillValue = -9999s;
+		wiper_status:flag_values = 0, 1, 2, 3, 4, 5, 255 ;
+		wiper_status:flag_meanings = "not_equipped off intermittent low high washer automatic_present" ;
+  
+    	short wiper_status_range_qc_passed(rec_num);
+ 	      	wiper_status_range_qc_passed:long_name = "qc-flag for wiper status range test";
+		wiper_status_range_qc_passed:_FillValue = 255s ;
+ 		
+	float yaw_rate (rec_num);
+	    	yaw_rate:long_name ="yaw rate";
+		yaw_rate:valid_range = 0.0, 655.35;
+		yaw_rate:units="degrees per second";
+		yaw_rate:_FillValue = -9999.f;
+		
+	short yaw_rate_range_qc_passed(rec_num) ;
+ 	      	yaw_rate_range_qc_passed:long_name = "qc-flag for yaw rate range test";       
+		yaw_rate_range_qc_passed:_FillValue = 255s ;
+}
