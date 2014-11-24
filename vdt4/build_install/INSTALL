@@ -73,6 +73,11 @@ expat
 ldm
 --Available for download at: http://www.unidata.ucar.edu/software/ldm/
 
+Create User Account:
+
+It is recommended that you create a separate user account for running the VDT.  This will
+allow more control over settings and permissions and will simplify removal.
+
 Compiling the code:
 
 Make sure to set the following environment variables in your .cshrc
@@ -138,3 +143,7 @@ Some of the configuration files have hard coded paths that you may need to modif
   "RWIS_DIR" in vii_paths.py
   "cdl_file" in write_probe_message_cdf.py
   Modify log paths (/d2/vii/data/log) in run_cdf_to_csv.py, run_create_probe_msg_history_mi.py, run_create_probe_msg_history_nv.py, run_create_probe_msg_history.py, run_group_umtri_probe_message_files.py
+
+Removal:
+
+To remove the software, your VDT user account can be removed.
