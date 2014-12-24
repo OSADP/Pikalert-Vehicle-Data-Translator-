@@ -112,4 +112,4 @@ INSTALLATION STEPS
 
 REMOVAL STEPS
 
-1) To completely remove the software, your VDT user account can be removed.
+1) The files created by this installation procedure can be uninstalled by removing them from these install directories: $VDT_CODE $VDT_DATA
