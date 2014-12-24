@@ -15,7 +15,9 @@ import os
 env = Environment(
         CPPPATH=[".", os.environ["NETCDF_INC_DIR"], os.environ["HDF_INC_DIR"], os.environ["ZLIB_INC_DIR"], os.environ["SZIP_INC_DIR"], os.environ["UDUNITS2_INC_DIR"], os.environ["LOCAL_INC_DIR"],os.environ["RAL_INC_DIR"]], 
         CCFLAGS=os.environ["RAL_CCFLAGS"], 
-        LIBPATH=[os.environ["NETCDF_LIB_DIR"], os.environ["HDF_LIB_DIR"], os.environ["ZLIB_LIB_DIR"], os.environ["SZIP_LIB_DIR"], os.environ["UDUNITS2_LIB_DIR"], os.environ["LOCAL_LIB_DIR"], os.environ["RAL_LIB_DIR"]] )
+        LIBPATH=[os.environ["NETCDF_LIB_DIR"], os.environ["HDF_LIB_DIR"], os.environ["ZLIB_LIB_DIR"], os.environ["SZIP_LIB_DIR"], os.environ["UDUNITS2_LIB_DIR"], os.environ["LOCAL_LIB_DIR"], os.environ["RAL_LIB_DIR"]],
+	CPPDEFINES=["JSON_SPIRIT_VALUE_ENABLED"]
+	 )
 
 vdt_inc_dir = "%s/vdt4" % os.environ["LOCAL_INC_DIR"]
 

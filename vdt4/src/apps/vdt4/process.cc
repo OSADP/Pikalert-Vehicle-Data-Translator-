@@ -18,7 +18,6 @@
 #include <stdlib.h>
 #include <fstream>
 #include <boost/format.hpp>
-#include <boost/filesystem.hpp>
 
 #include "process.hh"
 #include "vdt_probe_data_qc.hh"
@@ -37,8 +36,8 @@
 #include "vdt_probe_message_datasets.hh"
 #include "vdt_probe_message_datasets_test.hh"
 #include "vdt_test_generator.hh"
+#include "vdt4/vdt_util.hh"
 
-using namespace boost::filesystem;
 using namespace std;
 using namespace libconfig;
 using boost::format;
@@ -204,7 +203,7 @@ int process::run()
 
       Logg->write_time_info("using %s for road segments\n", args.road_seg_file.c_str());
 
-      if (boost::filesystem::exists(args.road_seg_file))
+      if (fileExists(args.road_seg_file))
 	{
 	  Logg->write_time_info("calling vdt_road_segment_file_reader(%s)\n", args.road_seg_file.c_str());
 	  vdt_road_segment_file_reader seg_reader = vdt_road_segment_file_reader(args.road_seg_file.c_str());

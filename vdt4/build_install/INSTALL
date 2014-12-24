@@ -1,3 +1,4 @@
+DEPENDENCIES
 
 The following third party libraries and executables are required for VDT TOPR4:
 
@@ -42,10 +43,6 @@ Python-2.7.1
 --Python-2.7.1.tgz
 --Available for download at: http://www.python.org/download/releases/2.7.1/
 
-FLANN
---flann-1.8.4-src.zip 
---Available for download at: https://github.com/mariusmuja/flann
-
 pytz
 --pytz-2013.9-py2.7.egg
 --Available for download at: https://pypi.python.org/pypi/pytz/
@@ -66,74 +63,42 @@ udunits
 --udunits-2.1.24.tar.gz
 --Available for download at: https://www.unidata.ucar.edu/downloads/udunits/index.jsp
 
-expat
---expat-2.1.0.tar.gz
---Available for download at: http://sourceforge.net/projects/expat/
-
 ldm
 --Available for download at: http://www.unidata.ucar.edu/software/ldm/
 
-Create User Account:
 
-It is recommended that you create a separate user account for running the VDT.  This will
-allow more control over settings and permissions and will simplify removal.
+INSTALLATION STEPS
 
-Compiling the code:
+1) Install 3rd Party Libraries  
+   A Debian (Wheezy) package manager can be used to grab these.
 
-Make sure to set the following environment variables in your .cshrc
-file, modifying the root (and other paths if necessary) to your desired 
-location:
+2) Create User Account
+   It is recommended that you create a separate user account for running the VDT.  This will
+   allow more control over settings and permissions and will simplify removal.
 
-setenv VDT_ROOT     /d2/vii
-setenv VDT_DATA     $VDT_ROOT/data
-setenv VDT_CODE     $VDT_ROOT/code
-setenv VDT_BIN_DIR  $VDT_CODE/bin
-setenv VDT_LIB_DIR  $VDT_CODE/lib
-setenv VDT_INC_DIR  $VDT_CODE/include
-setenv VDT_CCFLAGS  "-Wall -g -O"
-setenv BUILD        $VDT_ROOT/build
+3) Set Environment Variables
+   After editing the root and other environment variables in ./pikalert_env_vars.csh to the desired path,
+   export them using the following command. 
 
-setenv LOCAL_ROOT ${VDT_ROOT}
-setenv LOCAL_INC_DIR ${LOCAL_ROOT}/include
-setenv LOCAL_LIB_DIR ${LOCAL_ROOT}/lib
-setenv LOCAL_BIN_DIR ${LOCAL_ROOT}/bin
-setenv RAL_CCFLAGS "-O -std=c++0x -Wall -g -DNO_NCBYTE"
+   source pikalert_env_vars.csh
 
-setenv RAL_INC_DIR /d2/local/include
-setenv RAL_LIB_DIR /d2/local/lib
-setenv NETCDF_ROOT_DIR /usr/local/netcdf
-setenv NETCDF_INC_DIR $NETCDF_ROOT_DIR/include
-setenv NETCDF_LIB_DIR $NETCDF_ROOT_DIR/lib
-setenv NETCDF_BIN_DIR $NETCDF_ROOT_DIR/bin
-setenv HDF_ROOT_DIR /usr/local/hdf5
-setenv HDF_INC_DIR $HDF_ROOT_DIR/include
-setenv HDF_LIB_DIR $HDF_ROOT_DIR/lib
-setenv HDF_BIN_DIR $HDF_ROOT_DIR/bin
-setenv ZLIB_ROOT_DIR /usr/local/zlib
-setenv ZLIB_INC_DIR $ZLIB_ROOT_DIR/include
-setenv ZLIB_LIB_DIR $ZLIB_ROOT_DIR/lib
-setenv ZLIB_BIN_DIR $ZLIB_ROOT_DIR/bin
-setenv SZIP_INC_DIR /usr/local/szip/include
-setenv SZIP_LIB_DIR /usr/local/szip/lib
-setenv UDUNITS2_INC_DIR /usr/local/udunits2/include
-setenv UDUNITS2_LIB_DIR /usr/local/udunits2/lib
+4) Compile The Code
 
+   ./build.py -s manifest .. $VDT_CODE $VDT_DATA
 
-To build, do the following:
+   This will build all VDT libraries and executables. Libraries will be installed in $VDT_ROOT/lib/ and executables in $VDT_ROOT/bin/.
 
-source ~/.cshrc
-mkdir $BUILD
-mv vdt_topr4.tar.gz $BUILD
-cd $BUILD
-tar -zxf vdt_topr4.tar.gz
+5) Check The Binaries
+  
+   Try running the commands in $VDT_ROOT/bin/ without argument to be sure they print out a usage message.
 
-cd $BUILD/vdt/build_install
-build.py -s manifest .. $VDT_CODE $VDT_DATA
+   NOTE you may have to set the LD_LIBRARY_PATH environment variable so that executables can find dynamic libraries such as libnetcdf. This is an example but may be differnt on your system.
 
-This will build all VDT libraries and executables. Libraries will be installed in $VDT_CODE/lib and executables in $VDT_CODE/bin.
+   setenv LD_LIBRARY_PATH /home/vii/lib:/usr/local/netcdf/lib:/usr/local/hdf5/lib:/usr/local/python/lib:/usr/local/lib:/usr/dt/lib:/usr/lib:/usr/ccs/lib:/d2/local/lib:/d1/local/lib:/usr/local/szip/lib
+ 
 
-
-Some of the configuration files have hard coded paths that you may need to modify for your system.  Below is a list of the field and the files which may need modification.
+6) Configure The System 
+   Some of the configuration files have hard coded paths that you may need to modify for your system.  Below is a list of the field and the files which may need modification.
 
   "rwh_cdl" in rwh_config.cfg
   "road_segment_file" in the rwa configuration files (mi_rwa.cfg, mn_rwa.cfg, nv_rwa.cfg)
@@ -144,6 +109,7 @@ Some of the configuration files have hard coded paths that you may need to modif
   "cdl_file" in write_probe_message_cdf.py
   Modify log paths (/d2/vii/data/log) in run_cdf_to_csv.py, run_create_probe_msg_history_mi.py, run_create_probe_msg_history_nv.py, run_create_probe_msg_history.py, run_group_umtri_probe_message_files.py
 
-Removal:
 
-To remove the software, your VDT user account can be removed.
+REMOVAL STEPS
+
+1) To completely remove the software, your VDT user account can be removed.

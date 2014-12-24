@@ -1,0 +1,22 @@
+
+import os
+env = Environment(CPPPATH=[os.environ["NETCDF_INC_DIR"], "include", os.environ["RAL_INC_DIR"], os.environ["LOCAL_INC_DIR"]], LIBPATH=os.environ["RAL_LIB_DIR"], CCFLAGS=os.environ["RAL_CCFLAGS"])
+    
+env.Library("site_list", [
+    "site_list/site_list.cc",
+    "site_list/SiteList.cc",
+    "site_list/SiteLoc.cc"]
+            )
+
+env.Install(env["LIBPATH"], "libsite_list.a")
+
+install_include = "%s/site_list" % os.environ["RAL_INC_DIR"]
+env.Install(install_include, ["include/site_list/site_list.hh"])
+
+env.Alias("install", [env["LIBPATH"], install_include])
+env.Alias("install_include", install_include)
+
+
+
+
+

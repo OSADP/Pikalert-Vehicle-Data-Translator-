@@ -12,7 +12,7 @@
 #include "math.h"
 #include <log/log.hh>
 #include "vdt_const.hh"
-#include <boost/filesystem.hpp>
+#include "vdt_util.hh"
 
 const char* vdt_nssl_radar_dataset::NSSL_RADAR_NC_ATTR_NAME_LATITUDE = "Latitude";
 const char* vdt_nssl_radar_dataset::NSSL_RADAR_NC_ATTR_NAME_LONGITUDE = "Longitude";
@@ -30,7 +30,7 @@ vdt_nssl_radar_dataset::vdt_nssl_radar_dataset(const char* filename, Log* logg)
 {
   //use string error variable instead of logg
   this->logg = logg;
-  if (!boost::filesystem::exists(filename))
+  if (!fileExists(filename))
     {
       if (logg != NULL)
         {

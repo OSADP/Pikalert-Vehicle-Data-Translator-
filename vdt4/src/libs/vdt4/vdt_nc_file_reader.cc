@@ -9,12 +9,12 @@
 // *=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=* 
 
 #include "vdt_nc_file_reader.hh"
-#include <boost/filesystem.hpp>
+#include "vdt_util.hh"
 
 vdt_nc_file_reader::vdt_nc_file_reader(const char* fpath)
 {
   this->fpath = fpath;
-  if (!boost::filesystem::exists(fpath))
+  if (!fileExists(fpath))
     {
 
       error = fpath + string(" not found");
