@@ -11,7 +11,7 @@
 ####README
 
 The directory pikalert/ contains the source code. The directory documentation/ contain html 
-documentation that can be viewed by examining the index.html.
+documentation that can be viewed by examining the index.html and system diagrams.
 
 #####Installation
 To build/install or remove the code, follow these instructions:
