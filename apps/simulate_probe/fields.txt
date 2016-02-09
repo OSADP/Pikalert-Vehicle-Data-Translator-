@@ -1,0 +1,187 @@
+  
+
+  /**
+   * @brief get mean air temperature for the nearest surface stations value
+   * @return  mean air temperature for the nearest surface stations value
+   */
+  inline float get_nss_air_temp_mean() const
+  {
+    return nss_air_temp_mean;
+  }
+
+  /**
+   * @brief get mean barometric pressure for the nearest surface stations value
+   * @return mean barometric pressure for the nearest surface stations value
+   */
+  inline float get_nss_bar_press_mean() const
+  {
+    return nss_bar_press_mean;
+  }
+
+  /**
+   * @brief get air temperature from the model data value
+   * @return air temperature from the model data value
+   */
+  inline float get_model_air_temp() const
+  {
+    return model_air_temp;
+  }
+
+  /**
+   * @brief get dewpoint from the model data value
+   * @return dewpoint from the model data value
+   */
+  inline float get_model_dewpoint() const
+  {
+    return model_dewpoint;
+  }
+
+  /**
+   * @brief get barometric pressure from the model data value
+   * @return barometric pressure from the model data value
+   */
+  inline float get_model_bar_press() const
+  {
+    return model_bar_press;
+  }
+
+  /**
+   * @brief get reflectivity from radar grid value
+   * @return reflectivity from radar grid value
+   */
+  inline float get_radar_ref() const
+  {
+    return radar_ref;
+  }
+
+  /**
+   * @brief set mean air temperature for the nearest surface stations value
+   * @param[in] value mean air temperature for the nearest surface stations value
+   */
+  inline void set_nss_air_temp_mean(float value)
+  {
+    nss_air_temp_mean = value;
+  }
+
+  /**
+   * @brief set mean barometric pressure for the nearest surface stations value
+   * @param[in] value mean barometric pressure for the nearest surface stations value
+   */
+  inline void set_nss_bar_press_mean(float value)
+  {
+    nss_bar_press_mean = value;
+  }
+
+  /**
+   * @brief set air temperature from the model data value
+   * @param[in] value air temperature from the model data value
+   */
+  inline void set_model_air_temp(float value)
+  {
+    model_air_temp = value;
+  }
+
+  /**
+   * @brief set dewpoint from the model data value
+   * @param[in] value dewpoint from the model data value
+   */
+  inline void set_model_dewpoint(float value)
+  {
+    model_dewpoint = value;
+  }
+
+  /**
+   * @brief set barometric pressure from the model data value
+   * @param[in] value barometric pressure from the model data value
+   */
+  inline void set_model_bar_press(float value)
+  {
+    model_bar_press = value;
+  }
+
+  /**
+   * @brief set reflectivity from radar gridvalue
+   * @param[in] value reflectivity from radar grid value
+   */
+  inline void set_radar_ref(float value)
+  {
+    radar_ref = value;
+  }
+
+  /**
+   * @brief set mean dew temperature for the nearest surface stations value
+   * @param[in] value mean dew temperature for the nearest surface stations  value
+   */
+  inline void set_nss_dew_temp_mean(float value)
+  {
+    nss_dew_temp_mean = value;
+  }
+
+  /**
+   * @brief set mean wind direction for the nearest surface stations value
+   * @param[in] value mean wind direction for the nearest surface stations  value
+   */
+  inline void set_nss_wind_dir_mean(float value)
+  {
+    nss_wind_dir_mean = value;
+  }
+
+  /**
+   * @brief set mean wind speed for the nearest surface stations value
+   * @param[in] value  mean wind speed for the nearest surface stations value
+   */
+  inline void set_nss_wind_speed_mean(float value)
+  {
+    nss_wind_speed_mean = value;
+  }
+
+  /**
+   * @brief set mean hourly precipitation for the nearest surface stations value
+   * @param[in] value  mean hourly precipitation for the nearest surface stations value
+   */
+  inline void set_nss_hourly_precip_mean(float value)
+  {
+    nss_hourly_precip_mean = value;
+  }
+
+  /**
+   * @brief set mean prevailing visibility for the nearest surface stations value
+   * @param[in] value  mean prevailing visibility for the nearest surface stations value
+   */
+  inline void set_nss_prevail_vis_mean(float value)
+  {
+    nss_prevail_vis_mean = value;
+  }
+
+  /** @brief reflectivity from radar grid */
+  float radar_ref;
+
+  /** @brief air temperature from the model data */
+  float model_dewpoint;
+
+  /** @brief air temperature from the model data */
+  float model_air_temp;
+
+  /** @brief barometric pressure from the model data */
+  float model_bar_press;
+
+  /** @brief mean air temperature for the nearest surface stations */
+  float nss_air_temp_mean;
+
+  /** @brief mean barometric pressure for the nearest surface stations */
+  float nss_bar_press_mean;
+
+  /** @brief  mean prevailing visibility for the nearest surface stations */
+  float nss_prevail_vis_mean;
+
+  /** @brief mean dew temperature for the nearest surface stations */
+  float nss_dew_temp_mean;
+
+  /** @brief mean wind direction for the nearest surface stations */
+  float nss_wind_dir_mean;
+
+  /** @brief  mean wind speed for the nearest surface stations */
+  float nss_wind_speed_mean;
+
+  /** @brief  mean hourly precipitation for the nearest surface stations */
+  float nss_hourly_precip_mean;

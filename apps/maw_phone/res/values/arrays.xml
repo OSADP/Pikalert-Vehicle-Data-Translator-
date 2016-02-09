@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources>
+
+    <string-array name="state">
+        <item name="michigan">Michigan</item>
+        <item name="minnesota">Minnesota</item>
+        <item name="nevada">Nevada</item>
+    </string-array>
+    
+    <string-array name="stateValues">
+        <item name="michigan">michigan</item>
+        <item name="minnesota">minnesota</item>
+        <item name="nevada">nevada</item>
+    </string-array>
+
+</resources>

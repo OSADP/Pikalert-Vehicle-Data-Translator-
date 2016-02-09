@@ -1,0 +1,10 @@
+
+# Use csh so we get the proper set of env variables
+SHELL=/bin/csh
+
+# Mail output to these users
+#MAILTO="support@rap.ucar.edu"
+
+
+# Include any necessary scrubbing
+

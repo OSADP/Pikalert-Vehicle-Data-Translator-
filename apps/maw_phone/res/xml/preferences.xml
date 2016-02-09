@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory 
+        android:title="First Category"
+        android:key="first_category">
+        
+		<EditTextPreference 
+			android:key="user_name"
+			android:title="Phone Id" 
+			android:summary="Enter the phone id for your session"
+			android:dialogTitle="Phone Id"
+			android:dialogMessage="Enter your phone id (no spaces). Leave blank to use your device's phone number."
+			android:defaultValue=""
+		/>
+        
+		<ListPreference 
+			android:key="state"
+			android:title="State"
+			android:summary="Select the state where the application will be used"
+			android:defaultValue="minnesota" 
+			android:entries="@array/state"
+			android:entryValues="@array/stateValues"
+		/>  
+		<CheckBoxPreference
+			android:key="use_test_datasource"
+			android:title="Use Test Data"
+			android:summary="Check to use test data for New Hampshire and Colorado"
+			android:defaultValue="false" 
+		/>  
+            
+    </PreferenceCategory>
+    
+</PreferenceScreen>

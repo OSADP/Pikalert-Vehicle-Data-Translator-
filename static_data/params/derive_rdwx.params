@@ -1,0 +1,68 @@
+/**********************************************************************
+ * TDRP params for derive_vars
+ **********************************************************************/
+
+///////////// fcst_var_names //////////////////////////
+//
+// Forecast variables.
+// Variables which need to be copied over to output file.
+// Type: string
+// 1D array - variable length.
+//
+
+fcst_var_names = { "T", "dewpt", "rh", "wind_u", "wind_v", "wind_speed", "cloud_cov", "visibility", "cprob_rain", "cprob_snow", "cprob_ice", "qpf01", "qpf03", "qpf06", "precip_cn3", "prob_precip03", "prob_precip03", "prob_precip06", "P_msl", "P_sfc", "dlwrf_sfc", "dswrf_sfc" };
+
+///////////// derived_var_names ///////////////////////
+//
+// Derived variables.
+// Variables which need to be derived from forecast variables.
+// Type: string
+// 1D array - variable length.
+//
+
+derived_var_names = { "TempF", "dewptF", "rh", "rh_pct", "wind_speed", "wind_speed_mph", "wind_dir", "prob_fog", "qpf01", "precip_cn1", "prob_precip01", "precip_type", "precip_rate", "precip_rate_inches", "precip_accum", "precip_accum_inches", "cprob_rain", "cprob_snow", "cprob_ice", "snow_rate", "snow_rate_inches", "snow_accum", "snow_accum_inches", "snow_accum_total" };
+
+
+///////////// pop_threshold ///////////////////////////
+//
+// Probability of precipitation threshold.
+// POP value which must be attained before declaring precipitation.
+// Type: float
+//
+
+// Summer
+//pop_threshold = 0.25;
+
+// Winter
+pop_threshold = 0.15;
+
+
+///////////// qpf_threshold ///////////////////////////
+//
+// Quantitative precipitation forecast threshold.
+// QPF value which must be attained before declaring precipitation.
+// Type: float
+//
+
+qpf_threshold = 0.05;
+
+
+///////////// ice_threshold ///////////////////////////
+//
+// Freezing precipitation threshold.
+// CPOI value which must be attained before declaring freezing
+//   precipitation.
+// Type: float
+//
+
+ice_threshold = 0.25;
+
+///////////// snow_threshold //////////////////////////
+//
+// Frozen (snow) precipitation threshold.
+// CPOS value which must be attained before declaring frozen
+//   precipitation.
+// Type: float
+//
+
+snow_threshold = 0.4;

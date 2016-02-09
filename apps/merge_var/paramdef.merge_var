@@ -1,0 +1,162 @@
+/* Core forecast variables */
+paramdef string {
+  p_default = {
+	       "T",
+	       "max_T",
+	       "min_T",
+	       "dewpt",
+	       "wind_u",
+	       "wind_v",
+	       "wind_speed",
+	       "cloud_cov",
+	       "visibility",
+	       "prob_fog",
+	       "prob_thunder",
+	       "cprob_rain",
+	       "cprob_snow",
+	       "cprob_ice",
+	       "prob_precip03",
+	       "prob_precip06",
+	       "prob_precip24",
+	       "qpf03",
+	       "qpf06"
+	       };
+  p_descr = "Core forecast variables";
+  p_help = "Only variables which are forecast in the dicast system";
+} file1_input_var_names[];
+
+paramdef string {
+  p_default = {
+	       "T",
+	       "max_T",
+	       "min_T",
+	       "dewpt",
+	       "wind_u",
+	       "wind_v",
+	       "wind_speed",
+	       "cloud_cov",
+	       "visibility",
+	       "prob_fog",
+	       "prob_thunder",
+	       "cprob_rain",
+	       "cprob_snow",
+	       "cprob_ice",
+	       "prob_precip03",
+	       "prob_precip06",
+	       "prob_precip24",
+	       "qpf03",
+	       "qpf06"
+	       };
+  p_descr = "Core forecast variables";
+  p_help = "Only variables which are forecast in the dicast system";
+} file1_output_var_names[];
+
+/* Additional non-verifiable vars, or vars extracted from regressor
+   file */
+paramdef string {
+  p_default = {
+	       "P_sfc",
+	       "T_cb",
+	       "T_bls",
+               "T_lbls0",
+               "T_lbls1",
+               "T_lbls2",
+               "T_lbls3",
+	       "snow_depth",
+	       "net_snow_depth",
+	       "cloud_low",
+	       "cloud_middle",
+	       "cloud_high"
+	       };
+  p_descr = "Non-verifiable variables";
+  p_help = "Variables extracted from regressor and in mod_fcst
+   format";
+} file2_input_var_names[];
+
+paramdef string {
+  p_default = {
+	       "P_sfc",
+	       "T_cb",
+	       "T_bls",
+               "T_lbls0",
+               "T_lbls1",
+               "T_lbls2",
+               "T_lbls3",
+	       "snow_depth",
+	       "net_snow_depth",
+	       "cloud_low",
+	       "cloud_middle",
+	       "cloud_high"
+	       };
+  p_descr = "Non-verifiable variables";
+  p_help = "Variables extracted from regressor and in mod_fcst
+   format";
+} file2_output_var_names[];
+
+paramdef string {
+  p_default = {
+	       };
+  p_descr = "Non-verifiable variables";
+  p_help = "Variables extracted from regressor and in mod_fcst
+   format";
+} file2_input_blend_var_names[];
+
+paramdef string {
+  p_default = {
+	       };
+  p_descr = "Non-verifiable variables";
+  p_help = "Variables extracted from regressor and in mod_fcst
+   format";
+} file2_output_blend_var_names[];
+
+paramdef float {
+  p_defualt = {
+  };
+  p_descr = "Blending weights for file2 blend_var_names";
+  p_help = "size of array must be: number of blend_var_names * num_output_days * num_output_times_per_day";
+} file2_blend_weights[];
+
+typedef enum {
+	      TEMP_IND=0,
+	      DEWPT_IND,
+	      WIND_U_IND,
+	      WIND_V_IND,
+	      WIND_SPEED_IND,
+	      QPF03_IND,
+	      POP03_IND,
+	      CPOS_IND,
+	      CPOR_IND,
+	      CPOI_IND
+	      } der_inds;
+
+paramdef string {
+  p_default = {
+	       "T",
+	       "dewpt",
+	       "wind_u",
+	       "wind_v",
+	       "wind_speed",
+	       "qpf03",
+	       "prob_precip03",
+	       "cprob_snow",
+	       "cprob_rain",
+	       "cprob_ice",
+	       };
+  p_descr = "Variables to retain as inputs for derived variables at
+  end of post proc";
+} deriv_var_names[];
+
+
+typedef enum {
+	      CONF_TEMP_IND=0,
+	      } conf_der_inds;
+
+paramdef string {
+  p_default = {
+	       "T",
+	       };
+  p_descr = "Confidence variables to retain as inputs for derived variables at
+  end of post proc";
+} conf_deriv_var_names[];
+
+	      

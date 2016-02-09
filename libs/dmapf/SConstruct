@@ -1,0 +1,53 @@
+
+import os
+
+
+env = Environment(CPPPATH=['.',
+                           os.environ['NETCDF_INC_DIR'],
+                           os.environ['HDF_INC_DIR'],
+                           os.environ['ZLIB_INC_DIR'],
+                           os.environ['LOCAL_INC_DIR']],
+                  LIBPATH=[os.environ['NETCDF_LIB_DIR'],
+                           os.environ['HDF5_LIB_DIR'],
+                           os.environ['ZLIB_LIB_DIR'],
+                           os.environ['LOCAL_LIB_DIR']],
+                  CCFLAGS=os.environ['CCFLAGS'])
+
+    
+env.Library('dmapf', [
+    'basegm.c',
+    'cmapf.c',
+    'cmapf_model.cc',
+    'eqvlat.c',
+    'geog_ll.c',
+    'kcllxy.c',
+    'limmath.c',
+    'll_geog.c',
+    'lmbrt.c',
+    'mapstart.c',
+    'map_xy.c',
+    'nearest.cc',
+    'obmrc.c',
+    'obqlmbrt.c',
+    'obstr.c',
+    'proj_3d.c',
+    'stcm1p.c',
+    'stcm2p.c',
+    'trnsmrc.c',
+    'tsteqvlt.c',
+    'vector_3.c',
+    'xy_map.c'
+    ])
+
+env.Install(os.environ['LOCAL_LIB_DIR'], 'libdmapf.a')
+
+install_include = '%s/dmapf' % os.environ['LOCAL_INC_DIR']
+env.Install(install_include, [
+    'cmapf.h',
+    'cmapf_model.hh',
+    'limmath.h',
+    'vector_3.h'
+    ])
+
+env.Alias('install', [os.environ['LOCAL_LIB_DIR'], install_include])
+env.Alias('install_include', install_include)

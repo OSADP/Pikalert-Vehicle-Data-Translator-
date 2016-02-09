@@ -1,0 +1,13 @@
+netcdf test_write {
+dimensions:
+	count = 10 ;
+variables:
+	short test_short_field(count) ;
+		test_short_field:long_name = "bogus_long_name" ;
+		test_short_field:units = "bogus" ;
+		test_short_field:_FillValue = -99s ;
+	int test_int_field(count) ;
+		test_int_field:long_name = "bogus_long_name" ;
+		test_int_field:units = "bogus" ;
+		test_int_field:_FillValue = -999 ;
+}

@@ -1,0 +1,32 @@
+/**********************************************************************
+ * TDRP params for temp_interp
+ **********************************************************************/
+
+///////////// var_list ////////////////////////////////
+//
+// Forecast variables to interpolate.
+//
+// Type: struct
+//   typedef struct {
+//      char* name;
+//      char* method;
+//   }
+//
+// 1D array - variable length.
+//
+
+var_list = {
+  { "T", "cubic_spline"},
+  { "dewpt", "linear"},
+  { "wind_u", "linear"},
+  { "wind_v", "linear"},
+  { "cloud_cov", "linear"},
+  { "visibility", "linear"},
+  { "qpf03", "linear"},
+  { "precip_cn3", "linear"},
+  { "P_msl", "linear"},
+  { "P_sfc", "linear"},
+  { "dlwrf_sfc", "linear"},
+  { "dswrf_sfc", "linear"}
+};
+

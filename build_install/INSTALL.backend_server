@@ -1,0 +1,104 @@
+
+DEPENDENCIES
+------------
+
+The following third party libraries and executables are required for
+back end server:
+
+Python-2.7.1
+--Python-2.7.1.tgz
+--Available for download at: http://www.python.org/download/releases/2.7.1/
+--You can also install Anaconda Python. It contains many of the python third party libraries mentioned below.
+
+pytz
+--pytz-2013.9-py2.7.egg
+--Available for download at: https://pypi.python.org/pypi/pytz/
+--Can also be obtained in Anaconda Python.
+
+numpy 
+--numpy-1.6.2.tar.gz
+--Available for download at: https://pypi.python.org/pypi/numpy/1.6.2
+--Can also be obtained in Anaconda Python.
+
+matplotlib
+--matplotlib-1.2.0.tar.gz
+--Available for download at: https://pypi.python.org/pypi/matplotlib/1.2.0
+--Can also be obtained in Anaconda Python.
+
+netCDF4 python
+--netCDF4 1.1.7
+--Available for download at:https://pypi.python.org/pypi/netCDF4
+--Can also install using Anaconda Python.
+
+apache tomcat and modwsgi
+--https://code.google.com/p/modwsgi/wiki/InstallationOnLinux
+--http://tomcat.apache.org
+
+
+INSTALLATION STEPS
+
+
+0) Install Python and associated packages listed above
+
+1) Copy the Python scripts and wsgi modules located in
+pikalert/scripts/python/backend_server/ to a directory where
+you want them to reside. This directory should be specified in your
+PYTHONPATH environment variable to be accessible.
+
+2) Install Apache Tomcat and modwsgi
+
+3) Modify vdt_apache_config located in
+pikalert/build_install/vdt_apache_config so that the wsgi files
+mentioned in 1) can be found.
+
+4) Modify the directories mentioned in
+backend_sys_path.py. Backend_sys_path.py contains all the directory
+path information used by the python backend server scripts. 
+
+Note that the information for Alaska need not be modified since Alaska
+is not currently supported by this particular release of the software.
+
+Here is more detailed guidance for configuring Michigan (analogous for
+other states):
+
+Michigan_district_alerts_dir = "your_choice"
+Michigan_latest_vehicles_dir = "should be set to the output location of probe_to_json.py for this state"
+Michigan_maw_json_dir = "should be set to the output of rwa_to_json.py for this state"
+Michigan_obs_stats_dir = "should be set to the vdt stats output dir typically called mi_vdt_output"
+Michigan_obs_stats_json_dir = "should be set to the obs stats json directory, one of the outputdirectories of the rwa"
+Michigan_plots_dir = "should be set to the plot data json directory, one of the outputdirectories of the rwa"
+Michigan_road_segments_file = "should be set to the road segment file for this state such as "mi_roads.20140613.nc"
+Michigan_rwh_dir = "should be set to the location of the mi_rwh_output directory"
+Michigan_vdt_output_dir = "should be set the directory location of the vdt output"
+Michigan_radius = 20 # in meters
+
+
+5) Try running:
+
+python backend_sys_path.py
+
+to guarantee that no configuration mistakes have been made
+
+6) Restart the apache server so that it can read your new apache
+configuration file mentioned in 3)
+
+7) Check to make sure that your configuration in 3) is working correctly:
+
+curl http://your_machine_name:8080/latest_vehicles\?path=/latest_vehicles\&state=minnesota
+curl http://your_machine_name:8080/latest_vehicles\?path=/latest_vehicles\&state=michigan
+curl http://your_machine_name:8080/latest_vehicles\?path=/latest_vehicles\&state=nevada
+curl http://your_machine_name:8080/datatime\?path=/datatime\&state=minnesota
+curl http://your_machine_name:8080/datatime\?path=/datatime\&state=michigan
+curl http://your_machne_name:8080/datatime\?path=/datatime\&state=nevada
+
+You should see reasonable output from these. For example:
+
+32>curl http://eskimo:8080/latest_vehicles\?path=/latest_vehicles\&state=minnesota
+
+{"data_time":"201504162315","districts":[{"display_name":"minnesota","district_name":"minnesota","max_lat":49.70000076293945,"max_lon":-88.5,"min_lat":43.40000152587891,"min_lon":-97.69999694824219,"vehicles":[{"auto_brake":"-9999","heading_deg":"272.1","id":"209552","lat":"45.2207","lon":"-93.0353","obs_time":"1429226370","road_temp_f":"-9999.0","speed_mph":"0","temp_f":"-9999.0","traction_control":"-9999","wiper_status":"1"}]}]}
+
+
+eskimo:dicast:34>curl http://eskimo:8080/datatime\?path=/datatime\&state=michigan
+[{"latest_time": "201504162135", "dir": "latest_vehicles"},{"latest_time": "201504162318", "dir": "rec_treatment"},{"latest_time": "201504162315", "dir": "road_wx_dir"}, {"latest_time":"201504162300", "dir": "district_alerts"}]
+
+

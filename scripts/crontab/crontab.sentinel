@@ -1,0 +1,129 @@
+
+SHELL=/bin/csh
+MAILTO="bpetzke@ucar.edu"
+
+0 * * * * csh -c "fclean.py -v -p $VII_DATA -l $VII_DATA/log/fclean $VII_DATA/static/config/fclean_vii.conf"
+
+### Minnesota ###
+
+# Run vdt4 for MN and rwh for MN
+#*/5 * * * * combine_mn_wxt.sh; vii_ep.py vii_config run_vdt4_mn.py ep_run_rwh_mn.py 300  >& /dev/null
+*/5 * * * * vii_ep.py vii_config ep_run_mn_processes.py 300  >& /dev/null
+
+24 6 * * * vii_ep.py vii_config stop_ameritrak_ingest.py 300 >& /dev/null
+
+# Run copy_recent_files.py for Alaska images
+01,06,11,16,21,26,31,36,41,46,51,56 * * * * csh -c "copy_recent_files.py -l $VII_DATA/log/copy_recent_files_ak 1800 /ftp/restricted/alaska/root/upload_images /d2/vii/data/raw/alaska_images/recent >& /dev/null"
+
+# Run probe_to_json for AK
+01,06,11,16,21,26,31,36,41,46,51,56 * * * * csh -c "probe_to_json.py -l $VII_DATA/log/probe_to_json_ak backend_sys_path ak 300 >& /dev/null"
+
+# Run probe_to_json for MN
+#01,06,11,16,21,26,31,36,41,46,51,56 * * * * csh -c "probe_to_json.py -l $VII_DATA/log/probe_to_json_mn vii_config mn 300 >& /dev/null"
+
+# Run rwa_to_json for MN
+#*/5 * * * * csh -c "rwa_to_json.py -l $VII_DATA/log/rwa_to_json_mn vii_config mn 300 >& /dev/null"
+
+# Create VDT output for Minnesota in csv format and put on the ftp server each day for the previous day's data
+0 5 * * * csh -c "run_cdf_to_csv.py -l $VII_DATA/log/run_cdf_to_csv_mn /d2/vii/data/static/config/ `date -d yesterday +\%Y\%m\%d` /d2/vii/data/processed/mn_vdt_output/ /var/autofs/mnt/ftp/restricted/ftp_vdt/root/download/minnesota/csv_output/ >& /dev/null"
+
+# Create probe message history file for MN
+*/5 * * * * csh -c "/home/vii/scripts/python/run_create_probe_msg_history.py -l /d2/vii/data/log/run_create_probe_msg_history >& /dev/null" 
+
+### Michigan ###
+
+
+# Run ingest through RWH for MI
+* * * * * ep_run_mi_processes.py >& /dev/null
+
+# Create VDT output for Michigan in csv format and put on the ftp server each day for the previous day's data
+0 5 * * * csh -c "run_cdf_to_csv.py -l $VII_DATA/log/run_cdf_to_csv_mi /d2/vii/data/static/config/ `date -d yesterday +\%Y\%m\%d` /d2/vii/data/processed/mi_vdt_output/ /var/autofs/mnt/ftp/restricted/ftp_vdt/root/download/michigan/csv_output/ >& /dev/null"
+
+# Create probe message history file for MI
+* * * * * csh -c "/home/vii/scripts/python/run_create_probe_msg_history_mi.py -l /d2/vii/data/log/run_create_probe_msg_history_mi >& /dev/null"
+
+# Create data statistics for MI data that gets output to ftp server each day for the previous day's data
+0 6 * * * csh -c "run_michigan_data_status.py `date -d yesterday +\%Y\%m\%d` `date -d yesterday +\%Y\%m\%d` >& /dev/null"
+
+# Create monthly data statistics for MI on the first day of the month
+0 12 1 * * csh -c "create_monthly_stats.py -l $VII_DATA/log/create_monthly_stats_Michigan `date -d yesterday +\%Y` `date -d yesterday +\%m` Michigan /ftp/restricted/ftp_vdt/root/download/michigan/daily_statistics /ftp/restricted/ftp_vdt/root/download/michigan/monthly_statistics >& /dev/null"
+
+# Create daily MI timing file
+30 6 * * * csh -c "run_michigan_timing.py `date -d yesterday +\%Y\%m\%d` `date -d yesterday +\%Y\%m\%d` /d2/vii/data/raw/umtri /ftp/restricted/ftp_vdt/root/download/michigan/daily_statistics/>& /dev/null"
+
+# Create weekly MI timing (latency) file
+00 7 * * 0 weekly_timing.py `date -d "1 week ago" +\%Y\%m\%d` `date -d yesterday +\%Y\%m\%d` /ftp/restricted/ftp_vdt/root/download/michigan/daily_statistics/ /ftp/restricted/ftp_vdt/root/download/michigan/weekly_statistics >& /dev/null
+
+
+### INRIX ###
+
+# OLD METHOD
+# Move raw INRIX data from ftp area to MI VDT area
+#* * * * * csh -c "get_inrix_data.py -l $VII_DATA/log/get_inrix_data vii_config /var/autofs/mnt/ftp/restricted/ftp_inrix/root/upload/ /d2/vii/data/raw/umtri/ >& /dev/null"
+
+# CURRENT METHOD
+# Move files to raw INRIX dir, then run generic2probe_message to convert them to netcdf and put them in the umtri area
+* * * * * csh -c "get_inrix_data.py -l $VII_DATA/log/get_inrix_data vii_config /var/autofs/mnt/ftp/restricted/ftp_inrix/root/upload/ /d2/vii/data/raw/inrix/ >& /dev/null"
+
+# If you need to shut down the inclusion of INRIX data due to an UMTRI test, please only comment out the following line:
+#* * * * * csh -c "run_inrix_generic2probe_message.py -l /d2/vii/data/log/run_inrix_generic2probe_message vii_paths.py `date +\%Y\%m\%d` /d2/vii/data/raw/inrix /d2/vii/data/processed/mi_csv2nc /d2/vii/data/static/cdl/probe_message.cdl >& /dev/null"
+
+
+
+### Nevada ###
+
+# Run vdt4 for NV and rwh for NV
+#1,6,11,16,21,26,31,36,41,46,51,56 * * * * vii_ep.py vii_config run_vdt4_nv.py ep_run_rwh_nv.py 300 >& /dev/null
+#*/15 * * * * vii_ep.py vii_config run_vdt4_nv.py ep_run_rwh_nv.py 900 >& /dev/null
+* * * * * vii_ep.py vii_config ep_run_nv_processes.py 300  >& /dev/null
+
+# Run probe_to_json for NV
+#1,6,11,16,21,26,31,36,41,46,51,56 * * * * csh -c "probe_to_json.py -l $VII_DATA/log/probe_to_json_nv vii_config nv >& /dev/null"
+#01,16,31,46 * * * * csh -c "probe_to_json.py -l $VII_DATA/log/probe_to_json_nv vii_config nv 900 >& /dev/null"
+
+# Run rwa_to_json for NV
+#01,16,31,46 * * * * csh -c "rwa_to_json.py -l $VII_DATA/log/rwa_to_json_nv vii_config nv 900 >& /dev/null"
+
+# Create VDT output for Nevada in csv format and put on the ftp server each day for the previous day's data
+0 5 * * * csh -c "run_cdf_to_csv.py -l $VII_DATA/log/run_cdf_to_csv_nv /d2/vii/data/static/config/ `date -d yesterday +\%Y\%m\%d` /d2/vii/data/processed/nv_vdt_output/ /var/autofs/mnt/ftp/restricted/ftp_vdt/root/download/nevada/csv_output/ >& /dev/null"
+
+# Create probe message history file for NV
+*/5 * * * * csh -c "/home/vii/scripts/python/run_create_probe_msg_history_nv.py -l /d2/vii/data/log/run_create_probe_msg_history_nv >& /dev/null"
+
+
+
+# Run rtma_grib2_to_netcdf
+59 * * * * csh -c "rtma_grib2_to_netcdf.py -l $VII_DATA/log/rtma_grib2_to_netcdf >& /dev/null"
+
+
+###########
+
+# Run cdf_to_csv_dicast at 5 minutes after the hour (concatenates csv data from all three states)
+#
+05 * * * * vii_ep.py vii_config ep_run_cdf_to_csv_dicast.py 300 >& /dev/null
+
+##########
+
+#Run copy qc stats to ftp site (contact Amanda Anderson if problems)
+
+00 08 * * 5 /home/vii/aander/segstats2ftp.sh >& /dev/null
+
+### Old ###
+
+#*/15 * * * * vii_ep.py vii_config get_twitter_wx.sh 900 >& /dev/null
+#*/5 * * * * vii_ep.py vii_config run_get_storm_warnings.sh run_get_nws_ww.sh run_get_spc_reports.py 300 >& /dev/null
+#*/15 * * * * vii_ep.py vii_config run_get_unr_data.py 900 >& /dev/null
+#*/5 * * * * vii_ep.py vii_config run_ameritrak_ingest.py 300 >& /dev/null
+#24 6 * * * vii_ep.py vii_config stop_ameritrak_ingest.py 300 >& /dev/null
+#44 * * * * vii_ep.py vii_config run_getrtma.sh 900 >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 7 /tmp >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 7 /d2/vii/data/raw/rtma >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 7 /d2/vii/data/raw/metar >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 7 /d2/vii/data/raw/radar >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 7 /d2/vii/data/raw/rsas >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 60 /d2/vii/data/raw/nws_ww >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 60 /d2/vii/data/raw/storm_warn >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 7 /d2/vii/data/derived >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 7 /d2/vii/data/processed >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 28 /d2/vii/data/log >& /dev/null
+

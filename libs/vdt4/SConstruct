@@ -1,0 +1,104 @@
+
+import os
+env = Environment(CPPPATH=[".", "/usr/include", os.environ["NETCDF_INC_DIR"], os.environ["HDF_INC_DIR"], os.environ["LOCAL_INC_DIR"], os.environ["RAL_INC_DIR"]], LIBPATH=["/usr/lib", os.environ["NETCDF_LIB_DIR"], os.environ["HDF_LIB_DIR"], os.environ["LOCAL_LIB_DIR"], os.environ["RAL_LIB_DIR"]], 
+CCFLAGS=os.environ["RAL_CCFLAGS"]
+#CCFLAGS=os.environ["RAL_CCFLAGS"]+" -pg"
+)
+
+env.Library("vdt4", [
+            "vdt_climatology_file_reader.cc",
+	    #"vdt_cloud_mask_dataset.cc",
+            "vdt_const.cc",
+            "vdt_generic_message.cc",
+            "vdt_grid.cc",
+            "vdt_history_check.cc",
+            "vdt_index_distance.cc", 
+            "vdt_metar.cc",
+            "vdt_metar_file_reader.cc",
+            "vdt_nc_file_reader.cc",
+            "vdt_nc_file_writer.cc",
+            "vdt_nearest_nbr.cc",
+            "vdt_nssl_dataset.cc",
+            "vdt_point.cc",
+            "vdt_probe_message.cc",
+            "vdt_probe_message_file_reader.cc",
+            "vdt_probe_message_history.cc",
+            "vdt_probe_message_qc.cc",
+            "vdt_probe_message_qc_file_writer.cc",
+            "vdt_probe_message_qc_file_reader.cc",
+            "vdt_probe_message_qc_statistics.cc",
+            "vdt_probe_message_qc_statistics_file_writer.cc",
+            "vdt_read_cdf_variables.cc",
+            "vdt_road_segment.cc",
+            "vdt_rwis_file_reader.cc",
+            "vdt_road_segment_file_reader.cc",
+            "vdt_road_segment_statistics_file_writer.cc",
+            "vdt_road_segment_assessment.cc",
+            "vdt_road_segment_assessment_file_writer.cc",
+            "vdt_road_segment_statistics_file_writer.cc",
+	    "vdt_road_segment_data.cc",
+            "vdt_spatial_check.cc",
+            "vdt_surface_observation.cc",
+	    "vdt_util.cc"],
+
+            LIBS=[
+            "libconfig++", 
+            "log", 
+            "netcdf", 
+            "boost_system", 
+            "boost_date_time", 
+            "boost_thread"]
+            )
+
+env.Install(os.environ["LOCAL_LIB_DIR"], "libvdt4.a")
+
+install_include = "%s/vdt4" % os.environ["LOCAL_INC_DIR"]
+env.Install(install_include, [
+            "stat_tools.hh",
+            "vdt_const.hh",
+            "vdt_climatology_file_reader.hh",
+	    "vdt_cloud_mask_dataset.hh",
+            "vdt_dataset.hh",
+            "vdt_generic_message.hh",
+            "vdt_grid.hh",
+            "vdt_history_check.hh",
+            "vdt_index_distance.hh", 
+            "vdt_metar.hh",
+            "vdt_metar_file_reader.hh",
+            "vdt_nc_file_reader.hh",
+            "vdt_nc_file_writer.hh",
+            "vdt_nearest_nbr.hh",
+            "vdt_nssl_dataset.hh",
+            "vdt_point.hh",
+            "vdt_probe_message.hh",
+            "vdt_probe_message_file_reader.hh",
+            "vdt_probe_message_history.hh",
+            "vdt_probe_message_qc.hh",
+            "vdt_probe_message_qc_file_reader.hh",
+            "vdt_probe_message_qc_file_writer.hh",
+            "vdt_probe_message_qc_statistics.hh",
+            "vdt_probe_message_qc_statistics_file_writer.hh",
+            "vdt_read_cdf_variables.hh",
+            "vdt_road_segment.hh",
+            "vdt_road_segment_assessment.hh",
+            "vdt_road_segment_assessment_file_writer.hh",
+            "vdt_road_segment_file_reader.hh",
+            "vdt_road_segment_statistics_file_writer.hh",
+	    "vdt_road_segment_data.hh",
+            "vdt_rwis_file_reader.hh",
+            "vdt_spatial_check.hh",
+            "vdt_surface_observation.hh",
+            "vdt_util.hh",
+            "vdt_exception.hh",
+            "pika_message.hh",
+            "vdt_nc_file_dynamic_writer.hh"
+	]
+
+)
+
+env.Alias("install", [os.environ["LOCAL_LIB_DIR"], install_include])
+env.Alias("install_include", install_include)
+
+
+
+

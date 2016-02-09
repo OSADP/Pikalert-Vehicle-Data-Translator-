@@ -1,0 +1,97 @@
+
+			RCTM Installation Instructions
+			==============================
+
+
+DEPENDENCIES
+------------
+
+The following third party libraries and executables are required for RCTM:
+
+NetCDF-C
+--netcdf-4.2.1.1.tar.gz
+--Available for download at: http://www.unidata.ucar.edu/downloads/netcdf/index.jsp 
+
+NetCDF-3 C++
+--netcdf-cxx4.2.tar.gz
+--Available for download at: http://www.unidata.ucar.edu/downloads/netcdf/index.jsp
+
+HDF5
+--hdf5-1.8.10-patch1.tar.gz
+--Available for download at: ftp://ftp.hdfgroup.org/HDF5/current/src/
+
+zlib
+--zlib-1.2.5.tar.gz
+--Available for download at: http://zlib.net/
+-- or http://sourceforge.net/projects/libpng/files/zlib/1.2.5/zlib-1.2.5.tar.gz/
+
+Python-2.7.1
+--Python-2.7.1.tgz
+--Available for download at: http://www.python.org/download/releases/2.7.1/
+
+Scons
+--scons-2.3.0.tar.gz
+--Available for download at: http://www.scons.org/download.php
+
+
+
+INSTALLATION STEPS
+------------------
+
+1) Install 3rd party packages listed above
+   A Debian package manager can be used to grab these. This is done as root.
+
+
+2) Create user account
+   It is recommended that you create group account to run the RCTM.  This will
+   allow more control over settings and permissions and will simplify removal.
+
+
+3) Set environment variables
+   Set the environment variables to the desired paths, and export them using
+   the following command. (Assumes you are using a tcsh or csh shell.)
+
+   cd to where this file (INSTALL.rctm) is located
+   emacs/vi rctm_env_vars.csh
+   source rctm_env_vars.csh
+
+
+4) Compile and install the code
+   Run the script below:
+
+   ./build_rctm.csh
+
+   This will build all libraries and executables. Libraries will be installed
+   in $LOCAL_LIB_DIR, executables in $LOCAL_BIN_DIR, scripts will be copied
+   to $LOCAL_SCRIPTS_DIR.
+
+
+5) Test the build
+   Run the script below:
+
+   ./test_rctm.csh
+ 
+   Refer to the output of the test script to fix any errors.
+
+   The output of the RCTM are netCDF files which contain road temperature
+   forecasts. After the above test runs successfully, sample files will be
+   located in $RCTM_ROOT_DIR. Each type of file corresponds to a certain 
+   treatment scenario:
+
+   merge_no_tmt  - no treatment; road temps are computed assuming snow remains
+   		   on the road
+
+   merge_cur_tmt - current treatment; road temps are computed using the current
+                   treatment plan
+   merge_rec_tmt - recommended treatment; road temps are computed using the
+   		   internal treatment recommendation which removes snow
+
+
+6) Further steps
+
+   A sample crontab file (crontab.rctm) is provided in the scripts/crontab
+   directory which shows how the RCTM components are run in a chain every hour
+   in real-time. The RCTM requires weather forecast and observation input files
+   to run in real-time. Sample netCDF input data files are located under
+   test/data/rctm. Weather forecast data can be obtained in real-time by
+   installing the RWFS, and observation data can be obtained from MADIS files.

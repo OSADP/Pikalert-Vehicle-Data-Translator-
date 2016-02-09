@@ -1,0 +1,44 @@
+#
+# Example crontab for running the RWFS
+#
+# Set up environment
+#
+SHELL=/bin/csh
+#
+# Set these to your local system
+#
+RWFS_ROOT_DIR = "/usr/local/data/rwfs"
+#
+LD_LIBRARY_PATH = "$HOME/lib:/usr/local/lib:/usr/lib:/usr/local/netcdf/lib:/usr/local/hdf5/lib:/usr/local/zlib/lib:/usr/local/udunits2/lib"
+#
+# NOTE!
+#
+# Before installing this crontab:
+#
+# 1) Make sure to copy the static_data directory from the distribution
+#    into $RWFS_ROOT_DIR (this is done for you in test_rwfs.csh).
+#
+# 2) Make the following directories (also done in the test script)
+#
+#    mkdir $RWFS_ROOT_DIR/log
+#    mkdir $RWFS_ROOT_DIR/lock
+#    mkdir $RWFS_ROOT_DIR/tmp
+#
+# 3) Always look in the files under the log/ directory for help getting the
+#    RWFS running.
+#
+#------------------------------------------------------------------------------
+#
+# Note: It is assumed that the system clock is set to UTC time zone.
+#
+#
+# ftp and de-grib NAM model data, 4 runs per day
+#
+00 04 * * * ftp_model_data.pl scripts/perl/nam_218.pl 00; grib2site.pl scripts/perl/nam_218.pl 00
+00 10 * * * ftp_model_data.pl scripts/perl/nam_218.pl 06; grib2site.pl scripts/perl/nam_218.pl 06
+00 16 * * * ftp_model_data.pl scripts/perl/nam_218.pl 12; grib2site.pl scripts/perl/nam_218.pl 12
+00 22 * * * ftp_model_data.pl scripts/perl/nam_218.pl 18; grib2site.pl scripts/perl/nam_218.pl 18
+#
+# run RWFS chain hourly
+#
+10 * * * * rwfs_ep.py ep_mod_fcst.py nam ep_temporal_interp.py ep_derive_rdwx.py 600  >& /dev/null

@@ -1,0 +1,104 @@
+
+			RWFS Installation Instructions
+			==============================
+
+
+DEPENDENCIES
+------------
+
+The following third party libraries and executables are required for RWFS:
+
+NetCDF-C
+--netcdf-4.2.1.1.tar.gz
+--Available for download at: http://www.unidata.ucar.edu/downloads/netcdf/index.jsp 
+
+NetCDF-3 C++
+--netcdf-cxx4.2.tar.gz
+--Available for download at: http://www.unidata.ucar.edu/downloads/netcdf/index.jsp
+
+udunits2
+--udunits-2.1.24.tar.gz
+--Available for download at: https://www.unidata.ucar.edu/downloads/udunits/index.jsp
+
+HDF5
+--hdf5-1.8.10-patch1.tar.gz
+--Available for download at: ftp://ftp.hdfgroup.org/HDF5/current/src/
+
+Jasper
+-- version 1.x
+-- Available as a linux package
+
+PNG
+-- version 12.x
+-- Available as a linux package
+
+zlib
+--zlib-1.2.5.tar.gz
+--Available for download at: http://zlib.net/
+-- or http://sourceforge.net/projects/libpng/files/zlib/1.2.5/zlib-1.2.5.tar.gz/
+
+Python-2.7.1
+--Python-2.7.1.tgz
+--Available for download at: http://www.python.org/download/releases/2.7.1/
+
+Scons
+--scons-2.3.0.tar.gz
+--Available for download at: http://www.scons.org/download.php
+
+Ncftp
+--ncftp-3.2.5
+--Available for download at: http://www.ncftp.com/download
+
+
+
+INSTALLATION STEPS
+------------------
+
+1) Install 3rd party packages listed above
+   A package manager can be used to grab these. This is done as root.
+
+
+2) Create user account
+   It is recommended that you create group account to run the RWFS.  This will
+   allow more control over settings and permissions and will simplify removal.
+
+
+3) Set environment variables
+   Set the environment variables to the desired paths, and export them using
+   the following command. (Assumes you are using a tcsh or csh shell.)
+
+   cd to where this file (INSTALL.rwfs) is located
+   emacs/vi rwfs_env_vars.csh
+   source rwfs_env_vars.csh
+
+
+4) Compile and install the code
+   Run the script below:
+
+   ./build_rwfs.csh
+
+   This will build all libraries and executables. Libraries will be installed
+   in $LOCAL_LIB_DIR, executables in $LOCAL_BIN_DIR, scripts will be copied
+   to $LOCAL_SCRIPTS_DIR.
+
+
+5) Test the build
+   Run the script below:
+
+   ./test_rwfs.csh
+ 
+   Refer to the output of the test script to fix any errors.
+
+   The output of the RWFS is a netCDF file which can be used as input to the
+   RCTM or other Pikalert components. After the above test runs successfully, a
+   sample file will be located in $RWFS_ROOT_DIR/derive_rdwx/<date> directory.
+
+
+6) Further steps
+
+   A sample crontab file (crontab.rwfs) is provided in the scripts/crontab
+   directory which shows how the RWFS components are run in a chain every hour
+   in real-time. The RWFS requires weather model data to run in real-time.
+   This release contains scripts and applications to ftp and decode NAM model
+   data from NCEP for this purpose. The test above uses a sample of this data,
+   located under test/data/rwfs.

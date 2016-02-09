@@ -1,0 +1,57 @@
+# For c-shell users: in you .cshrc set the following
+# 
+# on motown:
+# setenv LOCAL_ROOT /d1/local
+# setenv LOCAL_INC_DIR ${LOCAL_ROOT}/include
+# setenv LOCAL_LIB_DIR ${LOCAL_ROOT}/lib
+# setenv LOCAL_BIN_DIR ${LOCAL_ROOT}/bin
+#
+# setenv RAL_INC_DIR /usr/include
+# setenv RAL_LIB_DIR /usr/lib
+# setenv RAL_CCFLAGS "-Wall -g -O -static"
+
+import os
+
+env = Environment(
+        CPPPATH=[".", os.environ["NETCDF_INC_DIR"], os.environ["HDF_INC_DIR"], os.environ["ZLIB_INC_DIR"], os.environ["SZIP_INC_DIR"], os.environ["LOCAL_INC_DIR"],os.environ["RAL_INC_DIR"]], 
+        CCFLAGS=os.environ["RAL_CCFLAGS"], 
+        LIBPATH=[os.environ["NETCDF_LIB_DIR"], os.environ["HDF_LIB_DIR"], os.environ["ZLIB_LIB_DIR"], os.environ["SZIP_LIB_DIR"], os.environ["LOCAL_LIB_DIR"], os.environ["RAL_LIB_DIR"]] )
+env.Append(CPPDEFINES=['JSON_SPIRIT_VALUE_ENABLED'])
+
+vdt_inc_dir = "%s/vdt" % os.environ["LOCAL_INC_DIR"]
+
+rwa = env.Program(
+    "rwa", [
+    "main.cc",
+    "arguments.cc",
+    "alert_conditions.cc",
+    "config_reader.cc",
+    "json_writer.cc",
+    "obs_stats_record.cc",
+    "process.cc",
+    "site_alert.cc",
+    "site_id_index_map.cc",
+    "site_info.cc",
+    "road_segment_map.cc",
+    "rwh_record.cc",
+    "treatment_record.cc"
+                                   ],LIBS=[
+                                           "boost_filesystem",
+                                           "boost_system",
+                                           "json_spirit",
+                                           "libconfig++",
+                                           "log",
+                                           "rwx",
+                                           "netcdf_c++4",
+                                           "netcdf_c++",
+                                           "netcdf",
+                                           "hdf5_hl",
+                                           "hdf5",
+                                           "z",
+                                           "sz"
+                                           ]
+#    LINKFLAGS = "--static"
+)
+    
+env.Install(os.environ["LOCAL_BIN_DIR"], "rwa")
+env.Alias("install", [os.environ["LOCAL_BIN_DIR"]])

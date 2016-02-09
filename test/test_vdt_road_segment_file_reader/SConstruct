@@ -1,0 +1,27 @@
+
+import os
+
+env = Environment(
+        CPPPATH=[".", os.environ["NETCDF_INC_DIR"], os.environ["HDF_INC_DIR"], os.environ["LOCAL_INC_DIR"], os.environ["RAL_INC_DIR"]], 
+        CCFLAGS=os.environ["RAL_CCFLAGS"], 
+        LIBPATH=[os.environ["NETCDF_LIB_DIR"], os.environ["HDF_LIB_DIR"], os.environ["LOCAL_LIB_DIR"], os.environ["RAL_LIB_DIR"], "/usr/lib"])
+
+vdt_inc_dir = "%s/vdt4" % os.environ["LOCAL_INC_DIR"]
+
+test_vdt_road_segment_file_reader = env.Program(
+    "test_road_segment_file_reader", [
+    "main.cc",
+                                   ],LIBS=[
+                                           "vdt4",
+                                           "netcdf_c++4",
+                                           "netcdf_c++",
+                                           "netcdf",
+                                           "hdf5_hl",
+                                           "hdf5",
+                                           "z",
+                                           "m"])
+
+env.Install(os.environ["LOCAL_BIN_DIR"], "test_road_segment_file_reader")
+env.Alias("install", [os.environ["LOCAL_BIN_DIR"]])
+
+

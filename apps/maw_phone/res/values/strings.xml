@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">MAW</string>
+    <string name="action_settings">Settings</string>
+    <string name="alertText"> </string><string name="title_section1">Section 1</string>
+    <string name="title_section2">Section 2</string>
+    <string name="title_section3">Section 3</string>
+
+    <color name="disabledColor">#C0C0C0</color>
+    <color name="loadingColor">#F5F5F5</color>
+
+    <string name="alertSwitch">Alerts</string>
+    <string name="settingsBtn">Settings</string>
+    <string name="getLocation">Get Location</string>
+    <string name="title_activity_geo_location">GeoLocationActivity</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="playAudio">Play Audio</string>
+    <item format="string" type="raw" name="audio1">res/raw/audio_alert_1.mp3</item>
+    <string name="longitudeLabel">Longitude</string>
+    <string name="latitudeLabel">Latitude</string>
+    <string name="locationLabel">Location</string>
+    
+    <string name="precip0">clear</string><string name="precip1">light rain</string>
+    <string name="precip2">moderate rain</string>
+    <string name="precip3">heavy rain</string>
+    <string name="precip4">light rain/snow mix</string>
+    <string name="precip5">moderate rain/snow mix</string>
+    <string name="precip6">heavy rain/snow mix</string>
+    <string name="precip7">light snow</string>
+    <string name="precip8">moderate snow</string>
+    <string name="precip9">heavy snow</string>
+    <string name="pavement0">clear</string>
+    <string name="pavement1">wet roads</string>
+    <string name="pavement2">snowy roads</string>
+    <string name="pavement3">snowy, slick roads</string>
+    <string name="pavement4">icy roads</string>
+    <string name="pavement5">icy, slick roads</string>
+    <string name="pavement6">hydroplaning possible</string>
+    <string name="pavement7">black ice</string>
+    <string name="pavement8">icy roads possible</string>
+    <string name="pavement9">icy, slick roads possible</string>
+    <string name="visibility0">clear</string>
+    <string name="visibility1">low visibility</string>
+    <string name="visibility2">blowing snow</string>
+    <string name="visibility3">fog</string>
+    <string name="visibility4">haze</string>
+    <string name="visibility5">dust</string>
+    <string name="visibility6">smoke</string>
+    <string name="action0">No Action</string>
+    <string name="action1">use caution</string>
+    <string name="action2">drive slowly and use caution</string>
+    <string name="action3">delay travel, seek alternate route, or drive slowly and use extreme caution</string>
+    <string name="unknownAlert">unknown</string><color name="redAlertColor">#bf0000</color>
+    <color name="orangeAlertColor">#ffa500</color>
+    <color name="yellowAlertColor">#ffd27f</color>
+    <color name="greenAlertColor">#4ca64c</color>
+    
+    <string name="title_activity_preferences">SettingsActivity</string>
+    <color name="unknownColor">#b2868e</color>
+    <string name="precip10">basketball-sized hail</string>
+    <string name="action10">hard hats recommended</string>
+    
+
+</resources>

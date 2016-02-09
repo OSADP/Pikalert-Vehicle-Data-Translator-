@@ -1,0 +1,12 @@
+
+import os
+
+env = Environment(CPPPATH='./',
+                  LIBPATH=os.environ['LOCAL_LIB_DIR'],
+                  CCFLAGS=os.environ['CCFLAGS'])
+    
+env.Library('spline', [
+    'spline.cc'])
+
+env.Install(env['LIBPATH'], 'libspline.a')
+env.Alias('install', env['LIBPATH'])

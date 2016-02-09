@@ -1,0 +1,684 @@
+netcdf metar  {				// metar netCDF definition
+
+dimensions:
+	recNum = UNLIMITED ;
+	r_len = 128;
+	rep_type_len = 5;
+	stn_name_len = 4;
+	UNITS_len = 3;
+	VIS_len = 5;
+	VIS_dir_len = 2;
+	rv_len = 4;
+	rv_d_len = 3;
+	WX_number = 3;
+	WX_len = 32;
+	rWX_len = 8;
+	TornadicType_len = 15;
+	TornadicDIR_len = 2;
+	TornadicLOC_len = 10;
+	auto_len = 4;
+	Site2_len = 10;
+	Obscur_len = 12;
+	Vrb_len = 3;
+	Aloft_len = 3;
+	Sgn_len = 10;
+	cloud_layers = 6;
+	cloud_len = 4 ;
+	cloud_type = 1 ;
+	LTG_DIR_len = 2;
+	VIRGA_dir_len = 2;
+
+variables:
+
+	// Report
+	char rep_type( recNum, rep_type_len ) ;
+		rep_type:long_name = "Report type";
+		rep_type:reference = "WMO #306, FM 15-IX & FM 16-IX";
+		rep_type:units = "" ;       // dimensionless
+	char stn_name( recNum, stn_name_len ) ;
+		stn_name:long_name = "Station name";
+		stn_name:reference = "sfmetar-sa.tbl";
+		stn_name:units = "" ;       // dimensionless
+	int wmo_id( recNum ) ;
+		wmo_id:long_name = "Numeric WMO Identifier";
+		wmo_id:_FillValue = -99999;
+		wmo_id:reference = "Air Force station bulletin plus others";
+		wmo_id:units = "" ;       // dimensionless
+	float lat( recNum ) ;
+		lat:long_name = "Station latitude";
+		lat:_FillValue = -99999.f;
+		lat:valid_range = -90.0, 90.0;
+		lat:units = "degrees";
+	float lon( recNum ) ;
+		lon:long_name = "Station longitude";
+		lon:_FillValue = -99999.f;
+		lon:valid_range = -180.0, 180.0;
+		lon:units = "degrees";
+	int elev( recNum ) ;
+		elev:long_name = "Station elevation";
+		elev:_FillValue = -99999;
+		elev:units = "meters";
+	//int ob_hour( recNum ) ;
+		//ob_hour:long_name = "Observation hour";
+		//ob_hour:_FillValue = -99999;
+		//ob_hour:units = "" ;       // dimensionless
+	//int ob_min( recNum ) ;
+		//ob_min:long_name = "Observation minute";
+		//ob_min:_FillValue = -99999;
+		//ob_min:units = "" ;       // dimensionless
+	//int ob_day( recNum ) ;
+		//ob_day:long_name = "Observation day";
+		//ob_day:_FillValue = -99999;
+		//ob_day:units = "" ;       // dimensionless
+	int time_obs( recNum ) ;
+		time_obs:long_name = "time of Observation";
+		time_obs:_FillValue = -99999;
+		time_obs:units = "seconds since 1970-01-01 00 UTC";
+	int time_nominal( recNum ) ;
+		time_nominal:long_name = "time nominal";
+		time_nominal:_FillValue = -99999;
+		time_nominal:units = "seconds since 1970-01-01 00 UTC";
+	//int AUTO( recNum ) ;
+		//AUTO:long_name = "Fully automated report";
+		//AUTO:_FillValue = -99999;
+		//AUTO:valid_range = 0, 1;
+		//AUTO:units = "" ;       // dimensionless
+	//WindStruct ;
+	char UNITS( recNum, UNITS_len ) ;
+		UNITS:long_name = "Wind Speed Units";
+		UNITS:reference = "KMH|KT|MPS|MPH";
+		UNITS:units = "" ;       // dimensionless
+	int DIR( recNum ) ;
+		DIR:long_name = "Wind Direction";
+		DIR:_FillValue = -99999;
+		DIR:valid_range = 0, 360;
+		DIR:units = "degrees";
+	int SPD( recNum ) ;
+		SPD:long_name = "Wind Speed";
+		SPD:_FillValue = -99999;
+		SPD:units = "";		//UNITS variable
+	int GUST( recNum ) ;
+		GUST:long_name = "Wind Gust";
+		GUST:_FillValue = -99999;
+		GUST:units = "";		//UNITS variable
+	//int VRB( recNum ) ;
+		//VRB:long_name = "Variable wind direction";
+		//VRB:_FillValue = -99999;
+		//VRB:valid_range = 0, 1;
+		//VRB:units = "" ;       // dimensionless
+	//int DIRmin( recNum ) ;
+		//DIRmin:long_name = "min wind direction";
+		//DIRmin:_FillValue = -99999;
+		//DIRmin:valid_range = 0, 360;
+		//DIRmin:units = "degrees";
+	//int DIRmax( recNum ) ;
+		//DIRmax:long_name = "max wind direction";
+		//DIRmax:_FillValue = -99999;
+		//DIRmax:valid_range = 0, 360;
+		//DIRmax:units = "degrees";
+	float prevail_VIS_SM( recNum ) ;
+		prevail_VIS_SM:long_name = "prevailing visibility";
+		prevail_VIS_SM:_FillValue = -99999.f;
+		prevail_VIS_SM:units = "US_statute_mile";
+	float prevail_VIS_KM( recNum ) ;
+		prevail_VIS_KM:long_name = "prevailing visibility";
+		prevail_VIS_KM:_FillValue = -99999.f;
+		prevail_VIS_KM:units = "kilometers";
+	int plus_VIS_SM( recNum ) ;
+		plus_VIS_SM:long_name = "greater than prevailing visibility";
+		plus_VIS_SM:_FillValue = -99999;
+		plus_VIS_SM:valid_range = 0, 1;
+		plus_VIS_SM:units = "US_statute_mile";
+	int plus_VIS_KM( recNum ) ;
+		plus_VIS_KM:long_name = "greater than prevailing visibility";
+		plus_VIS_KM:_FillValue = -99999;
+		plus_VIS_KM:valid_range = 0, 1;
+		plus_VIS_KM:units = "kilometers";
+	float prevail_VIS_M( recNum ) ;
+		prevail_VIS_M:long_name = "horizontal visibility";
+		prevail_VIS_M:_FillValue = -99999.f;
+		prevail_VIS_M:units = "meters";
+	char VIS_dir( recNum, VIS_dir_len ) ;
+		VIS_dir:long_name = "horizontal visibility direction";
+		VIS_dir:reference = "NE|NW|SE|SW|N|S|E|W";
+		VIS_dir:units = "" ;       // dimensionless
+	int CAVOK( recNum ) ;
+		CAVOK:long_name = "Ceiling And Visibility OK";
+		CAVOK:_FillValue = -99999;
+		CAVOK:valid_range = 0, 1;
+		CAVOK:units = "" ;       // dimensionless
+	//Runway_VisRange ;
+	//int RVRNO( recNum ) ;
+		//RVRNO:long_name = "No runway report";
+		//RVRNO:_FillValue = -99999;
+		//RVRNO:valid_range = 0, 1;
+		//RVRNO:units = "" ;       // dimensionless
+	//char RV_designator(  recNum, rv_len, rv_d_len ) ;
+		//RV_designator:long_name = "Runway designator";
+		//RV_designator:reference = "2 digit plus Right, Left, Center";
+		//RV_designator:units = "" ;       // dimensionless
+	//int RV_above_max(  recNum, rv_len ) ;
+		//RV_above_max:long_name = "Runway visibillity is above max";
+		//RV_above_max:_FillValue = -99999;
+		//RV_above_max:valid_range = 0, 1;
+		//RV_above_max:units = "P";
+	//int RV_below_min(  recNum, rv_len ) ;
+		//RV_below_min:long_name = "Runway visibillity is below min";
+		//RV_below_min:_FillValue = -99999;
+		//RV_below_min:valid_range = 0, 1;
+		//RV_below_min:units = "M";
+	//int RV_vrbl(  recNum, rv_len ) ;
+		//RV_vrbl:long_name = "Runway visibillity is variable";
+		//RV_vrbl:_FillValue = -99999;
+		//RV_vrbl:valid_range =  0, 1;
+		//RV_vrbl:units = "" ;       // dimensionless
+	//int RV_min(  recNum, rv_len ) ;
+		//RV_min:long_name = "Runway visibillity min";
+		//RV_min:_FillValue = -99999;
+		//RV_min:units = "meters";
+	//int RV_max(  recNum, rv_len ) ;
+		//RV_max:long_name = "Runway visibillity max";
+		//RV_max:_FillValue = -99999;
+		//RV_max:units = "meters";
+	//int RV_visRange(  recNum, rv_len ) ;
+		//RV_visRange:long_name = "Runway Visibility Range";
+		//RV_visRange:_FillValue = -99999;
+		//RV_visRange:units = "meters";
+	char WX( recNum, WX_len ) ;
+		WX:long_name = "Weather phenomenia";
+		WX:reference = "WMO #306, code table 4658";
+		WX:units = "" ;       // dimensionless
+	//int vert_VIS( recNum ) ;
+		//vert_VIS:long_name = "Vertical visibility";
+		//vert_VIS:_FillValue = -99999;
+		//vert_VIS:units = "meters";
+	//Cloud_Conditions ;
+	char cloud_type( recNum, cloud_layers, cloud_len ) ;
+		cloud_type:long_name = "cloud type";
+		cloud_type:reference = "CLR|SKC or +- OVC|SCT|FEW|BKN";
+		cloud_type:units = "" ;       // dimensionless
+	int cloud_hgt( recNum, cloud_layers ) ;
+		cloud_hgt:long_name = "cloud height";
+		cloud_hgt:_FillValue = -99999;
+		cloud_hgt:units = "feet";
+	int cloud_meters( recNum, cloud_layers ) ;
+		cloud_meters:long_name = "cloud height in meters";
+		cloud_meters:_FillValue = -99999;
+		cloud_meters:units = "meters";
+	char cloud_phenom( recNum, cloud_layers, cloud_len ) ;
+		cloud_phenom:long_name = "cloud phenomenia";
+		cloud_phenom:reference = "CB|TCU";
+		cloud_phenom:units = "" ;       // dimensionless
+	int T( recNum ) ;
+		T:long_name = "Temperature";
+		T:_FillValue = -99999;
+		T:units = "Celsius";
+	int TD( recNum ) ;
+		TD:long_name = "Dew-point temperature";
+		TD:_FillValue = -99999;
+		TD:units = "Celsius";
+	float hectoPasc_ALTIM( recNum ) ;
+		hectoPasc_ALTIM:long_name = "Altimeter setting";
+		hectoPasc_ALTIM:_FillValue = -99999.f;
+		hectoPasc_ALTIM:units = "hectopascals";
+	float inches_ALTIM( recNum ) ;
+		inches_ALTIM:long_name = "Altimeter setting";
+		inches_ALTIM:_FillValue = -99999.f;
+		inches_ALTIM:units = "inches";
+	//int NOSIG( recNum ) ;
+		//NOSIG:long_name = "No significant change";
+		//NOSIG:_FillValue = -99999;
+		//NOSIG:valid_range = 0, 1;
+		//NOSIG:units = "" ;       // dimensionless
+ 
+	// Remarks
+	//char TornadicType( recNum, TornadicType_len ) ;
+		//TornadicType:long_name = "Tornadic type";
+		//TornadicType:reference = "TORNADO|WATERSPOUTS|FUNNEL CLOUDS";
+		//TornadicType:units = "" ;       // dimensionless
+	//char TornadicLOC( recNum, TornadicLOC_len ) ;
+		//TornadicLOC:long_name = "Tornadic location";
+		//TornadicLOC:reference = "DSNT|VCY STN|VC STN|VCY|VC";
+		//TornadicLOC:units = "" ;       // dimensionless
+	//char TornadicDIR( recNum, TornadicDIR_len ) ;
+		//TornadicDIR:long_name = "Tornadic direction";
+		//TornadicDIR:reference = "NE|NW|SE|SW|N|S|E|W";
+		//TornadicDIR:units = "" ;       // dimensionless
+	//int BTornadic_hh( recNum ) ;
+		//BTornadic_hh:long_name = "Beginning Hour Tornadic";
+		//BTornadic_hh:_FillValue = -99999;
+		//BTornadic_hh:units = "" ;       // dimensionless
+	//int BTornadic_mm( recNum ) ;
+		//BTornadic_mm:long_name = "Beginning Minute Tornadic";
+		//BTornadic_mm:_FillValue = -99999;
+		//BTornadic_mm:units = "" ;       // dimensionless
+	//int ETornadic_hh( recNum ) ;
+		//ETornadic_hh:long_name = "Ending Hour Tornadic";
+		//ETornadic_hh:_FillValue = -99999;
+		//ETornadic_hh:units = "" ;       // dimensionless
+	//int ETornadic_mm( recNum ) ;
+		//ETornadic_mm:long_name = "Ending Minute Tornadic";
+		//ETornadic_mm:_FillValue = -99999;
+		//ETornadic_mm:units = "" ;       // dimensionless
+	//char AUTOindicator( recNum, auto_len ) ;
+		//AUTOindicator:long_name = "Type of automated station";
+		//AUTOindicator:reference = "AO1|AO1A|AO2|AO2A|AOA";
+		//AUTOindicator:units = "" ;       // dimensionless
+	//int PKWND_dir( recNum ) ;
+		//PKWND_dir:long_name = "Peak wind direction";
+		//PKWND_dir:_FillValue = -99999;
+		//PKWND_dir:valid_range = 0, 360;
+		//PKWND_dir:units = "degrees";
+	//int PKWND_spd( recNum ) ;
+		//PKWND_spd:long_name = "Peak wind speed";
+		//PKWND_spd:_FillValue = -99999;
+		//PKWND_spd:units = "knots";
+	//int PKWND_hh( recNum ) ;
+		//PKWND_hh:long_name = "Hour of Peak wind";
+		//PKWND_hh:_FillValue = -99999;
+		//PKWND_hh:units = "" ;       // dimensionless
+	//int PKWND_mm( recNum ) ;
+		//PKWND_mm:long_name = "Minute of Peak wind";
+		//PKWND_mm:_FillValue = -99999;
+		//PKWND_mm:units = "" ;       // dimensionless
+	//int WshfTime_hh( recNum ) ;
+		//WshfTime_hh:long_name = "Hour of Wind shift";
+		//WshfTime_hh:_FillValue = -99999;
+		//WshfTime_hh:units = "" ;       // dimensionless
+	//int WshfTime_mm( recNum ) ;
+		//WshfTime_mm:long_name = "Minute of Wind shift";
+		//WshfTime_mm:_FillValue = -99999;
+		//WshfTime_mm:units = "" ;       // dimensionless
+	//int Wshft_FROPA( recNum ) ;
+		//Wshft_FROPA:long_name = "Wind shift frontal passage";
+		//Wshft_FROPA:_FillValue = -99999;
+		//Wshft_FROPA:valid_range = 0, 1;
+		//Wshft_FROPA:units = "" ;       // dimensionless
+	//float VIS_TWR( recNum ) ;
+		//VIS_TWR:long_name = "Tower visibility";
+		//VIS_TWR:_FillValue = -99999.f;
+		//VIS_TWR:units = "Statue miles";
+	//float VIS_SFC( recNum ) ;
+		//VIS_SFC:long_name = "Surface visibility";
+		//VIS_SFC:_FillValue = -99999.f;
+		//VIS_SFC:units = "Statue miles";
+	//float VISmin( recNum ) ;
+		//VISmin:long_name = "min Visibility";
+		//VISmin:_FillValue = -99999.f;
+		//VISmin:units = "Statue miles";
+	//float VISmax( recNum ) ;
+		//VISmax:long_name = "max Visibility";
+		//VISmax:_FillValue = -99999.f;
+		//VISmax:units = "Statue miles";
+	//float VIS_2ndSite( recNum ) ;
+		//VIS_2ndSite:long_name = "Visibility at 2nd Site";
+		//VIS_2ndSite:_FillValue = -99999.f;
+		//VIS_2ndSite:units = "Statue miles";
+	//char VIS_2ndSite_LOC( recNum, Site2_len ) ;
+		//VIS_2ndSite_LOC:long_name = "2nd Site location";
+		//VIS_2ndSite_LOC:reference = "2 digit runway";
+		//VIS_2ndSite:units = "" ;       // dimensionless
+	//int LTG_OCNL( recNum ) ;
+		//LTG_OCNL:long_name = "Occasional lightning";
+		//LTG_OCNL:_FillValue = -99999;
+		//LTG_OCNL:valid_range = 0, 1;
+		//LTG_OCNL:units = "" ;       // dimensionless
+	//int LTG_FRQ( recNum ) ;
+		//LTG_FRQ:long_name = "Frequent lightning";
+		//LTG_FRQ:_FillValue = -99999;
+		//LTG_FRQ:valid_range = 0, 1;
+		//LTG_FRQ:units = "" ;       // dimensionless
+	//int LTG_CNS( recNum ) ;
+		//LTG_CNS:long_name = "Continuous lightning";
+		//LTG_CNS:_FillValue = -99999;
+		//LTG_CNS:valid_range = 0, 1;
+		//LTG_CNS:units = "" ;       // dimensionless
+	//int LTG_CG( recNum ) ;
+		//LTG_CG:long_name = "Cloud-ground lightning";
+		//LTG_CG:_FillValue = -99999;
+		//LTG_CG:valid_range = 0, 1;
+		//LTG_CG:units = "" ;       // dimensionless
+	//int LTG_IC( recNum ) ;
+		//LTG_IC:long_name = "In-cloud lightning";
+		//LTG_IC:_FillValue = -99999;
+		//LTG_IC:valid_range = 0, 1;
+	//int LTG_CC( recNum ) ;
+		//LTG_CC:long_name = "Cloud-cloud lightning";
+		//LTG_CC:_FillValue = -99999;
+		//LTG_CC:valid_range = 0, 1;
+		//LTG_CC:units = "" ;       // dimensionless
+	//int LTG_CA( recNum ) ;
+		//LTG_CA:long_name = "Cloud-air lightning";
+		//LTG_CA:_FillValue = -99999;
+		//LTG_CA:valid_range = 0, 1;
+		//LTG_CA:units = "" ;       // dimensionless
+	//int LTG_DSNT( recNum ) ;
+		//LTG_DSNT:long_name = "Distant lightning, beyond 30 SM";
+		//LTG_DSNT:_FillValue = -99999;
+		//LTG_DSNT:valid_range = 0, 1;
+		//LTG_DSNT:units = "" ;       // dimensionless
+	//int LTG_AP( recNum ) ;
+		//LTG_AP:long_name = "Lightning at airport";
+		//LTG_AP:_FillValue = -99999;
+		//LTG_AP:valid_range = 0, 1;
+		//LTG_AP:units = "" ;       // dimensionless
+	//int LTG_VcyStn( recNum ) ;
+		//LTG_VcyStn:long_name = "Lightning in vicinity, less than 5 SM";
+		//LTG_VcyStn:_FillValue = -99999;
+		//LTG_VcyStn:valid_range = 0, 1;
+		//LTG_VcyStn:units = "" ;       // dimensionless
+	//char LTG_DIR( recNum, LTG_DIR_len ) ;
+		//LTG_DIR:long_name = "Lightning direction";
+		//LTG_DIR:reference = "NE|NW|SE|SW|N|S|E|W";
+		//LTG_DIR:units = "" ;       // dimensionless
+ 
+	//Recent_WX ReWX[3];
+	//char Recent_WX( recNum, WX_number, rWX_len ) ;
+		//Recent_WX:long_name = "Recent weather";
+		//Recent_WX:reference = "WMO #306, code table 4658";
+		//Recent_WX:units = "" ;       // dimensionless
+	//int Recent_WX_Bhh( recNum, WX_number ) ;
+		//Recent_WX_Bhh:long_name = "Recent weather beginning hour";
+		//Recent_WX_Bhh:_FillValue = -99999;
+		//Recent_WX_Bhh:units = "" ;       // dimensionless
+	//int Recent_WX_Bmm( recNum, WX_number ) ;
+		//Recent_WX_Bmm:long_name = "Recent weather beginning minute";
+		//Recent_WX_Bmm:_FillValue = -99999;
+		//Recent_WX_Bmm:units = "" ;       // dimensionless
+	//int Recent_WX_Ehh( recNum, WX_number ) ;
+		//Recent_WX_Ehh:long_name = "Recent weather ending hour";
+		//Recent_WX_Ehh:_FillValue = -99999;
+		//Recent_WX_Ehh:units = "" ;       // dimensionless
+	//int Recent_WX_Emm( recNum, WX_number ) ;
+		//Recent_WX_Emm:long_name = "Recent weather ending minute";
+		//Recent_WX_Emm:_FillValue = -99999;
+		//Recent_WX_Emm:units = "" ;       // dimensionless
+
+	//int Ceiling_min( recNum ) ;
+		//Ceiling_min:long_name = "Ceiling min";
+		//Ceiling_min:_FillValue = -99999;
+		//Ceiling_min:units = "feet";
+	//int Ceiling_max( recNum ) ;
+		//Ceiling_max:long_name = "Ceiling max";
+		//Ceiling_max:_FillValue = -99999;
+		//Ceiling_max:units = "feet";
+
+	//int CIG_2ndSite_meters( recNum ) ;
+		//CIG_2ndSite_meters:long_name = "Sky condition at 2nd Site";
+		//CIG_2ndSite_meters:_FillValue = -99999;
+		//CIG_2ndSite_meters:units = "meters";
+	//int CIG_2ndSite_LOC( recNum ) ;
+		//CIG_2ndSite_LOC:long_name = "2nd Site location, runway";
+		//CIG_2ndSite_LOC:_FillValue = -99999;
+		//CIG_2ndSite_LOC:units = "2 digit runway";
+	//int PRESFR( recNum ) ;
+		//PRESFR:long_name = "Pressure falling rapidly";
+		//PRESFR:_FillValue = -99999;
+		//PRESFR:valid_range = 0, 1;
+		//PRESFR:units = "" ;       // dimensionless
+	//int PRESRR( recNum ) ;
+		//PRESRR:long_name = "Pressure rising rapidly";
+		//PRESRR:_FillValue = -99999;
+		//PRESRR:valid_range = 0, 1;
+		//PRESRR:units = "" ;       // dimensionless
+	//int SLPNO( recNum ) ;
+		//SLPNO:long_name = "Sea level pressure not available";
+		//SLPNO:_FillValue = -99999;
+		//SLPNO:valid_range = 0, 1;
+		//SLPNO:units = "" ;       // dimensionless
+	float SLP( recNum ) ;
+		SLP:long_name = "Sea level pressure";
+		SLP:_FillValue = -99999.f;
+		SLP:units = "hectopascals";
+	//char SectorVIS_DIR( recNum, VIS_dir_len ) ;
+		//SectorVIS_DIR:long_name = "Sector visibility direction";
+		//SectorVIS_DIR:reference = "NE|NW|SE|SW|N|S|E|W";
+		//SectorVIS_DIR:units = "" ;       // dimensionless
+	//float SectorVIS( recNum ) ;
+		//SectorVIS:long_name = "Sector visibility";
+		//SectorVIS:_FillValue = -99999.f;
+		//SectorVIS:units = "US_statute_mile";
+	//int GR( recNum ) ;
+		//GR:long_name = "Hailstone";
+		//GR:_FillValue = -99999;
+		//GR:valid_range = 0, 1;
+		//GR:units = "" ;       // dimensionless
+	//float GRsize( recNum ) ;
+		//GRsize:long_name = "Hailstone size";
+		//GRsize:_FillValue = -99999.f;
+		//GRsize:units = "inches";
+	//int VIRGA( recNum ) ;
+		//VIRGA:long_name = "Virga";
+		//VIRGA:_FillValue = -99999;
+		//VIRGA:valid_range = 0, 1;
+		//VIRGA:units = "" ;       // dimensionless
+	//char VIRGAdir( recNum, VIS_dir_len ) ;
+		//VIRGAdir:long_name = "Virga direction";
+		//VIRGAdir:reference = "NE|NW|SE|SW|N|S|E|W";
+		//VIRGAdir:units = "" ;       // dimensionless
+	char SfcObscuration( recNum, rWX_len ) ;
+		SfcObscuration:long_name = "Surface Obscuration";
+		SfcObscuration:reference = "WMO #306, code table 4658";
+		SfcObscuration:units = "" ;       // dimensionless
+	int OctsSkyObscured( recNum ) ;
+		OctsSkyObscured:long_name = "Octets of Sky Obscured";
+		OctsSkyObscured:_FillValue = -99999;
+		OctsSkyObscured:units = "8 bit";		//octets
+	//int CIGNO( recNum ) ;
+		//CIGNO:long_name = "Ceiling height not available";
+		//CIGNO:_FillValue = -99999;
+		//CIGNO:valid_range = 0, 1;
+		//CIGNO:units = "" ;       // dimensionless
+	int Ceiling_est( recNum ) ;
+		Ceiling_est:long_name = "Ceiling height estimate";
+		Ceiling_est:_FillValue = -99999;
+		Ceiling_est:units = "feet";
+	int Ceiling( recNum ) ;
+		Ceiling:long_name = "Ceiling height";
+		Ceiling:_FillValue = -99999;
+		Ceiling:units = "feet";
+	//char VrbSkyBelow( recNum, Vrb_len ) ;
+		//VrbSkyBelow:long_name = "Variable Sky Below";
+		//VrbSkyBelow:reference = "FEW|SCT|BKN|OVC";
+		//VrbSkyBelow:units = "" ;       // dimensionless
+	//int VrbSkyLayerHgt( recNum ) ;
+		//VrbSkyLayerHgt:long_name = "Variable Sky Layer Height";
+		//VrbSkyLayerHgt:_FillValue = -99999;
+		//VrbSkyLayerHgt:units = "feet";
+	//char VrbSkyAbove( recNum, Vrb_len ) ;
+		//VrbSkyAbove:long_name = "Variable Sky Above";
+		//VrbSkyAbove:reference = "FEW|SCT|BKN|OVC";
+		//VrbSkyAbove:units = "" ;       // dimensionless
+	//char Sign_cloud( recNum, Sgn_len ) ;
+		//Sign_cloud:long_name = "Significant cloud types";
+		//Sign_cloud:reference = "CB|CBMAM|TCU|ACC|SCSL|ACSL|ROTOR CLD";
+		//Sign_cloud:units = "" ;       // dimensionless
+	//char Sign_dist( recNum, Sgn_len ) ;
+		//Sign_dist:long_name = "Significant distance";
+		//Sign_dist:reference = "VCNTY STN|VCY STN|VC STN|VCY|VC|DSNT|OMT";
+		//Sign_dist:units = "" ;       // dimensionless
+	//char Sign_dir( recNum, Sgn_len ) ;
+		//Sign_dir:long_name = "Significant direction";
+		//Sign_dir:reference = "NE|NW|SE|SW|N|S|E|W";
+		//Sign_dir:units = "" ;       // dimensionless
+	//char ObscurAloft( recNum, rWX_len ) ;
+		//ObscurAloft:long_name = "Obscuring phenomenia Aloft";
+		//ObscurAloft:reference = "WMO #306, code table 4658";
+		//ObscurAloft:units = "" ;       // dimensionless
+	char ObscurAloftSkyCond( recNum, Aloft_len ) ;
+		ObscurAloftSkyCond:long_name = "Obscuring Aloft Sky Condition";
+		ObscurAloftSkyCond:reference = "FEW|SCT|BKN|OVC";
+		ObscurAloftSkyCond:units = "" ;       // dimensionless
+	int ObscurAloftHgt( recNum ) ;
+		ObscurAloftHgt:long_name = "Obscuring Aloft Height";
+		ObscurAloftHgt:_FillValue = -99999;
+		ObscurAloftHgt:units = "feet";
+	//int ACFTMSHP( recNum ) ;
+		//ACFTMSHP:long_name = "Aircraft mishap";
+		//ACFTMSHP:_FillValue = -99999;
+		//ACFTMSHP:valid_range = 0, 1;
+		//ACFTMSHP:units = "" ;       // dimensionless
+	//int NOSPECI( recNum ) ;
+		//NOSPECI:long_name = "No changes in weather conditions";
+		//NOSPECI:_FillValue = -99999;
+		//NOSPECI:valid_range = 0, 1;
+		//NOSPECI:units = "" ;       // dimensionless
+	//int FIRST( recNum ) ;
+		//FIRST:long_name = "First report of the day";
+		//FIRST:_FillValue = -99999;
+		//FIRST:valid_range = 0, 1;
+		//FIRST:units = "" ;       // dimensionless
+	//int LAST( recNum ) ;
+		//LAST:long_name = "Last report in observation coverage";
+		//LAST:_FillValue = -99999;
+		//LAST:valid_range = 0, 1;
+		//LAST:units = "" ;       // dimensionless
+	char Cloud_low( recNum, cloud_type ) ;
+		Cloud_low:long_name = "Low Cloud type";
+		Cloud_low:reference = "WMO Abridged Internation Cloud Atlas";
+		Cloud_low:units = "" ;       // dimensionless
+	char Cloud_medium( recNum, cloud_type ) ;
+		Cloud_medium:long_name = "Medium Cloud type";
+		Cloud_medium:reference = "WMO Abridged Internation Cloud Atlas";
+		Cloud_medium:units = "" ;       // dimensionless
+	char Cloud_high( recNum, cloud_type ) ;
+		Cloud_high:long_name = "High Cloud type";
+		Cloud_high:reference = "WMO Abridged Internation Cloud Atlas";
+		Cloud_high:units = "" ;       // dimensionless
+	int SNINCR( recNum ) ;
+		SNINCR:long_name = "Snow increasing rapidly, amount past hour";
+		SNINCR:_FillValue = -99999;
+		SNINCR:units = "inches";
+	int SNINCR_TotalDepth( recNum ) ;
+		SNINCR_TotalDepth:long_name = "Snow Total Depth on ground";
+		SNINCR_TotalDepth:_FillValue = -99999;
+		SNINCR_TotalDepth:units = "inches";
+	int SN_depth( recNum ) ;
+		SN_depth:long_name = "Snow depth on ground";
+		SN_depth:_FillValue = -99999;
+		SN_depth:units = "inches";
+	float SN_waterequiv( recNum ) ;
+		SN_waterequiv:long_name = "Water equivalent of snow on ground";
+		SN_waterequiv:_FillValue = -99999.f;
+		SN_waterequiv:units = "inches";
+	//int SunSensorOut( recNum ) ;
+		//SunSensorOut:long_name = "Sun Sensor Out";
+		//SunSensorOut:_FillValue = -99999;
+		//SunSensorOut:valid_range = 0, 1;
+		//SunSensorOut:units = "" ;       // dimensionless
+	int SunShineDur( recNum ) ;
+		SunShineDur:long_name = "Sun Shine Duration";
+		SunShineDur:_FillValue = -99999;
+		SunShineDur:units = "minutes";
+	float PRECIP_hourly( recNum ) ;
+		PRECIP_hourly:long_name = "Hourly precipitation amount";
+		PRECIP_hourly:_FillValue = -99999.f;
+		PRECIP_hourly:units = "inches";
+	float PRECIP_amt( recNum ) ;
+		PRECIP_amt:long_name = "Last 3 or 6 hour precipitation amount";
+		PRECIP_amt:_FillValue = -99999.f;
+		PRECIP_amt:units = "inches";
+	float PRECIP_24_amt( recNum ) ;
+		PRECIP_24_amt:long_name = "24 hour precipitation amount";
+		PRECIP_24_amt:_FillValue = -99999.f;
+		PRECIP_24_amt:units = "inches";
+	float T_tenths( recNum ) ;
+		T_tenths:long_name = "Temperature to tenths";
+		T_tenths:_FillValue = -99999.f;
+		T_tenths:units = "Celsius";
+	float TD_tenths( recNum ) ;
+		TD_tenths:long_name = "Dew-point temperature to tenths";
+		TD_tenths:_FillValue = -99999.f;
+		TD_tenths:units = "Celsius";
+	float Tmax( recNum ) ;
+		Tmax:long_name = "Temperature max for 6-hourly reports";
+		Tmax:_FillValue = -99999.f;
+		Tmax:units = "Celsius";
+	float Tmin( recNum ) ;
+		Tmin:long_name = "Temperature min for 6-hourly reports";
+		Tmin:_FillValue = -99999.f;
+		Tmin:units = "Celsius";
+	float Tmax24( recNum ) ;
+		Tmax24:long_name = "Temperature max for 24 period at midnight";
+		Tmax24:_FillValue = -99999.f;
+		Tmax24:units = "Celsius";
+	float Tmin24( recNum ) ;
+		Tmin24:long_name = "Temperature min for 24 period at midnight";
+		Tmin24:_FillValue = -99999.f;
+		Tmin24:units = "Celsius";
+	int char_Ptend( recNum ) ;
+		char_Ptend:long_name = "Character Pressure tendency";
+		char_Ptend:_FillValue = -99999;
+		char_Ptend:units = "0|1|2|3|4|5|6|7|8 Table 12-5";
+	float Ptend( recNum ) ;
+		Ptend:long_name = "Change in Pressure in past 3 hours";
+		Ptend:_FillValue = -99999.f;
+		Ptend:units = "hectopascals";
+	//int PWINO( recNum ) ;
+		//PWINO:long_name = "Precipitation sensor not working";
+		//PWINO:_FillValue = -99999;
+		//PWINO:valid_range = 0, 1;
+		//PWINO:units = "" ;       // dimensionless
+	//int FZRANO( recNum ) ;
+		//FZRANO:long_name = "Freezing Rain sensor not working";
+		//FZRANO:_FillValue = -99999;
+		//FZRANO:valid_range = 0, 1;
+		//FZRANO:units = "" ;       // dimensionless
+	//int TSNO( recNum ) ;
+		//TSNO:long_name = "Lightning detection system not working";
+		//TSNO:_FillValue = -99999;
+		//TSNO:valid_range = 0, 1;
+		//TSNO:units = "" ;       // dimensionless
+	//int maintIndicator( recNum ) ;
+		//maintIndicator:long_name = "Maintenance needed at system";
+		//maintIndicator:_FillValue = -99999;
+		//maintIndicator:valid_range = 0, 1;
+		//maintIndicator:units = "" ;       // dimensionless
+	//char PlainText( recNum, r_len ) ;
+		//PlainText:long_name = "Plain language remarks";
+		//PlainText:_FillValue = "\0";
+		//PlainText:reference = "max length 128";
+		//PlainText:units = "" ;       // dimensionless
+
+	// Original report and remarks
+	char report( recNum, r_len ) ;
+		report:long_name = "Main body of report";
+		report:reference = "max length 128";
+		report:units = "" ;       // dimensionless
+	char remarks( recNum, r_len ) ;
+		remarks:long_name = "Remarks section seperated by RMK";
+		remarks:reference = "max length 128";
+		remarks:units = "" ;       // dimensionless
+
+	:title = "METAR definition";
+	:version = 1.1;
+
+//	In general:
+//	
+//	The metar2nc decoder is dependant on the netCDF variables names 
+//	because it reads the cdl file to determine the variables to be
+//	included in the netcdf file.  A user can comment out or delete
+//	variables not to be included in the output file with one exception,
+//	the variable 'stn_name' must be included as the first or second position
+//	There are 140 variables in the cdl with the last two variables are 
+//	the original report and remarks.
+//	The actual names chosen for the netCDF variables are still up to the
+//	data supplier. The agreement amongst this group is that all the
+//	code that reads in the data will NOT be variable name dependent. Code
+//	will be written generically using the netCDF inquire functions or
+//	will employ some sort of table look-up algorithm. The names I've 
+//	included for illustration purposes were mainly borrowed from the
+//	conventions document to offer somewhat "generic" names for these 
+//	fields. Long names are data supplier defined, but should be included
+//	and descriptive for self-documentation purposes.
+//	
+//	Units must be compatible with UDUNITS and consistent for a given 
+//	variable (ie. all temperatures written out in degrees C, even though
+//	they are reported in C or F). That's why the "units" attribute is
+//	critical for numeric variables that may be used in calculations.
+//	
+//	Again, these will be the MINIMUM variables required in files used
+//	for surface observation data exchange. Any data supplier can add extra 
+//	variables needed to further identify a station and/or its observations.
+
+} 

@@ -1,0 +1,142 @@
+DEPENDENCIES
+
+The following third party libraries and executables are required for PIKALERT:
+
+GCC including g++ and gfortran compilers and associated tools
+--Available for download at: https://gcc.gnu.org/install/download.html 
+
+Scons
+--scons-2.3.0.tar.gz
+--Available for download at: http://www.scons.org/download.php
+
+libconfig
+--libconfig-1.4.9.tar.gz
+--Available for download at: http://www.hyperrealm.com/libconfig/
+
+ANN
+--ann_1.1.2.tar.gz
+--Available for download at: http://www.cs.umd.edu/~mount/ANN/
+
+NetCDF
+--netcdf-4.2.1.1.tar.gz
+--Available for download at: http://www.unidata.ucar.edu/downloads/netcdf/index.jsp 
+
+NetCDF C++ API
+--netcdf-cxx4-4.2.tar.gz
+--Available for download at: http://www.unidata.ucar.edu/downloads/netcdf/netcdf-cxx/index.jsp
+
+HDF
+--hdf5-1.8.10-patch1.tar.gz
+--Available for download at: ftp://ftp.hdfgroup.org/HDF5/current/src/
+
+zlib
+--zlib-1.2.5.tar.gz
+--Available for download at: http://zlib.net/
+-- or http://sourceforge.net/projects/libpng/files/zlib/1.2.5/zlib-1.2.5.tar.gz/
+
+szip
+--szip-2.1.tar.gz
+--Available for download at: https://www.hdfgroup.org/HDF5/release/obtain5.html#extlibs
+
+Boost
+--boost_1_51_0.tar.gz
+--Available for download at: http://sourceforge.net/projects/boost/files/boost/1.51.0/
+
+Blitz
+--blitz-0.9.tar.gz
+--Available for download at: http://sourceforge.net/projects/blitz/files/blitz/Blitz%2B%2B%200.9/
+
+Python-2.7.1
+--Python-2.7.1.tgz
+--Available for download at: http://www.python.org/download/releases/2.7.1/
+
+pytz
+--pytz-2013.9-py2.7.egg
+--Available for download at: https://pypi.python.org/pypi/pytz/
+
+numpy 
+--numpy-1.6.2.tar.gz
+--Available for download at: https://pypi.python.org/pypi/numpy/1.6.2
+
+matplotlib
+--matplotlib-1.2.0.tar.gz
+--Available for download at: https://pypi.python.org/pypi/matplotlib/1.2.0
+
+netCDF4 (Python library)
+--sudo pip install netcdf4
+
+json_spirit
+--json_spirit_v4.06.zip
+--Available for download at: http://www.codeproject.com/Articles/20027/JSON-Spirit-A-C-JSON-Parser-Generator-Implemented
+
+udunits
+--udunits-2.1.24.tar.gz
+--Available for download at: https://www.unidata.ucar.edu/downloads/udunits/index.jsp
+
+ldm
+--Available for download at: http://www.unidata.ucar.edu/software/ldm/
+
+proj4
+--Available for download at: https://github.com/OSGeo/proj.4
+
+libcurl
+--Available for download at: http://curl.haxx.se/download.html
+
+INSTALLATION STEPS
+
+1) Install 3rd Party Libraries  
+   A Debian (Wheezy) package manager can be used to grab these.
+
+2) Create User Account
+   It is recommended that you create a separate user account for running the VDT.  This will
+   allow more control over settings and permissions and will simplify removal.  The account
+   should use csh by default as there are many Pikalert csh scripts.
+
+3) Set Environment Variables
+   After editing the root and other environment variables in ./pikalert_env_vars.csh to the desired path,
+   export them using the following command. 
+
+   source pikalert_env_vars.csh
+
+   NOTE: the var VDT_ROOT controls where the output binaries, include files,
+   and configuration data will be installed.  This may be different on
+   your server.
+
+   Also there is a var in pikalert_env_vars.csh, LIB_ANN_NAME, that can be used to control the linked in ANN library which is sometimes installed as 'ANN' and other times as 'ann'.  
+
+4) Compile The Code
+
+   ./build.py -s manifest .. $VDT_CODE $VDT_DATA
+
+   This will build all VDT libraries and executables. Libraries will
+   be installed in $VDT_ROOT/lib/ and executables in $VDT_ROOT/bin/.
+
+   Code can be cleaned with the following command if re-building:
+
+   ./build.py -s -c manifest .. $VDT_CODE $VDT_DATA   
+
+5) Check The Binaries
+  
+   Try running the commands in $VDT_ROOT/bin/ without argument to be sure they print out a usage message.
+
+   NOTE you may have to set the LD_LIBRARY_PATH environment variable so that executables can find dynamic libraries such as libnetcdf. This is an example but may be differnt on your system.
+
+   setenv LD_LIBRARY_PATH /home/vii/lib:/usr/local/netcdf/lib:/usr/local/hdf5/lib:/usr/local/python/lib:/usr/local/lib:/usr/dt/lib:/usr/lib:/usr/ccs/lib:/d2/local/lib:/d1/local/lib:/usr/local/szip/lib
+ 
+
+6) Configure The System 
+   Some of the configuration files have hard coded paths that you may need to modify for your system.  Below is a list of the field and the files which may need modification.
+
+  "rwh_cdl" in rwh_config.cfg
+  "road_segment_file" in the rwa configuration files (mi_rwa.cfg, mn_rwa.cfg, nv_rwa.cfg)
+  "climatology_file", "probe_message_cdl", "probe_message_qc_cdl", "statistics_cdl", "assessment_cdl" in statistics_output.cfg, vdt_mi_config.cfg, vdt_mn_config.cfg, vdt_nv_config.cfg
+
+  various paths in backend_sys_path.py 
+  "RWIS_DIR" in vii_paths.py
+  "cdl_file" in write_probe_message_cdf.py
+  Modify log paths (/d2/vii/data/log) in run_cdf_to_csv.py, run_create_probe_msg_history_mi.py, run_create_probe_msg_history_nv.py, run_create_probe_msg_history.py, run_group_umtri_probe_message_files.py
+
+
+REMOVAL STEPS
+
+1) The files created by this installation procedure can be uninstalled by removing them from these install directories: $VDT_CODE $VDT_DATA

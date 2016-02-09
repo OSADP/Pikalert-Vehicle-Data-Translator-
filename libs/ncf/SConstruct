@@ -1,0 +1,45 @@
+
+import os
+
+
+env = Environment(CPPPATH=['.',
+                           os.environ['NETCDF_INC_DIR'],
+                           os.environ['HDF_INC_DIR'],
+                           os.environ['ZLIB_INC_DIR'],
+                           os.environ['LOCAL_INC_DIR']],
+                  LIBPATH=[os.environ['NETCDF_LIB_DIR'],
+                           os.environ['HDF5_LIB_DIR'],
+                           os.environ['ZLIB_LIB_DIR'],
+                           os.environ['LOCAL_LIB_DIR']],
+                  CCFLAGS=os.environ['CCFLAGS'])
+
+    
+env.Library('ncf', [
+    'att_as_string.cc',
+    'finite.cc',
+    'cdltonc.cc',
+    'cdf2unix_time.cc',
+    'gtime.cc',
+    'find_day_start.cc',
+    'write_var.cc',
+    'get_dim_size.cc',
+    'get_var.cc',
+    'get_var_attr.cc',
+    'get_var_fill_val.cc',
+    'put_var_attr.cc',
+    'put_var.cc',
+    'get_attr.cc',
+    'put_attr.cc'
+    ])
+
+env.Install(os.environ['LOCAL_LIB_DIR'], 'libncf.a')
+
+install_include = '%s/ncf' % os.environ['LOCAL_INC_DIR']
+env.Install(install_include, [
+    'gtime.h',
+    'ncf.hh',
+    'ncf_template.hh'
+    ])
+
+env.Alias('install', [os.environ['LOCAL_LIB_DIR'], install_include])
+env.Alias('install_include', install_include)

@@ -1,0 +1,11 @@
+The backend server consists of a number of Python wsgi modules and
+Python scripts that support the EMDSS and MAW web displays as well as
+the MAW phone application.
+
+The backend server requires the Apache Tomcat server
+(http://tomcat.apache.org/) and the modwsgi module
+(http://wiki.apache.org/tomcat/HelpOnInstalling/ApacheWithModWSGI,
+https://code.google.com/p/modwsgi/)
+
+See INSTALL.backend_server for installation information.
+

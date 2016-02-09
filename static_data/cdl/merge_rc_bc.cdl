@@ -1,0 +1,152 @@
+netcdf merge_tmt {
+dimensions:
+	max_site_num = UNLIMITED;	// number of locations
+	days = 5;			// number of days
+        fc_times_per_day = 24;		// number of forecasts per day
+	max_str_len = 80;  		// max string length
+	num_times = 78;			// number of times road condtions are computed
+	
+variables:
+	double	creation_time;
+		creation_time:long_name = "time at which forecast file was created";
+		creation_time:units = "seconds since 1970-1-1 00:00:00" ;
+
+	double 	forc_time;
+		forc_time:long_name = "time of earliest forecast";
+		forc_time:units = "seconds since 1970-1-1 00:00:00" ;
+
+	int	num_sites;
+		num_sites:long_name = "number of actual_sites";
+
+	int	site_list(max_site_num);
+		site_list:long_name = "forecast site id numbers";
+
+        int     type;
+                type:long_name = "cdl file type";
+
+
+	// Forecast variables
+	float	application_rate(max_site_num, days, fc_times_per_day);
+		application_rate:long_name = "chemical application rate";
+		application_rate:units = "lb/lane-mile";
+		application_rate:reference = "units for solids";
+
+	float   apply_chem(max_site_num, days, fc_times_per_day);
+		apply_chem:long_name = "apply chemicals";
+		apply_chem:values = "0 or 1";
+
+	float   available_H2O(max_site_num, days, fc_times_per_day);
+		available_H2O:long_name = "water available for chemical dilution";
+		available_H2O:units = "lb/ft2";
+
+	float   available_chem(max_site_num, days, fc_times_per_day);
+		available_chem:long_name = "pure de-icing chemicals on road";
+		available_chem:units = "lb/ft2";
+
+	float	bridge_T(max_site_num, days, fc_times_per_day);
+		bridge_T:long_name = "bridge surface temperature";
+		bridge_T:units = "Celsius";
+
+	float	bridge_TempF(max_site_num, days, fc_times_per_day);
+		bridge_TempF:long_name = "road surface temperature";
+		bridge_TempF:units = "Fahrenheit";
+
+	float	bridge_frost_potential_index(max_site_num, days, fc_times_per_day);
+		bridge_frost_potential_index:long_name = "potential for frost on bridge category";
+		bridge_frost_potential_index:value0 = "None";
+		bridge_frost_potential_index:value1 = "Low";
+		bridge_frost_potential_index:value2 = "Medium";
+		bridge_frost_potential_index:value3 = "High";
+
+	float	chem_form(max_site_num, days, fc_times_per_day);
+		chem_form:long_name = "chemical form";
+		chem_form:value0 = "Dry";
+		chem_form:value1 = "Prewet";
+		chem_form:value2 = "Liquid";
+
+	float	chem_type(max_site_num, days, fc_times_per_day);
+		chem_type:long_name = "chemical type";
+		chem_type:value0 = "Not set";
+		chem_type:value1 = "NACL";
+		chem_type:value2 = "CACL2";
+		chem_type:value3 = "MGCL2";
+		chem_type:value4 = "CMA";
+		chem_type:value5 = "KAC";
+		chem_type:value6 = "Caliber";
+		chem_type:value7 = "IceSlicer";
+		chem_type:value8 = "IceBan";
+
+	float	chemical_concentration(max_site_num, days, fc_times_per_day);
+		chemical_concentration:long_name = "chemical concentration";
+		chemical_concentration:units = "percent";
+
+	float   do_plowing(max_site_num, days, fc_times_per_day);
+		do_plowing:long_name = "do plowing";
+		do_plowing:values = "0 or 1";
+
+	float	mobility(max_site_num, days, fc_times_per_day);
+		mobility:long_name = "net mobility";
+		mobility:values = "0.0 to 1.0";
+
+	float   nominal_chem(max_site_num, days, fc_times_per_day);
+		nominal_chem:long_name = "theoretical chem concentration";
+		nominal_chem:units = "percent";
+
+	float	phase_type(max_site_num, days, fc_times_per_day);
+		phase_type:long_name = "road water phase";
+		phase_type:value0 = "Dry";
+		phase_type:value1 = "Wet";
+		phase_type:value2 = "Chemically wet";
+		phase_type:value3 = "Chemically ice";
+		phase_type:value4 = "Slush";
+		phase_type:value5 = "Snow";
+		phase_type:value6 = "Ice";
+
+	float	precip_type(max_site_num, days, fc_times_per_day);
+		precip_type:long_name = "precip type on road";
+                precip_type:value0 = "None";
+		precip_type:value1 = "Rain";
+		precip_type:value2 = "Snow";
+		precip_type:value3 = "Mixed rain/snow";
+		precip_type:value4 = "Mixed snow/rain";
+		precip_type:value5 = "Freezing rain";
+
+	float	road_T(max_site_num, days, fc_times_per_day);
+		road_T:long_name = "road surface temperature";
+		road_T:units = "Celsius";
+
+	float	road_TempF(max_site_num, days, fc_times_per_day);
+		road_TempF:long_name = "road surface temperature";
+		road_TempF:units = "Fahrenheit";
+
+	float	road_frost_potential_index(max_site_num, days, fc_times_per_day);
+		road_frost_potential_index:long_name = "potential for frost on road category";
+		road_frost_potential_index:value0 = "None";
+		road_frost_potential_index:value1 = "Low";
+		road_frost_potential_index:value2 = "Medium";
+		road_frost_potential_index:value3 = "High";
+
+	float	snow_depth(max_site_num, days, fc_times_per_day);
+		snow_depth:long_name = "snow depth on road";
+		snow_depth:units = "mm";
+
+	float	snow_depth_inches(max_site_num, days, fc_times_per_day);
+		snow_depth_inches:long_name = "snow depth on road";
+		snow_depth_inches:units = "in";
+
+	char	treatment_explanation(max_site_num, days, fc_times_per_day, max_str_len);
+		treatment_explanation:long_name = "treatment explanation string" ;
+
+	float	treatment_explanation_index(max_site_num, days, fc_times_per_day);
+		treatment_explanation_index:long_name = "treatment explanation index";
+
+	float   treatment_time(max_site_num, days, fc_times_per_day);
+		treatment_time:long_name = "offset from current hour to apply treatment";
+		treatment_time:units = "hour";
+		treatment_time:values = "-1 to num_times";
+
+
+data:
+
+	type = 2;
+}

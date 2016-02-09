@@ -1,0 +1,35 @@
+
+import os
+
+
+env = Environment(CPPPATH=['.',
+                           os.environ['NETCDF_INC_DIR'],
+                           os.environ['HDF_INC_DIR'],
+                           os.environ['ZLIB_INC_DIR'],
+                           os.environ['LOCAL_INC_DIR']],
+                  LIBPATH=[os.environ['NETCDF_LIB_DIR'],
+                           os.environ['HDF5_LIB_DIR'],
+                           os.environ['ZLIB_LIB_DIR'],
+                           os.environ['LOCAL_LIB_DIR']],
+                  CCFLAGS=os.environ['CCFLAGS'])
+
+    
+env.Library('nxncf', [
+    'ncf_fcst_output.cc',
+    'ncf_site.cc',
+    'get_sites.cc',
+    'write_creation_time.cc',
+    'model_id.cc',
+    'create_index_array.cc'
+    ])
+
+env.Install(os.environ['LOCAL_LIB_DIR'], 'libnxncf.a')
+
+install_include = '%s/nxncf' % os.environ['LOCAL_INC_DIR']
+env.Install(install_include, [
+    'model_id.h',
+    'nxncf.hh'
+    ])
+
+env.Alias('install', [os.environ['LOCAL_LIB_DIR'], install_include])
+env.Alias('install_include', install_include)

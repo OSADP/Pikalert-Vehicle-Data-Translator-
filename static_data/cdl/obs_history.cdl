@@ -1,0 +1,49 @@
+netcdf obs_history {
+
+dimensions:
+	max_site_num = UNLIMITED;	// number of locations
+	num_times = 48;			// number of times
+
+
+variables:
+	double creation_time ;
+		creation_time:long_name = "time at which forecast file was created" ;
+		creation_time:units = "seconds since 1970-1-1 00:00:00" ;
+	double obs_time ;
+		obs_time:long_name = "time of earliest obs" ;
+		obs_time:units = "seconds since 1970-1-1 00:00:00" ;
+	int num_sites ;
+		num_sites:long_name = "number of actual_sites" ;
+	int site_list(max_site_num) ;
+		site_list:long_name = "forecast site id numbers" ;
+	int type ;
+		type:long_name = "cdl file type" ;
+	float T(max_site_num, num_times) ;
+		T:long_name = "2m air temperature" ;
+		T:units = "Celsius" ;
+	float dewpt(max_site_num, num_times) ;
+		dewpt:long_name = "dew point temperature" ;
+		dewpt:units = "Celsius" ;
+	float wind_speed(max_site_num, num_times) ;
+		wind_speed:long_name = "windspeed" ;
+		wind_speed:units = "meters per second" ;
+	int Precip(max_site_num, num_times) ;
+		Precip:long_name = "Presence of Precip" ;
+		Precip:units = "0=None, 1=Precip" ;
+	float road_T(max_site_num, num_times) ;
+		road_T:long_name = "road surface temperature" ;
+		road_T:units = "Celsius" ;
+	float bridge_T(max_site_num, num_times) ;
+		bridge_T:long_name = "bridge surface temperature" ;
+		bridge_T:units = "Celsius" ;
+	int road_condition(max_site_num, num_times) ;
+		road_condition:long_name = "road condition" ;
+		road_condition:units = "SSI codes" ;
+	float subsurface_T(max_site_num, num_times) ;
+		subsurface_T:long_name = "subsurface temperature" ;
+		subsurface_T:units = "Celsius" ;
+
+
+data:
+	type = 2;
+}

@@ -1,0 +1,1031 @@
+netcdf segment_statistics.20130701.1150 {
+dimensions:
+	rec_num = UNLIMITED ; // (1 currently)
+variables:
+	double begin_time(rec_num) ;
+		begin_time:units = "seconds since 1970-1-1 00:00" ;
+		begin_time:long_name = "begin of time interval" ;
+	double end_time(rec_num) ;
+		end_time:units = "seconds since 1970-1-1 00:00" ;
+		end_time:long_name = "end of time interval" ;
+	int id(rec_num) ;
+		id:long_name = "identifier" ;
+		id:_FillValue = -9999 ;
+	double mid_point_latitude(rec_num) ;
+		mid_point_latitude:long_name = "latitude of the road segment mid point" ;
+		mid_point_latitude:units = "degrees_north" ;
+		mid_point_latitude:_FillValue = -9999. ;
+	double mid_point_longitude(rec_num) ;
+		mid_point_longitude:long_name = "longitude of the road segment mid point" ;
+		mid_point_longitude:units = "degrees_east" ;
+		mid_point_longitude:_FillValue = -9999. ;
+	int total_num_msg(rec_num) ;
+		total_num_msg:long_name = "total number of messages processed" ;
+		total_num_msg:_FillValue = -9999 ;
+	int num_msg_valid_abs(rec_num) ;
+		num_msg_valid_abs:long_name = "number of messages with valid abs value" ;
+		num_msg_valid_abs:_FillValue = -9999 ;
+	int num_abs_not_equipped(rec_num) ;
+		num_abs_not_equipped:long_name = "number of messages with abs not equipped" ;
+		num_abs_not_equipped:_FillValue = -9999 ;
+	int num_abs_off(rec_num) ;
+		num_abs_off:long_name = "number of messages with abs off" ;
+		num_abs_off:_FillValue = -9999 ;
+	int num_abs_on(rec_num) ;
+		num_abs_on:long_name = "number of messages with abs on" ;
+		num_abs_on:_FillValue = -9999 ;
+	int num_abs_engaged(rec_num) ;
+		num_abs_engaged:long_name = "number of messages with abs engaged" ;
+		num_abs_engaged:_FillValue = -9999 ;
+	float model_air_temp(rec_num) ;
+		model_air_temp:long_name = "air temperature from the model data" ;
+		model_air_temp:standard_name = "model_air_temperature" ;
+		model_air_temp:valid_range = -40, 151 ;
+		model_air_temp:units = "Celsius" ;
+		model_air_temp:_FillValue = -9999.f ;
+	float model_bar_press(rec_num) ;
+		model_bar_press:long_name = "barometric pressure from the model data" ;
+		model_bar_press:valid_range = 580, 1090 ;
+		model_bar_press:units = "mb" ;
+		model_bar_press:_FillValue = -9999.f ;
+	float nss_air_temp_mean(rec_num) ;
+		nss_air_temp_mean:long_name = "mean air temperature for the nearest surface stations" ;
+		nss_air_temp_mean:valid_range = -40, 151 ;
+		nss_air_temp_mean:units = "Celsius" ;
+		nss_air_temp_mean:_FillValue = -9999.f ;
+	float nss_bar_press_mean(rec_num) ;
+		nss_bar_press_mean:long_name = "mean barometric pressure for the nearest surface stations" ;
+		nss_bar_press_mean:valid_range = 580, 1090 ;
+		nss_bar_press_mean:units = "mb" ;
+		nss_bar_press_mean:_FillValue = -9999.f ;
+	float nss_dew_temp_mean(rec_num) ;
+		nss_dew_temp_mean:long_name = "mean dew temp. for the nearest surface stations" ;
+		nss_dew_temp_mean:valid_range = -40, 151 ;
+		nss_dew_temp_mean:units = "Celsius" ;
+		nss_dew_temp_mean:_FillValue = -9999.f ;
+	float nss_hourly_precip_mean(rec_num) ;
+		nss_hourly_precip_mean:long_name = "mean hourly precip for the nearest surface stations" ;
+		nss_hourly_precip_mean:valid_range = 0, 30 ;
+		nss_hourly_precip_mean:units = "cc" ;
+		nss_hourly_precip_mean:_FillValue = -9999.f ;
+	float nss_prevail_vis_mean(rec_num) ;
+		nss_prevail_vis_mean:long_name = "mean prevailing vis. for the nearest surface stations" ;
+		nss_prevail_vis_mean:valid_min = 0 ;
+		nss_prevail_vis_mean:units = "km" ;
+		nss_prevail_vis_mean:_FillValue = -9999.f ;
+	float nss_wind_dir_mean(rec_num) ;
+		nss_wind_dir_mean:long_name = "mean wind_dir for the nearest surface stations" ;
+		nss_wind_dir_mean:valid_range = 0, 360 ;
+		nss_wind_dir_mean:units = "degrees" ;
+		nss_wind_dir_mean:_FillValue = -9999.f ;
+	float nss_wind_speed_mean(rec_num) ;
+		nss_wind_speed_mean:long_name = "mean wind_speed for the nearest surface stations" ;
+		nss_wind_speed_mean:valid_range = 0, 45 ;
+		nss_wind_speed_mean:units = "m/s" ;
+		nss_wind_speed_mean:_FillValue = -9999.f ;
+	float radar_cref(rec_num) ;
+		radar_cref:long_name = "composite reflectivity from radar grid" ;
+		radar_cref:valid_range = -25, 70 ;
+		radar_cref:units = "dBZ" ;
+		radar_cref:_FillValue = -9999.f ;
+	short radar_precip_flag(rec_num) ;
+		radar_precip_flag:long_name = "precip from radar grid" ;
+		radar_precip_flag:_FillValue = -9999s ;
+	short radar_precip_type(rec_num) ;
+		radar_precip_type:long_name = "precip type from radar grid" ;
+		radar_precip_type:flag_values = -1, 0, 1, 3 ;
+		radar_precip_type:flag_meanings = "no_radar_coverage no_precipitation liquid frozen" ;
+		radar_precip_type:_FillValue = -9999s ;
+	short cloud_mask(rec_num) ;
+		cloud_mask:long_name = "cloud mask from satellite grid" ;
+		cloud_mask:flag_values = 0, 1 ;
+		cloud_mask:flag_meanings = "off on" ;
+		cloud_mask:_FillValue = -9999s ;
+	int num_msg_valid_air_temp(rec_num) ;
+		num_msg_valid_air_temp:long_name = "number of messages with valid air_temp values" ;
+		num_msg_valid_air_temp:_FillValue = -9999 ;
+	float air_temp_min(rec_num) ;
+		air_temp_min:units = "Celsius" ;
+		air_temp_min:long_name = "minimum air temperature" ;
+		air_temp_min:valid_range = -40, 151 ;
+		air_temp_min:_FillValue = -9999.f ;
+	float air_temp_max(rec_num) ;
+		air_temp_max:units = "Celsius" ;
+		air_temp_max:long_name = "maximum air temperature" ;
+		air_temp_max:valid_range = -40, 151 ;
+		air_temp_max:_FillValue = -9999.f ;
+	float air_temp_mean(rec_num) ;
+		air_temp_mean:units = "Celsius" ;
+		air_temp_mean:long_name = "average air temperature" ;
+		air_temp_mean:valid_range = -40, 151 ;
+		air_temp_mean:_FillValue = -9999.f ;
+	float air_temp_median(rec_num) ;
+		air_temp_median:units = "Celsius" ;
+		air_temp_median:long_name = "median air temperature" ;
+		air_temp_median:valid_range = -40, 151 ;
+		air_temp_median:_FillValue = -9999.f ;
+	float air_temp_var(rec_num) ;
+		air_temp_var:long_name = "air temperature variance" ;
+		air_temp_var:units = "Celsius^2" ;
+		air_temp_var:_FillValue = -9999.f ;
+	float air_temp_stdev(rec_num) ;
+		air_temp_stdev:long_name = "air temperature standard deviation" ;
+		air_temp_stdev:units = "Celsius" ;
+		air_temp_stdev:_FillValue = -9999.f ;
+	float air_temp_iqr25(rec_num) ;
+		air_temp_iqr25:long_name = "25th percentile air temperature" ;
+		air_temp_iqr25:units = "Celsius" ;
+		air_temp_iqr25:_FillValue = -9999.f ;
+	float air_temp_iqr75(rec_num) ;
+		air_temp_iqr75:long_name = "75th percentile air temperature" ;
+		air_temp_iqr75:units = "Celsius" ;
+		air_temp_iqr75:_FillValue = -9999.f ;
+	int num_msg_valid_air_temp2(rec_num) ;
+		num_msg_valid_air_temp2:long_name = "number of messages with valid air_temp2 values" ;
+		num_msg_valid_air_temp2:_FillValue = -9999 ;
+	float air_temp2_min(rec_num) ;
+		air_temp2_min:units = "Celsius" ;
+		air_temp2_min:long_name = "minimum external air temperature" ;
+		air_temp2_min:valid_range = -40, 151 ;
+		air_temp2_min:_FillValue = -9999.f ;
+	float air_temp2_max(rec_num) ;
+		air_temp2_max:units = "Celsius" ;
+		air_temp2_max:long_name = "maximum external air temperature" ;
+		air_temp2_max:valid_range = -40, 151 ;
+		air_temp2_max:_FillValue = -9999.f ;
+	float air_temp2_mean(rec_num) ;
+		air_temp2_mean:units = "Celsius" ;
+		air_temp2_mean:long_name = "average external air temperature" ;
+		air_temp2_mean:valid_range = -40, 151 ;
+		air_temp2_mean:_FillValue = -9999.f ;
+	float air_temp2_median(rec_num) ;
+		air_temp2_median:units = "Celsius" ;
+		air_temp2_median:long_name = "median external air temperature" ;
+		air_temp2_median:valid_range = -40, 151 ;
+		air_temp2_median:_FillValue = -9999.f ;
+	float air_temp2_var(rec_num) ;
+		air_temp2_var:long_name = "external air temperature variance" ;
+		air_temp2_var:units = "Celsius^2" ;
+		air_temp2_var:_FillValue = -9999.f ;
+	float air_temp2_stdev(rec_num) ;
+		air_temp2_stdev:long_name = "external air temperature standard deviation" ;
+		air_temp2_stdev:units = "Celsius" ;
+		air_temp2_stdev:_FillValue = -9999.f ;
+	float air_temp2_iqr25(rec_num) ;
+		air_temp2_iqr25:long_name = "25th percentile external air temperature" ;
+		air_temp2_iqr25:units = "Celsius" ;
+		air_temp2_iqr25:_FillValue = -9999.f ;
+	float air_temp2_iqr75(rec_num) ;
+		air_temp2_iqr75:long_name = "75th percentile external air temperature" ;
+		air_temp2_iqr75:units = "Celsius" ;
+		air_temp2_iqr75:_FillValue = -9999.f ;
+	int num_msg_valid_bar_press(rec_num) ;
+		num_msg_valid_bar_press:long_name = "number of messages with valid bar_press values" ;
+		num_msg_valid_bar_press:_FillValue = -9999 ;
+	float bar_press_min(rec_num) ;
+		bar_press_min:units = "mb" ;
+		bar_press_min:long_name = "minimum barometric pressure" ;
+		bar_press_min:valid_range = 580, 1090 ;
+		bar_press_min:_FillValue = -9999.f ;
+	float bar_press_max(rec_num) ;
+		bar_press_max:units = "mb" ;
+		bar_press_max:long_name = "maximum barometric pressure" ;
+		bar_press_max:valid_range = 580, 1090 ;
+		bar_press_max:_FillValue = -9999.f ;
+	float bar_press_mean(rec_num) ;
+		bar_press_mean:units = "mb" ;
+		bar_press_mean:long_name = "average barometric pressure" ;
+		bar_press_mean:valid_range = 580, 1090 ;
+		bar_press_mean:_FillValue = -9999.f ;
+	float bar_press_median(rec_num) ;
+		bar_press_median:units = "mb" ;
+		bar_press_median:long_name = "median barometric pressure" ;
+		bar_press_median:valid_range = 580, 1090 ;
+		bar_press_median:_FillValue = -9999.f ;
+	float bar_press_var(rec_num) ;
+		bar_press_var:long_name = "barometric pressure variance" ;
+		bar_press_var:units = "mb^2" ;
+		bar_press_var:_FillValue = -9999.f ;
+	float bar_press_stdev(rec_num) ;
+		bar_press_stdev:long_name = "barometric pressure standard deviation" ;
+		bar_press_stdev:units = "Celsius" ;
+		bar_press_stdev:_FillValue = -9999.f ;
+	float bar_press_iqr25(rec_num) ;
+		bar_press_iqr25:long_name = "25th percentile barometric pressure" ;
+		bar_press_iqr25:units = "Celsius" ;
+		bar_press_iqr25:_FillValue = -9999.f ;
+	float bar_press_iqr75(rec_num) ;
+		bar_press_iqr75:long_name = "75th percentile barometric pressure" ;
+		bar_press_iqr75:units = "Celsius" ;
+		bar_press_iqr75:_FillValue = -9999.f ;
+	int num_msg_valid_brakes(rec_num) ;
+		num_msg_valid_brakes:long_name = "number of messages with valid brakes values" ;
+		num_msg_valid_brakes:_FillValue = -9999 ;
+	int num_brakes_all_off(rec_num) ;
+		num_brakes_all_off:long_name = "number of messages with all brakes off" ;
+		num_brakes_all_off:_FillValue = -9999 ;
+	int num_brakes_all_on(rec_num) ;
+		num_brakes_all_on:long_name = "number of messages with all brakes on " ;
+		num_brakes_all_on:_FillValue = -9999 ;
+	int num_brakes_rr_active(rec_num) ;
+		num_brakes_rr_active:long_name = "number of messages with right rear brake active" ;
+		num_brakes_rr_active:_FillValue = -9999 ;
+	int num_brakes_rf_active(rec_num) ;
+		num_brakes_rf_active:long_name = "number of messages with right front brake active" ;
+		num_brakes_rf_active:_FillValue = -9999 ;
+	int num_brakes_lr_active(rec_num) ;
+		num_brakes_lr_active:long_name = "number of messages with left rear brake active" ;
+		num_brakes_lr_active:_FillValue = -9999 ;
+	int num_brakes_lf_active(rec_num) ;
+		num_brakes_lf_active:long_name = "number of messages with left front brake active" ;
+		num_brakes_lf_active:_FillValue = -9999 ;
+	int num_msg_valid_brakes_boost(rec_num) ;
+		num_msg_valid_brakes_boost:long_name = "number of messages with valid brakes_boost values " ;
+		num_msg_valid_brakes_boost:_FillValue = -9999 ;
+	int num_brakes_boost_not_equipped(rec_num) ;
+		num_brakes_boost_not_equipped:long_name = "number of messages with brake boost not equipped" ;
+		num_brakes_boost_not_equipped:_FillValue = -9999 ;
+	int num_brakes_boost_off(rec_num) ;
+		num_brakes_boost_off:long_name = "number of messages with brake boost off" ;
+		num_brakes_boost_off:_FillValue = -9999 ;
+	int num_brakes_boost_on(rec_num) ;
+		num_brakes_boost_on:long_name = "number of messages with brake boost on" ;
+		num_brakes_boost_on:_FillValue = -9999 ;
+	int num_msg_valid_dew_temp(rec_num) ;
+		num_msg_valid_dew_temp:long_name = "number of messages with valid dew_temp values" ;
+		num_msg_valid_dew_temp:_FillValue = -9999 ;
+	float dew_temp_min(rec_num) ;
+		dew_temp_min:units = "Celsius" ;
+		dew_temp_min:long_name = "minimum dew temperature" ;
+		dew_temp_min:valid_range = -40, 151 ;
+		dew_temp_min:_FillValue = -9999.f ;
+	float dew_temp_max(rec_num) ;
+		dew_temp_max:units = "Celsius" ;
+		dew_temp_max:long_name = "maximum dew temperature" ;
+		dew_temp_max:valid_range = -40, 151 ;
+		dew_temp_max:_FillValue = -9999.f ;
+	float dew_temp_mean(rec_num) ;
+		dew_temp_mean:units = "Celsius" ;
+		dew_temp_mean:long_name = "average dew temperature" ;
+		dew_temp_mean:valid_range = -40, 151 ;
+		dew_temp_mean:_FillValue = -9999.f ;
+	float dew_temp_median(rec_num) ;
+		dew_temp_median:units = "Celsius" ;
+		dew_temp_median:long_name = "median dew temperature" ;
+		dew_temp_median:valid_range = -40, 151 ;
+		dew_temp_median:_FillValue = -9999.f ;
+	float dew_temp_var(rec_num) ;
+		dew_temp_var:long_name = "dew temperature variance" ;
+		dew_temp_var:units = "Celsius^2" ;
+		dew_temp_var:_FillValue = -9999.f ;
+	float dew_temp_stdev(rec_num) ;
+		dew_temp_stdev:long_name = "dew temperature standard deviation" ;
+		dew_temp_stdev:units = "Celsius" ;
+		dew_temp_stdev:_FillValue = -9999.f ;
+	float dew_temp_iqr25(rec_num) ;
+		dew_temp_iqr25:long_name = "25th percentile dew temperature" ;
+		dew_temp_iqr25:units = "Celsius" ;
+		dew_temp_iqr25:_FillValue = -9999.f ;
+	float dew_temp_iqr75(rec_num) ;
+		dew_temp_iqr75:long_name = "75th percentile dew temperature" ;
+		dew_temp_iqr75:units = "Celsius" ;
+		dew_temp_iqr75:_FillValue = -9999.f ;
+	int num_msg_valid_heading(rec_num) ;
+		num_msg_valid_heading:long_name = "number of messages with valid heading values" ;
+		num_msg_valid_heading:_FillValue = -9999 ;
+	float heading_min(rec_num) ;
+		heading_min:units = "degrees" ;
+		heading_min:long_name = "minimum heading" ;
+		heading_min:valid_range = 0, 360 ;
+		heading_min:_FillValue = -9999.f ;
+	float heading_max(rec_num) ;
+		heading_max:units = "degrees" ;
+		heading_max:long_name = "maximum heading" ;
+		heading_max:valid_range = 0, 360 ;
+		heading_max:_FillValue = -9999.f ;
+	float heading_mean(rec_num) ;
+		heading_mean:units = "degrees" ;
+		heading_mean:long_name = "average heading" ;
+		heading_mean:valid_range = 0, 360 ;
+		heading_mean:_FillValue = -9999.f ;
+	float heading_median(rec_num) ;
+		heading_median:units = "degrees" ;
+		heading_median:long_name = "median heading" ;
+		heading_median:valid_range = 0, 360 ;
+		heading_median:_FillValue = -9999.f ;
+	float heading_var(rec_num) ;
+		heading_var:long_name = "heading variance" ;
+		heading_var:units = "degrees^2" ;
+		heading_var:_FillValue = -9999.f ;
+	float heading_stdev(rec_num) ;
+		heading_stdev:long_name = "heading standard deviation" ;
+		heading_stdev:units = "degrees" ;
+		heading_stdev:_FillValue = -9999.f ;
+	float heading_iqr25(rec_num) ;
+		heading_iqr25:long_name = "25th percentile heading" ;
+		heading_iqr25:units = "degrees" ;
+		heading_iqr25:_FillValue = -9999.f ;
+	float heading_iqr75(rec_num) ;
+		heading_iqr75:long_name = "75th percentile heading" ;
+		heading_iqr75:units = "degrees" ;
+		heading_iqr75:_FillValue = -9999.f ;
+	int num_msg_valid_hoz_accel_lat(rec_num) ;
+		num_msg_valid_hoz_accel_lat:long_name = "number of messages with valid hoz_accel_lat values" ;
+		num_msg_valid_hoz_accel_lat:_FillValue = -9999 ;
+	float hoz_accel_lat_min(rec_num) ;
+		hoz_accel_lat_min:units = "m/s^2" ;
+		hoz_accel_lat_min:long_name = "minimum horizontal lateral acceleration" ;
+		hoz_accel_lat_min:valid_range = -19.66976, 19.66976 ;
+		hoz_accel_lat_min:_FillValue = -9999.f ;
+	float hoz_accel_lat_max(rec_num) ;
+		hoz_accel_lat_max:units = "m/s^2" ;
+		hoz_accel_lat_max:long_name = "maximum horizontal lateral acceleration" ;
+		hoz_accel_lat_max:valid_range = -19.66976, 19.66976 ;
+		hoz_accel_lat_max:_FillValue = -9999.f ;
+	float hoz_accel_lat_mean(rec_num) ;
+		hoz_accel_lat_mean:units = "m/s^2" ;
+		hoz_accel_lat_mean:long_name = "average horizontal lateral acceleration" ;
+		hoz_accel_lat_mean:valid_range = -19.66976, 19.66976 ;
+		hoz_accel_lat_mean:_FillValue = -9999.f ;
+	float hoz_accel_lat_median(rec_num) ;
+		hoz_accel_lat_median:units = "m/s^2" ;
+		hoz_accel_lat_median:long_name = "median horizontal lateral acceleration" ;
+		hoz_accel_lat_median:valid_range = -19.66976, 19.66976 ;
+		hoz_accel_lat_median:_FillValue = -9999.f ;
+	float hoz_accel_lat_var(rec_num) ;
+		hoz_accel_lat_var:long_name = "horizontal lateral acceleration variance" ;
+		hoz_accel_lat_var:units = "(m/s^2)^2" ;
+		hoz_accel_lat_var:_FillValue = -9999.f ;
+	float hoz_accel_lat_stdev(rec_num) ;
+		hoz_accel_lat_stdev:long_name = "horizontal lateral acceleration standard deviation" ;
+		hoz_accel_lat_stdev:units = "m/s^2" ;
+		hoz_accel_lat_stdev:_FillValue = -9999.f ;
+	float hoz_accel_lat_iqr25(rec_num) ;
+		hoz_accel_lat_iqr25:long_name = "25th percentile horizontal lateral acceleration" ;
+		hoz_accel_lat_iqr25:units = "m/s^2" ;
+		hoz_accel_lat_iqr25:_FillValue = -9999.f ;
+	float hoz_accel_lat_iqr75(rec_num) ;
+		hoz_accel_lat_iqr75:long_name = "75th percentile horizontal lateral acceleration" ;
+		hoz_accel_lat_iqr75:units = "m/s^2" ;
+		hoz_accel_lat_iqr75:_FillValue = -9999.f ;
+	int num_msg_valid_hoz_accel_lon(rec_num) ;
+		num_msg_valid_hoz_accel_lon:long_name = "number of messages with valid hoz_accel_long values" ;
+		num_msg_valid_hoz_accel_lon:_FillValue = -9999 ;
+	float hoz_accel_lon_min(rec_num) ;
+		hoz_accel_lon_min:units = "m/s^2" ;
+		hoz_accel_lon_min:long_name = "minimum horizontal longitudinal acceleration" ;
+		hoz_accel_lon_min:valid_range = -19.66976, 19.66976 ;
+		hoz_accel_lon_min:_FillValue = -9999.f ;
+	float hoz_accel_lon_max(rec_num) ;
+		hoz_accel_lon_max:units = "m/s^2" ;
+		hoz_accel_lon_max:long_name = "maximum horizontal longitudinal acceleration" ;
+		hoz_accel_lon_max:valid_range = -19.66976, 19.66976 ;
+		hoz_accel_lon_max:_FillValue = -9999.f ;
+	float hoz_accel_lon_mean(rec_num) ;
+		hoz_accel_lon_mean:units = "m/s^2" ;
+		hoz_accel_lon_mean:long_name = "average horizontal longitudinal acceleration" ;
+		hoz_accel_lon_mean:valid_range = -19.66976, 19.66976 ;
+		hoz_accel_lon_mean:_FillValue = -9999.f ;
+	float hoz_accel_lon_median(rec_num) ;
+		hoz_accel_lon_median:units = "m/s^2" ;
+		hoz_accel_lon_median:long_name = "median horizontal longitudinal acceleration" ;
+		hoz_accel_lon_median:valid_range = -19.66976, 19.66976 ;
+		hoz_accel_lon_median:_FillValue = -9999.f ;
+	float hoz_accel_lon_var(rec_num) ;
+		hoz_accel_lon_var:long_name = "horizontal longitudinal acceleration variance" ;
+		hoz_accel_lon_var:units = "(m/s^2)^2" ;
+		hoz_accel_lon_var:_FillValue = -9999.f ;
+	float hoz_accel_lon_stdev(rec_num) ;
+		hoz_accel_lon_stdev:long_name = "horizontal longitudinal acceleration standard deviation" ;
+		hoz_accel_lon_stdev:units = "m/s^2" ;
+		hoz_accel_lon_stdev:_FillValue = -9999.f ;
+	float hoz_accel_lon_iqr25(rec_num) ;
+		hoz_accel_lon_iqr25:long_name = "25th percentile horizontal longitudinal acceleration" ;
+		hoz_accel_lon_iqr25:units = "m/s^2" ;
+		hoz_accel_lon_iqr25:_FillValue = -9999.f ;
+	float hoz_accel_lon_iqr75(rec_num) ;
+		hoz_accel_lon_iqr75:long_name = "75th percentile horizontal longitudinal acceleration" ;
+		hoz_accel_lon_iqr75:units = "m/s^2" ;
+		hoz_accel_lon_iqr75:_FillValue = -9999.f ;
+	int num_msg_valid_lights(rec_num) ;
+		num_msg_valid_lights:long_name = "number of messages with valid lights value" ;
+		num_msg_valid_lights:_FillValue = -9999 ;
+	int num_lights_off(rec_num) ;
+		num_lights_off:long_name = "number of messages with all lights off" ;
+		num_lights_off:_FillValue = -9999 ;
+	int num_lights_hazard(rec_num) ;
+		num_lights_hazard:long_name = "number of messages with hazard lights on" ;
+		num_lights_hazard:_FillValue = -9999 ;
+	int num_lights_parking(rec_num) ;
+		num_lights_parking:long_name = "number of messages with parking lights on" ;
+		num_lights_parking:_FillValue = -9999 ;
+	int num_lights_fog(rec_num) ;
+		num_lights_fog:long_name = "number of messages with fog lights on" ;
+		num_lights_fog:_FillValue = -9999 ;
+	int num_lights_drl(rec_num) ;
+		num_lights_drl:long_name = "number of messages with daytime running lights On" ;
+		num_lights_drl:_FillValue = -9999 ;
+	int num_lights_automatic_control(rec_num) ;
+		num_lights_automatic_control:long_name = "number of messages with automatic lights control" ;
+		num_lights_automatic_control:_FillValue = -9999 ;
+	int num_lights_right_turn(rec_num) ;
+		num_lights_right_turn:long_name = "number of messages with right turn signal on" ;
+		num_lights_right_turn:_FillValue = -9999 ;
+	int num_lights_left_turn(rec_num) ;
+		num_lights_left_turn:long_name = "number of messages with left turn signal on" ;
+		num_lights_left_turn:_FillValue = -9999 ;
+	int num_lights_high_beam(rec_num) ;
+		num_lights_high_beam:long_name = "number of messages with high beam on" ;
+		num_lights_high_beam:_FillValue = -9999 ;
+	int num_lights_low_beam(rec_num) ;
+		num_lights_low_beam:long_name = "number of messages with low beam on" ;
+		num_lights_low_beam:_FillValue = -9999 ;
+	int num_msg_valid_speed(rec_num) ;
+		num_msg_valid_speed:long_name = "number of messages with valid speed values" ;
+		num_msg_valid_speed:_FillValue = -9999 ;
+	float speed_min(rec_num) ;
+		speed_min:long_name = "minimum speed" ;
+		speed_min:units = "m/s" ;
+		speed_min:valid_range = -328.12736, 328.12736 ;
+		speed_min:_FillValue = -9999.f ;
+	float speed_ratio(rec_num) ;
+		speed_ratio:long_name = "average speed to speed limit ratio" ;
+		speed_ratio:valid_range = 0., 1. ;
+		speed_ratio:_FillValue = -9999.f ;
+	float speed_max(rec_num) ;
+		speed_max:long_name = "maximum speed" ;
+		speed_max:units = "m/s" ;
+		speed_max:valid_range = -328.12736, 328.12736 ;
+		speed_max:_FillValue = -9999.f ;
+	float speed_mean(rec_num) ;
+		speed_mean:long_name = "average speed" ;
+		speed_mean:units = "m/s" ;
+		speed_mean:valid_range = -328.12736, 328.12736 ;
+		speed_mean:_FillValue = -9999.f ;
+	float speed_median(rec_num) ;
+		speed_median:long_name = "median speed" ;
+		speed_median:units = "m/s" ;
+		speed_median:valid_range = -328.12736, 328.12736 ;
+		speed_median:_FillValue = -9999.f ;
+	float speed_var(rec_num) ;
+		speed_var:long_name = "speed variance" ;
+		speed_var:units = "m/s^2" ;
+		speed_var:_FillValue = -9999.f ;
+	float speed_stdev(rec_num) ;
+		speed_stdev:long_name = "speed standard deviation" ;
+		speed_stdev:units = "m/s" ;
+		speed_stdev:_FillValue = -9999.f ;
+	float speed_iqr25(rec_num) ;
+		speed_iqr25:long_name = "25th percentile speed" ;
+		speed_iqr25:units = "m/s" ;
+		speed_iqr25:_FillValue = -9999.f ;
+	float speed_iqr75(rec_num) ;
+		speed_iqr75:long_name = "75th percentile speed" ;
+		speed_iqr75:units = "m/s" ;
+		speed_iqr75:_FillValue = -9999.f ;
+	int num_msg_valid_stab(rec_num) ;
+		num_msg_valid_stab:long_name = "number of messages with valid stab values" ;
+		num_msg_valid_stab:_FillValue = -9999 ;
+	int num_stab_not_equipped(rec_num) ;
+		num_stab_not_equipped:long_name = "number of messages with stability control not equipped" ;
+		num_stab_not_equipped:_FillValue = -9999 ;
+	int num_stab_off(rec_num) ;
+		num_stab_off:long_name = "number of messages with stability control off" ;
+		num_stab_off:_FillValue = -9999 ;
+	int num_stab_on(rec_num) ;
+		num_stab_on:long_name = "number of messages with stability control on" ;
+		num_stab_on:_FillValue = -9999 ;
+	int num_stab_engaged(rec_num) ;
+		num_stab_engaged:long_name = "number of messages with stability control engaged" ;
+		num_stab_engaged:_FillValue = -9999 ;
+	int num_msg_valid_steering_angle(rec_num) ;
+		num_msg_valid_steering_angle:long_name = "number of messages with valid steering_angle values" ;
+		num_msg_valid_steering_angle:_FillValue = -9999 ;
+	float steering_angle_min(rec_num) ;
+		steering_angle_min:units = "degrees" ;
+		steering_angle_min:long_name = "minimum steering wheel angle" ;
+		steering_angle_min:valid_range = -655.36, 655.36 ;
+		steering_angle_min:_FillValue = -9999.f ;
+	float steering_angle_max(rec_num) ;
+		steering_angle_max:units = "degrees" ;
+		steering_angle_max:long_name = "maximum steering wheel angle" ;
+		steering_angle_max:valid_range = -655.36, 655.36 ;
+		steering_angle_max:_FillValue = -9999.f ;
+	float steering_angle_mean(rec_num) ;
+		steering_angle_mean:units = "degrees" ;
+		steering_angle_mean:long_name = "average steering wheel angle" ;
+		steering_angle_mean:valid_range = -655.36, 655.36 ;
+		steering_angle_mean:_FillValue = -9999.f ;
+	float steering_angle_median(rec_num) ;
+		steering_angle_median:units = "degrees" ;
+		steering_angle_median:long_name = "median steering wheel angle" ;
+		steering_angle_median:valid_range = -655.36, 655.36 ;
+		steering_angle_median:_FillValue = -9999.f ;
+	float steering_angle_var(rec_num) ;
+		steering_angle_var:long_name = "steering wheel angle variance" ;
+		steering_angle_var:units = "degrees^2" ;
+		steering_angle_var:_FillValue = -9999.f ;
+	float steering_angle_stdev(rec_num) ;
+		steering_angle_stdev:long_name = "steering wheel angle standard deviation" ;
+		steering_angle_stdev:units = "degrees" ;
+		steering_angle_stdev:_FillValue = -9999.f ;
+	float steering_angle_iqr25(rec_num) ;
+		steering_angle_iqr25:long_name = "25th percentile steering wheel angle" ;
+		steering_angle_iqr25:units = "degrees" ;
+		steering_angle_iqr25:_FillValue = -9999.f ;
+	float steering_angle_iqr75(rec_num) ;
+		steering_angle_iqr75:long_name = "75th percentile steering wheel angle" ;
+		steering_angle_iqr75:units = "degrees" ;
+		steering_angle_iqr75:_FillValue = -9999.f ;
+	int num_msg_valid_steering_rate(rec_num) ;
+		num_msg_valid_steering_rate:long_name = "number of messages with valid staeering_rate values" ;
+		num_msg_valid_steering_rate:_FillValue = -9999 ;
+	float steering_rate_min(rec_num) ;
+		steering_rate_min:units = "degrees per second" ;
+		steering_rate_min:long_name = "minimum steering wheel angle rate of change" ;
+		steering_rate_min:valid_range = -381, 381 ;
+		steering_rate_min:_FillValue = -9999.f ;
+	float steering_rate_max(rec_num) ;
+		steering_rate_max:units = "degrees per second" ;
+		steering_rate_max:long_name = "maximum steering wheel angle rate of change" ;
+		steering_rate_max:valid_range = -381, 381 ;
+		steering_rate_max:_FillValue = -9999.f ;
+	float steering_rate_mean(rec_num) ;
+		steering_rate_mean:units = "degrees per second" ;
+		steering_rate_mean:long_name = "average steering wheel angle rate of change" ;
+		steering_rate_mean:valid_range = -381, 381 ;
+		steering_rate_mean:_FillValue = -9999.f ;
+	float steering_rate_median(rec_num) ;
+		steering_rate_median:units = "degrees per second" ;
+		steering_rate_median:long_name = "median steering wheel angle rate of change" ;
+		steering_rate_median:valid_range = -381, 381 ;
+		steering_rate_median:_FillValue = -9999.f ;
+	float steering_rate_var(rec_num) ;
+		steering_rate_var:long_name = "steering wheel angle rate of change variance" ;
+		steering_rate_var:units = "(degrees per second)^2" ;
+		steering_rate_var:_FillValue = -9999.f ;
+	float steering_rate_stdev(rec_num) ;
+		steering_rate_stdev:long_name = "steering wheel angle rate of change standard deviation" ;
+		steering_rate_stdev:units = "degrees per second" ;
+		steering_rate_stdev:_FillValue = -9999.f ;
+	int num_msg_valid_surface_temp(rec_num) ;
+		num_msg_valid_surface_temp:long_name = "number of messages with valid surface_temp values" ;
+		num_msg_valid_surface_temp:_FillValue = -9999 ;
+	float surface_temp_min(rec_num) ;
+		surface_temp_min:units = "Celsius" ;
+		surface_temp_min:long_name = "minimum surface temperature" ;
+		surface_temp_min:valid_range = -40, 151 ;
+		surface_temp_min:_FillValue = -9999.f ;
+	float surface_temp_max(rec_num) ;
+		surface_temp_max:units = "Celsius" ;
+		surface_temp_max:long_name = "maximum surface temperature" ;
+		surface_temp_max:valid_range = -40, 151 ;
+		surface_temp_max:_FillValue = -9999.f ;
+	float surface_temp_mean(rec_num) ;
+		surface_temp_mean:units = "Celsius" ;
+		surface_temp_mean:long_name = "average surface temperature" ;
+		surface_temp_mean:valid_range = -40, 151 ;
+		surface_temp_mean:_FillValue = -9999.f ;
+	float surface_temp_median(rec_num) ;
+		surface_temp_median:units = "Celsius" ;
+		surface_temp_median:long_name = "median surface temperature" ;
+		surface_temp_median:valid_range = -40, 151 ;
+		surface_temp_median:_FillValue = -9999.f ;
+	float surface_temp_var(rec_num) ;
+		surface_temp_var:long_name = "surface temperature variance" ;
+		surface_temp_var:units = "Celsius^2" ;
+		surface_temp_var:_FillValue = -9999.f ;
+	float surface_temp_stdev(rec_num) ;
+		surface_temp_stdev:long_name = "surface temperature standard deviation" ;
+		surface_temp_stdev:units = "Celsius" ;
+		surface_temp_stdev:_FillValue = -9999.f ;
+	float surface_temp_iqr25(rec_num) ;
+		surface_temp_iqr25:long_name = "25th percentile surface temperature" ;
+		surface_temp_iqr25:units = "Celsius" ;
+		surface_temp_iqr25:_FillValue = -9999.f ;
+	float surface_temp_iqr75(rec_num) ;
+		surface_temp_iqr75:long_name = "75th percentile surface temperature" ;
+		surface_temp_iqr75:units = "Celsius" ;
+		surface_temp_iqr75:_FillValue = -9999.f ;
+	int num_msg_valid_trac(rec_num) ;
+		num_msg_valid_trac:long_name = "number of messages with valid trac value" ;
+		num_msg_valid_trac:_FillValue = -9999 ;
+	int num_trac_not_equipped(rec_num) ;
+		num_trac_not_equipped:long_name = "number of messages with traction control not equipped" ;
+		num_trac_not_equipped:_FillValue = -9999 ;
+	int num_trac_off(rec_num) ;
+		num_trac_off:long_name = "number of messages with traction control off" ;
+		num_trac_off:_FillValue = -9999 ;
+	int num_trac_on(rec_num) ;
+		num_trac_on:long_name = "number of messages with traction control on" ;
+		num_trac_on:_FillValue = -9999 ;
+	int num_trac_engaged(rec_num) ;
+		num_trac_engaged:long_name = "number of messages with traction control engaged" ;
+		num_trac_engaged:_FillValue = -9999 ;
+	int num_msg_valid_wipers(rec_num) ;
+		num_msg_valid_wipers:long_name = "number of messages with valid wipers value" ;
+		num_msg_valid_wipers:_FillValue = -9999 ;
+	int num_wipers_not_equipped(rec_num) ;
+		num_wipers_not_equipped:long_name = "number of messages with wiper sensor not equipped" ;
+		num_wipers_not_equipped:_FillValue = -9999 ;
+	int num_wipers_off(rec_num) ;
+		num_wipers_off:long_name = "number of messages with wipers off" ;
+		num_wipers_off:_FillValue = -9999 ;
+	int num_wipers_intermittent(rec_num) ;
+		num_wipers_intermittent:long_name = "number of messages with wipers intermittent" ;
+		num_wipers_intermittent:_FillValue = -9999 ;
+	int num_wipers_low(rec_num) ;
+		num_wipers_low:long_name = "number of messages with wipers low" ;
+		num_wipers_low:_FillValue = -9999 ;
+	int num_wipers_high(rec_num) ;
+		num_wipers_high:long_name = "number of messages with wipers high" ;
+		num_wipers_high:_FillValue = -9999 ;
+	int num_wipers_washer(rec_num) ;
+		num_wipers_washer:long_name = "number of messages with wiper washer on" ;
+		num_wipers_washer:_FillValue = -9999 ;
+	int num_wipers_automatic(rec_num) ;
+		num_wipers_automatic:long_name = "number of messages with automatic wiper control on" ;
+		num_wipers_automatic:_FillValue = -9999 ;
+	int num_msg_valid_yaw(rec_num) ;
+		num_msg_valid_yaw:long_name = "number of messages with valid yaw value" ;
+		num_msg_valid_yaw:_FillValue = -9999 ;
+	float yaw_min(rec_num) ;
+		yaw_min:units = "degrees per second" ;
+		yaw_min:long_name = "minimum yaw" ;
+		yaw_min:valid_range = 0., 655.35 ;
+		yaw_min:_FillValue = -9999.f ;
+	float yaw_max(rec_num) ;
+		yaw_max:units = "degrees per second" ;
+		yaw_max:long_name = "maximum yaw" ;
+		yaw_max:valid_range = 0., 655.35 ;
+		yaw_max:_FillValue = -9999.f ;
+	float yaw_mean(rec_num) ;
+		yaw_mean:units = "degrees per second" ;
+		yaw_mean:long_name = "average yaw" ;
+		yaw_mean:valid_range = 0., 655.35 ;
+		yaw_mean:_FillValue = -9999.f ;
+	float yaw_median(rec_num) ;
+		yaw_median:units = "degrees per second" ;
+		yaw_median:long_name = "median yaw" ;
+		yaw_median:valid_range = 0., 655.35 ;
+		yaw_median:_FillValue = -9999.f ;
+	float yaw_var(rec_num) ;
+		yaw_var:long_name = "yaw variance" ;
+		yaw_var:units = "(degrees per second)^2" ;
+		yaw_var:_FillValue = -9999.f ;
+	float yaw_stdev(rec_num) ;
+		yaw_stdev:long_name = "yaw standard variance" ;
+		yaw_stdev:units = "degrees per second" ;
+		yaw_stdev:_FillValue = -9999.f ;
+	float yaw_iqr25(rec_num) ;
+		yaw_iqr25:long_name = "25th percentile yaw" ;
+		yaw_iqr25:units = "degrees per second" ;
+		yaw_iqr25:_FillValue = -9999.f ;
+	float yaw_iqr75(rec_num) ;
+		yaw_iqr75:long_name = "75th percentile yaw" ;
+		yaw_iqr75:units = "degrees per second" ;
+		yaw_iqr75:_FillValue = -9999.f ;
+data:
+
+ begin_time = 1372679401 ;
+
+ end_time = 1372679701 ;
+
+ id = 282 ;
+
+ mid_point_latitude = _ ;
+
+ mid_point_longitude = _ ;
+
+ total_num_msg = 45 ;
+
+ num_msg_valid_abs = _ ;
+
+ num_abs_not_equipped = _ ;
+
+ num_abs_off = _ ;
+
+ num_abs_on = _ ;
+
+ num_abs_engaged = _ ;
+
+ model_air_temp = -257.3 ;
+
+ model_bar_press = 983 ;
+
+ nss_air_temp_mean = 18.4 ;
+
+ nss_bar_press_mean = _ ;
+
+ nss_dew_temp_mean = 18.4 ;
+
+ nss_hourly_precip_mean = 2.794 ;
+
+ nss_prevail_vis_mean = 15.91463 ;
+
+ nss_wind_dir_mean = 174.4444 ;
+
+ nss_wind_speed_mean = 1.777778 ;
+
+ radar_cref = _ ;
+
+ radar_precip_flag = 32516 ;
+
+ radar_precip_type = 0 ;
+
+ cloud_mask = _ ;
+
+ num_msg_valid_air_temp = 0 ;
+
+ air_temp_min = _ ;
+
+ air_temp_max = _ ;
+
+ air_temp_mean = _ ;
+
+ air_temp_median = _ ;
+
+ air_temp_var = _ ;
+
+ air_temp_stdev = _ ;
+
+ air_temp_iqr25 = _ ;
+
+ air_temp_iqr75 = _ ;
+
+ num_msg_valid_air_temp2 = 45 ;
+
+ air_temp2_min = 17.77778 ;
+
+ air_temp2_max = 19.44444 ;
+
+ air_temp2_mean = 18.2963 ;
+
+ air_temp2_median = 17.77778 ;
+
+ air_temp2_var = 0.3209874 ;
+
+ air_temp2_stdev = 0.5665575 ;
+
+ air_temp2_iqr25 = 17.77778 ;
+
+ air_temp2_iqr75 = 18.88889 ;
+
+ num_msg_valid_bar_press = 0 ;
+
+ bar_press_min = _ ;
+
+ bar_press_max = _ ;
+
+ bar_press_mean = _ ;
+
+ bar_press_median = _ ;
+
+ bar_press_var = _ ;
+
+ bar_press_stdev = _ ;
+
+ bar_press_iqr25 = _ ;
+
+ bar_press_iqr75 = _ ;
+
+ num_msg_valid_brakes = _ ;
+
+ num_brakes_all_off = _ ;
+
+ num_brakes_all_on = _ ;
+
+ num_brakes_rr_active = _ ;
+
+ num_brakes_rf_active = _ ;
+
+ num_brakes_lr_active = _ ;
+
+ num_brakes_lf_active = _ ;
+
+ num_msg_valid_brakes_boost = _ ;
+
+ num_brakes_boost_not_equipped = _ ;
+
+ num_brakes_boost_off = _ ;
+
+ num_brakes_boost_on = _ ;
+
+ num_msg_valid_dew_temp = _ ;
+
+ dew_temp_min = _ ;
+
+ dew_temp_max = _ ;
+
+ dew_temp_mean = _ ;
+
+ dew_temp_median = _ ;
+
+ dew_temp_var = _ ;
+
+ dew_temp_stdev = _ ;
+
+ dew_temp_iqr25 = _ ;
+
+ dew_temp_iqr75 = _ ;
+
+ num_msg_valid_heading = 45 ;
+
+ heading_min = 188.12 ;
+
+ heading_max = 194.51 ;
+
+ heading_mean = 193.4713 ;
+
+ heading_median = 194.17 ;
+
+ heading_var = 3.291017 ;
+
+ heading_stdev = 1.814116 ;
+
+ heading_iqr25 = 193.9 ;
+
+ heading_iqr75 = 194.33 ;
+
+ num_msg_valid_hoz_accel_lat = _ ;
+
+ hoz_accel_lat_min = _ ;
+
+ hoz_accel_lat_max = _ ;
+
+ hoz_accel_lat_mean = _ ;
+
+ hoz_accel_lat_median = _ ;
+
+ hoz_accel_lat_var = _ ;
+
+ hoz_accel_lat_stdev = _ ;
+
+ hoz_accel_lat_iqr25 = _ ;
+
+ hoz_accel_lat_iqr75 = _ ;
+
+ num_msg_valid_hoz_accel_lon = _ ;
+
+ hoz_accel_lon_min = _ ;
+
+ hoz_accel_lon_max = _ ;
+
+ hoz_accel_lon_mean = _ ;
+
+ hoz_accel_lon_median = _ ;
+
+ hoz_accel_lon_var = _ ;
+
+ hoz_accel_lon_stdev = _ ;
+
+ hoz_accel_lon_iqr25 = _ ;
+
+ hoz_accel_lon_iqr75 = _ ;
+
+ num_msg_valid_lights = _ ;
+
+ num_lights_off = _ ;
+
+ num_lights_hazard = _ ;
+
+ num_lights_parking = _ ;
+
+ num_lights_fog = _ ;
+
+ num_lights_drl = _ ;
+
+ num_lights_automatic_control = _ ;
+
+ num_lights_right_turn = _ ;
+
+ num_lights_left_turn = _ ;
+
+ num_lights_high_beam = _ ;
+
+ num_lights_low_beam = _ ;
+
+ num_msg_valid_speed = 45 ;
+
+ speed_min = 21.16612 ;
+
+ speed_ratio = _ ;
+
+ speed_max = 24.46366 ;
+
+ speed_mean = 24.04811 ;
+
+ speed_median = 24.29904 ;
+
+ speed_var = 0.4900962 ;
+
+ speed_stdev = 0.7000687 ;
+
+ speed_iqr25 = 24.14471 ;
+
+ speed_iqr75 = 24.3762 ;
+
+ num_msg_valid_stab = _ ;
+
+ num_stab_not_equipped = _ ;
+
+ num_stab_off = _ ;
+
+ num_stab_on = _ ;
+
+ num_stab_engaged = _ ;
+
+ num_msg_valid_steering_angle = _ ;
+
+ steering_angle_min = _ ;
+
+ steering_angle_max = _ ;
+
+ steering_angle_mean = _ ;
+
+ steering_angle_median = _ ;
+
+ steering_angle_var = _ ;
+
+ steering_angle_stdev = _ ;
+
+ steering_angle_iqr25 = _ ;
+
+ steering_angle_iqr75 = _ ;
+
+ num_msg_valid_steering_rate = _ ;
+
+ steering_rate_min = _ ;
+
+ steering_rate_max = _ ;
+
+ steering_rate_mean = _ ;
+
+ steering_rate_median = _ ;
+
+ steering_rate_var = _ ;
+
+ steering_rate_stdev = _ ;
+
+ num_msg_valid_surface_temp = 45 ;
+
+ surface_temp_min = 22.22222 ;
+
+ surface_temp_max = 24.44444 ;
+
+ surface_temp_mean = 23.7284 ;
+
+ surface_temp_median = 23.88889 ;
+
+ surface_temp_var = 0.228014 ;
+
+ surface_temp_stdev = 0.4775081 ;
+
+ surface_temp_iqr25 = 23.33333 ;
+
+ surface_temp_iqr75 = 23.88889 ;
+
+ num_msg_valid_trac = _ ;
+
+ num_trac_not_equipped = _ ;
+
+ num_trac_off = _ ;
+
+ num_trac_on = _ ;
+
+ num_trac_engaged = _ ;
+
+ num_msg_valid_wipers = 0 ;
+
+ num_wipers_not_equipped = _ ;
+
+ num_wipers_off = _ ;
+
+ num_wipers_intermittent = _ ;
+
+ num_wipers_low = _ ;
+
+ num_wipers_high = _ ;
+
+ num_wipers_washer = _ ;
+
+ num_wipers_automatic = _ ;
+
+ num_msg_valid_yaw = _ ;
+
+ yaw_min = _ ;
+
+ yaw_max = _ ;
+
+ yaw_mean = _ ;
+
+ yaw_median = _ ;
+
+ yaw_var = _ ;
+
+ yaw_stdev = _ ;
+
+ yaw_iqr25 = _ ;
+
+ yaw_iqr75 = _ ;
+}

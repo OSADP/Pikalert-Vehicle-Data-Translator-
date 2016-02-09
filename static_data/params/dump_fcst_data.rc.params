@@ -1,0 +1,24 @@
+/**********************************************************************
+ * TDRP params for ./dump_fcst_data
+ **********************************************************************/
+
+///////////// fcst_var_names //////////////////////////
+//
+// Array of structs containing dicast variable names and their 
+//   associated output names.
+// Forecast data will be dumped for these variables.
+//
+// Type: struct
+//   typedef struct {
+//      char* in_var_name;
+//      char* out_var_name;
+//   }
+//
+// 1D array - variable length.
+//
+
+fcst_var_names = {
+  { "road_T", "roadTemperature"},
+  { "subsurface_T", "roadSubsurfaceTemp"}
+};
+

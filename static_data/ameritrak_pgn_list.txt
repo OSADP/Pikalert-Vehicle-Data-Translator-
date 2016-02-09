@@ -1,0 +1,395 @@
+
+
+
+Brice --
+
+Here is an update to the PGN and SPN definitions contained in the CAN-bus interface
+program's .INI file.
+
+
+;
+;
+;   CAN-bus address        Desc
+;-------------------------------------------------------
+;   src: 249 (F9) ....... 'Scan Tool'
+;   dst: 255 (FF) ....... 'Global Destination Address'
+;-------------------------------------------------------
+;
+;   Code      Abrev for    Desc
+;-------------------------------------------------------------------------------
+;   $var .... variable ... Expected data len or frequency is variable)
+;   $req .... request .... Data item must be requested
+;-------------------------------------------------------------------------------
+;   $mon .... monitor .... Data item is to be monitored (no request necessary)
+;   $once ... once ....... Data item is to be requested once
+;-------------------------------------------------------------------------------
+;
+;
+;                      exp   freq   acq   addr addr      --- J1939-71 Docs ---
+;  port    PGN   PGN   len     ms   mode   src  dst  pri  page     code  desc
+;---------------------------------------------------------------------------------------------------------------
+>Pgn: 0, 61441, F001,    8,   100,  $mon,  249, 255,  6,  2300,    EBC1, Electronic brake controller 1
+>Pgn: 0, 61442, F002,    8,    10,  $mon,  249, 255,  6,  2300,    ETC1, Electronic transmission controller 1
+>Pgn: 0, 61443, F003,    8,    50,  $mon,  249, 255,  6,  2301,    EEC2, Electronic engine controller 2
+>Pgn: 0, 61444, F004,    8,  $var,  $mon,  249, 255,  6,  2301,    EEC1, Electronic engine controller 1
+>Pgn: 0, 61445, F005,    8,   100,  $mon,  249, 255,  6,  2302,    ETC2, Electronic transmission controller 2
+>Pgn: 0, 61469, F01D,    8,    10,  $mon,  249, 255,  6,  2313,     SAS, Steering angle sensor info
+>Pgn: 0, 61482, F02A,    8,    10,  $mon,  249, 255,  6,  2318,     ARI, Angular rate info
+>Pgn: 0, 61485, F02D,    8,    10,  $mon,  249, 255,  6,  2320,      AS, Acceleration sensor
+>Pgn: 0, 64773, FD05,    8,  1000,  $mon,  249, 255,  6,  2332,   DLCD1, Direct lamp control data 1
+>Pgn: 0, 64776, FD08,    8,    30,  $mon,  249, 255,  6,  2333,     EOM, Engine oil message
+>Pgn: 0, 64777, FD09,    8,  1000,  $mon,  249, 255,  6,  2334,   HRLFC, High resolution fuel consumption (liquid)
+>Pgn: 0, 64851, FD53,    8,   500,  $mon,  249, 255,  6,  2375,     EAI, Engine average info
+>Pgn: 0, 64870, FD66,    8,  1000,  $mon,  249, 255,  6,  2376,     ET4, Engine temperature 4
+;Pgn: 0, 64906, FD8A, $var,  $req,  5000,  249, 255,  6,  2391,   J2012, SAE J2012 DTC display
+>Pgn: 0, 64972, FDCC,    8,  1000,  $mon,  249, 255,  6,  2416,     OEL, Operators external light controls message
+>Pgn: 0, 64973, FDCD,    8,   200,  $mon,  249, 255,  6,  2416,     OWW, Operator wiper and washer controls message
+>Pgn: 0, 64992, FDE0,    8,  1000,  $mon,  249, 255,  6,  2426,    AMB2, Ambient conditions 2
+>Pgn: 0, 65031, FE07,    8,   500,  $mon,  249, 255,  6,  2429,      ET, Exhaust temp
+>Pgn: 0, 65088, FE40,    8,  $req,  5000,  249, 255,  6,  2430,      LD, Lighting data
+>Pgn: 0, 65100, FE4D,    8,  $req,  5000,  249, 255,  6,  2433,    TAVG, Total averaged info
+>Pgn: 0, 65134, FE6E,    8,    20,  $mon,  249, 255,  6,  2443,     HRW, High resolution wheel speed
+>Pgn: 0, 65171, FE93,    8,   100,  $mon,  249, 255,  6,  2457,     EES, Engine electrical system/module info
+>Pgn: 0, 65191, FEA7,    8,  1000,  $mon,  249, 255,  6,  2464,      AT, Alternator temp
+>Pgn: 0, 65203, FEB3,    8,  $req,  5000,  249, 255,  6,  2468,     LFI, Fuel info (liquid)
+>Pgn: 0, 65215, FEBF,    8,   100,  $mon,  249, 255,  6,  2472,    EBC2, Wheel speed info
+;Pgn: 0, 65216, FEC0, $var,  $req,  5000,  249, 255,  6,  2473,    SERV, Service info
+>Pgn: 0, 65217, FEC1,    8,  1000,  $mon,  249, 255,  6,  2473,    VDHR, High resolution vehicle distance
+>Pgn: 0, 65237, FED5,    8,  1000,  $mon,  249, 255,  6,  2475,      AS, Alternator info
+>Pgn: 0, 65248, FEE0,    8,   100,  $mon,  249, 255,  6,  2479,      VD, Vehicle distance
+>Pgn: 0, 65253, FEE5,    8,  $req,  5000,  249, 255,  6,  2484,   HOURS, Engine hours & revolutions
+>Pgn: 0, 65255, FEE7,    8,  $req,  5000,  249, 255,  6,  2484,      VH, Vehicle hours
+;Pgn: 0, 65259, FEEB, $var,  $req,  $once, 249, 255,  6,  2486,      CI, Component identification
+>Pgn: 0, 65260, FEEC, $var,  $req,  $once, 249, 255,  6,  2487,      VI, Vehicle identification
+>Pgn: 0, 65261, FEEC,    8,  $req,  5000,  249, 255,  6,  2487,    CCSS, Cruise control/vehicle speed setup
+>Pgn: 0, 65262, FEEE,    8,  1000,  $mon,  249, 255,  6,  2487,     ET1, Engine temperature 1
+>Pgn: 0, 65263, FEEF,    8,   500,  $mon,  249, 255,  6,  2488,  EFL/P1, Engine fluid level/pressure 1
+>Pgn: 0, 65265, FEF1,    8,   100,  $mon,  249, 255,  6,  2489,    CCVS, Cruise control/vehicle speed
+>Pgn: 0, 65266, FEF2,    8,   100,  $mon,  249, 255,  6,  2489,     LFE, Fuel economy (liquid)
+>Pgn: 0, 65269, FEF5,    8,  1000,  $mon,  249, 255,  6,  2491,     AMB, Ambient conditions
+>Pgn: 0, 65271, FEF7,    8,  1000,  $mon,  249, 255,  6,  2492,    VEP1, Vehicle electrical power 1
+>Pgn: 0, 65272, FEF8,    8,  1000,  $mon,  249, 255,  6,  2492,    TRF1, Transmission fluids 1
+;---------------------------------------------------------------------------------------------------------------
+;
+;
+>Fraction: @frcA, 1/32,    0.03125
+>Fraction: @frcB, 1/64,    0.015625
+>Fraction: @frcC, 1/128,   0.0078125
+>Fraction: @frcD, 1/256,   0.00390625
+>Fraction: @frcE, 1/512,   0.001953125
+>Fraction: @frcF, 1/1024,  0.0009765625
+>Fraction: @frcG, 1/8192,  0.0001220703125
+>Fraction: @frcH, 1/32768, 0.000030517578125
+;
+;
+;   Code       Abrev for          Desc
+;---------------------------------------------------------------------
+;   #hold ... 'hold' ............ Hold (omit). Don't send this SPN
+;   #send ... 'send' ............ Send (don't omit). Send this SPN
+;---------------------------------------------------------------------
+;   $dis .... 'discrete' ........ Data type
+;   $int .... 'integer' ......... Data type
+;   $lng .... 'long' ............ Data type
+;   $flt .... 'float' ........... Data type
+;   $txt .... 'text' ............ Data type
+;---------------------------------------------------------------------
+;   @nrs .... 'no resolution' ... Resolution
+;   @frcX ... 'fraction' ........ See the >Fraction: defines, above.
+;---------------------------------------------------------------------
+;   $nu ..... 'no units' ........ Units
+;---------------------------------------------------------------------
+;
+;
+;     PGN    PGN    SPN  send   beg bits type   res/bit   off    units  desc
+;---------------------------------------------------------------------------------------------------------------
+>Spn: 61441, F001,  561, #send, 1.1,  2, $dis,  @nrs,       0,     $nu, ASR engine control active
+>Spn: 61441, F001,  562, #send, 1.3,  2, $dis,  @nrs,       0,     $nu, ASR brake control active
+>Spn: 61441, F001,  563, #send, 1.5,  2, $dis,  @nrs,       0,     $nu, ABS active
+>Spn: 61441, F001, 1121, #send, 1.7,  2, $dis,  @nrs,       0,     $nu, EBS brake switch
+>Spn: 61441, F001,  521, #send, 2.1,  8, $flt,  0.4,        0,       %, Brake pedal position
+>Spn: 61441, F001,  575, #send, 3.1,  2, $dis,  @nrs,       0,     $nu, ABS off-road switch
+>Spn: 61441, F001,  576, #send, 3.3,  2, $dis,  @nrs,       0,     $nu, ASR off-road switch
+>Spn: 61441, F001,  577, #send, 3.5,  2, $dis,  @nrs,       0,     $nu, ASR hill-holder switch
+>Spn: 61441, F001, 1238, #send, 3.7,  2, $dis,  @nrs,       0,     $nu, Traction control override switch
+>Spn: 61441, F001,  972, #send, 4.1,  2, $dis,  @nrs,       0,     $nu, Accelerator interlock switch
+>Spn: 61441, F001,  971, #send, 4.3,  2, $dis,  @nrs,       0,     $nu, Engine derate switch
+>Spn: 61441, F001,  970, #send, 4.5,  2, $dis,  @nrs,       0,     $nu, Engine auxiliary shutdown switch
+>Spn: 61441, F001,  969, #send, 4.7,  2, $dis,  @nrs,       0,     $nu, Remote accelerator enable switch
+>Spn: 61441, F001,  973, #send, 5.1,  8, $flt,  0.4,        0,       %, Engine retarder selection
+>Spn: 61441, F001, 1243, #send, 6.1,  2, $dis,  @nrs,       0,     $nu, ABS fully operational
+>Spn: 61441, F001, 1439, #send, 6.3,  2, $dis,  @nrs,       0,     $nu, EBS red warning signal
+>Spn: 61441, F001, 1438, #send, 6.5,  2, $dis,  @nrs,       0,     $nu, ABS/EBS amber warning signal (powered vehicle)
+>Spn: 61441, F001, 1793, #send, 6.7,  2, $dis,  @nrs,       0,     $nu, ATC/ASR information signal
+>Spn: 61441, F001, 1481, #send, 7.1,  8, $int,  1,          0,     $nu, Source address of controlling device for brake control
+>Spn: 61441, F001, 2911, #send, 8.3,  2, $dis,  @nrs,       0,     $nu, Halt brake switch
+>Spn: 61441, F001, 1836, #send, 8.5,  2, $dis,  @nrs,       0,     $nu, Trailer ABS status
+>Spn: 61441, F001, 1792, #send, 8.7,  2, $dis,  @nrs,       0,     $nu, Tractor-mounted trailer ABS warning signal
+;
+>Spn: 61442, F002,  560, #send, 1.1,  2, $dis,  @nrs,       0,     $nu, Transmission driveline engaged
+>Spn: 61442, F002,  573, #send, 1.3,  2, $dis,  @nrs,       0,     $nu, Transmission torque converter lockup engaged
+>Spn: 61442, F002,  574, #send, 1.5,  2, $dis,  @nrs,       0,     $nu, Transmission shift in process
+>Spn: 61442, F002, 4816, #send, 1.7,  2, $dis,  @nrs,       0,     $nu, Transmission torque converter lockup transition in process
+>Spn: 61442, F002,  191, #send, 2.1, 16, $flt,  0.125,      0,     rpm, Transmission output shaft speed
+>Spn: 61442, F002,  522, #send, 4.1,  8, $flt,  0.4,        0,       %, Percent clutch slip
+>Spn: 61442, F002,  606, #send, 5.1,  2, $dis,  @nrs,       0,     $nu, Engine momentary overspeed enable
+>Spn: 61442, F002,  607, #send, 5.3,  2, $dis,  @nrs,       0,     $nu, Progressive shift disable
+>Spn: 61442, F002, 5015, #send, 5.5,  2, $dis,  @nrs,       0,     $nu, Momentary engine maximum power enable
+>Spn: 61442, F002,  161, #send, 6.1, 16, $flt,  0.125,      0,     rpm, Transmission input shaft speed
+;
+>Spn: 61443, F003,  558, #send, 1.1,  2, $dis,  @nrs,       0,     $nu, Accelerator pedal 1 low idle switch
+>Spn: 61443, F003,  559, #send, 1.3,  2, $dis,  @nrs,       0,     $nu, Accelerator pedal kickdown switch
+>Spn: 61443, F003, 1437, #send, 1.5,  2, $dis,  @nrs,       0,     $nu, Road speed limit status
+>Spn: 61443, F003, 2970, #send, 1.7,  2, $dis,  @nrs,       0,     $nu, Accelerator pedal 2 low idle switch
+>Spn: 61443, F003,   91, #send, 2.1,  8, $flt,  0.4,        0,       %, Accelerator pedal position
+>Spn: 61443, F003,   92, #send, 3.1,  8, $int,  1,          0,       %, Engine percent load at current speed
+>Spn: 61443, F003,  974, #send, 4.1,  8, $flt,  0.4,        0,       %, Remote accelerator pedal position
+>Spn: 61443, F003,   29, #send, 5.1,  8, $flt,  0.4,        0,       %, Accelerator pedal position 2
+>Spn: 61443, F003, 2979, #send, 6.1,  2, $dis,  @nrs,       0,     $nu, Vehicle acceleration rate limit status
+>Spn: 61443, F003, 5021, #send, 6.3,  2, $dis,  @nrs,       0,     $nu, Momentary engine maximum power enable feedback
+>Spn: 61443, F003, 5399, #send, 6.5,  2, $dis,  @nrs,       0,     $nu, DPF thermal management active
+>Spn: 61443, F003, 5400, #send, 6.7,  2, $dis,  @nrs,       0,     $nu, SCR thermal management active
+>Spn: 61443, F003, 3357, #send, 7.1,  8, $flt,  0.4,        0,       %, Actual maximum available engine percent torque
+>Spn: 61443, F003, 5398, #send, 8.1,  8, $int,  1,       -125,       %, Estimated pumping percent torque
+;
+>Spn: 61444, F004,  899, #send, 1.1,  4, $dis,  @nrs,       0,     $nu, Engine torque mode
+>Spn: 61444, F004, 4154, #send, 1.5,  4, $flt,  0.125,      0,       %, Actual engine percent torque high resolution
+>Spn: 61444, F004,  512, #send, 2.1,  8, $int,  1,       -125,       %, Drivers demand engine percent torque
+>Spn: 61444, F004,  513, #send, 3.1,  8, $int,  1,       -125,       %, Actual engine percent torque
+>Spn: 61444, F004,  190, #send, 4.1, 16, $flt,  0.125,      0,     rpm, Engine speed
+>Spn: 61444, F004, 1483, #send, 6.1,  8, $int,  1,          0,     $nu, Source address of controlling device for engine control
+>Spn: 61444, F004, 1675, #send, 7.1,  4, $dis,  @nrs,       0,     $nu, Engine starter mode
+>Spn: 61444, F004, 2432, #send, 8.1,  8, $int,  1,       -125,       %, Engine demand percent torque
+;
+>Spn: 61445, F005,  524, #send, 1.1,  8, $int,  1,       -125,    gear, Transmission selected gear
+>Spn: 61445, F005,  526, #send, 2.1, 16, $flt,  0.001,      0,     $nu, Transmission actual gear ratio
+>Spn: 61445, F005,  523, #send, 4.1,  8, $int,  1,       -125,    gear, Transmission current gear
+>Spn: 61445, F005,  162, #send, 5.1, 16, $txt,  $nrs,       0,     $nu, Transmission requested range
+>Spn: 61445, F005,  163, #hold, 7.1, 16, $txt,  @nrs,       0,     $nu, Transmission current range
+;
+>Spn: 61469, F01D, 3683, #send, 1.1, 16, $flt,  @frcF,    -31.374, rad, Steering wheel angle
+>Spn: 61469, F01D, 3684, #send, 3.1,  6, $int,  1,        -32,     $nu, Steering wheel angle range counter
+>Spn: 61469, F01D, 3685, #send, 3.7,  2, $dis,  @nrs,       0,     $nu, Steering wheel angle range counter type
+>Spn: 61469, F01D, 3686, #send, 5.1, 16, $flt,  @frcF,    -31.374, rad, Steering wheel angle range
+>Spn: 61469, F01D, 3687, #send, 7.1,  2, $dis,  @nrs,       0,     $nu, Steering angle sensor active mode
+>Spn: 61469, F01D, 3688, #send, 7.3,  2, $dis,  @nrs,       0,     $nu, Steering angle sensor calibrated
+>Spn: 61469, F01D, 3689, #hold, 8.1,  4, $dis,  @nrs,       0,     $nu, Message counter
+>Spn: 61469, F01D, 3690, #hold, 8.5,  4, $dis,  @nrs,       0,     $nu, Message checksum
+;
+>Spn: 61482, F02A, 4983, #send, 1.1, 16, $flt,  @frcC,   -250,     deg, Pitch rate extended range
+>Spn: 61482, F02A, 4984, #send, 3.1, 16, $flt,  @frcC,   -250,     deg, Roll  rate extended range
+>Spn: 61482, F02A, 4985, #send, 5.1, 16, $flt,  @frcC,   -250,     deg, Yaw   rate extended range
+>Spn: 61482, F02A, 4986, #hold, 7.1,  2, $dis,  @nrs,       0,     $nu, Pitch rate extended range figure of merit
+>Spn: 61482, F02A, 4987, #hold, 7.3,  2, $dis,  @nrs,       0,     $nu, Roll  rate extended range figure of merit
+>Spn: 61482, F02A, 4988, #hold, 7.5,  2, $dis,  @nrs,       0,     $nu, Yaw   rate extended range figure of merit
+>Spn: 61482, F02A, 4989, #hold, 8.1,  8, $dis,  @nrs,       0,      ms, Angular rate measurement latency
+;
+>Spn: 61485, F02D, 5347, #send, 1.1,  8, $flt,  0.01,    -320,   m/s^2, Lateral      acceleration extended range
+>Spn: 61485, F02D, 5348, #send, 3.1,  8, $flt,  0.01,    -320,   m/s^2, Longitudinal acceleration extended range
+>Spn: 61485, F02D, 5349, #send, 5.1,  8, $flt,  0.01,    -320,   m/s^2, Vertical     acceleration extended range
+>Spn: 61485, F02D, 5350, #send, 7.1,  2, $dis,  @nrs,       0,     $nu, Lateral      acceleration extended range figure of merit
+>Spn: 61485, F02D, 5351, #send, 7.3,  2, $dis,  @nrs,       0,     $nu, Longitudinal acceleration extended range figure of merit
+>Spn: 61485, F02D, 5352, #send, 7.5,  2, $dis,  @nrs,       0,     $nu, Vertical     acceleration extended range figure of merit
+>Spn: 61485, F02D, 5353, #hold, 7.7,  2, $dis,  @nrs,       0,     $nu, Support variable transmission repitition rate for acceleration sensor
+;
+>Spn: 64773, FD05, 5093, #send, 1.1,  2, $dis,  @nrs,       0,     $nu, Engine protect lamp
+>Spn: 64773, FD05, 5094, #send, 1.3,  2, $dis,  @nrs,       0,     $nu, Engine amber warning lamp
+>Spn: 64773, FD05, 5095, #send, 1.5,  2, $dis,  @nrs,       0,     $nu, Engine red stop lamp
+>Spn: 64773, FD05, 5096, #send, 1.7,  2, $dis,  @nrs,       0,     $nu, OBD malfunction indicator lamp
+>Spn: 64773, FD05, 5097, #send, 2.1,  2, $dis,  @nrs,       0,     $nu, Engine brake active lamp
+>Spn: 64773, FD05, 5098, #send, 2.3,  2, $dis,  @nrs,       0,     $nu, Compression brake enable switch lamp
+>Spn: 64773, FD05, 5099, #send, 2.5,  2, $dis,  @nrs,       0,     $nu, Engine oil pressure low lamp
+>Spn: 64773, FD05, 5100, #send, 2.7,  2, $dis,  @nrs,       0,     $nu, Engine coolant temp high lamp
+>Spn: 64773, FD05, 5101, #send, 3.1,  2, $dis,  @nrs,       0,     $nu, Engine coolant level low lamp
+>Spn: 64773, FD05, 5102, #send, 3.3,  2, $dis,  @nrs,       0,     $nu, Engine idle management idle active lamp
+>Spn: 64773, FD05, 5103, #send, 3.5,  2, $dis,  @nrs,       0,     $nu, Engine air filter restriction lamp
+>Spn: 64773, FD05, 5470, #send, 3.7,  2, $dis,  @nrs,       0,     $nu, Engine fuel filter restructed lamp
+>Spn: 64773, FD05, 5416, #send, 8.7,  2, $dis,  @nrs,       0,     $nu, Engine wait to start lamp
+;
+>Spn: 64776, FD08, 5055, #send, 1.1, 16, $flt,  @frcB,      0,      Cp, Engine oil viscosity
+>Spn: 64776, FD08, 5056, #send, 3.1, 16, $flt,  @frcH,      0,      Cp, Engine oil density
+>Spn: 64776, FD08, 5468, #send, 5.1, 16, $flt,  @frcG,      0,     $nu, Engine oil relative dielectricity (hi res)
+;
+>Spn: 64777, FD09, 5053, #send, 1.1, 32, $flt,  0.001,      0,       L, Hi res engine trip  fuel
+>Spn: 64777, FD09, 5054, #send, 5.1, 32, $flt,  0.001,      0,       L, Hi res engine total fuel used
+;
+>Spn: 64851, FD53, 4151, #send, 1.1, 16, $flt,  @frcA,   -273,       C, Engine exhaust temp average
+>Spn: 64851, FD53, 4153, #send, 3.1, 16, $flt,  @frcA,   -273,       C, Engine exhaust temp average bank 1
+>Spn: 64851, FD53, 4152, #send, 5.1, 16, $flt,  @frcA,   -273,       C, Engine exhaust temp average bank 2
+;
+>Spn: 64870, FD66, 4076, #send, 1.1,  8, $int,  1,        -40,       C, Engine coolant temp 2
+>Spn: 64870, FD66, 4193, #send, 2.1,  8, $int,  1,        -40,       C, Engine coolant pump outlet temp
+>Spn: 64870, FD66, 4194, #send, 3.1,  8, $flt,  0.4,        0,       %, Engine coolant thermostat opening
+>Spn: 64870, FD66, 4288, #send, 4.1, 16, $flt,  @frcA,   -273,       C, Engine exhaust valve actuation system oil temp
+>Spn: 64870, FD66, 5020, #send, 6.1,  8, $flt,  @frcA,   -273,       C, Engine exhaust gas recirculation 1 mixer intake temp
+;
+>Spn: 64972, FDCC, 2873, #send, 1.1,  4, $dis,  @nrs,       0,     $nu, Work light switch
+>Spn: 64972, FDCC, 2872, #send, 1.5,  4, $dis,  @nrs,       0,     $nu, Main light switch
+>Spn: 64972, FDCC, 2876, #send, 2.1,  4, $dis,  @nrs,       0,     $nu, Turn signal switch
+>Spn: 64972, FDCC, 2875, #send, 2.5,  2, $dis,  @nrs,       0,     $nu, Hazard light switch
+>Spn: 64972, FDCC, 2874, #send, 2.7,  2, $dis,  @nrs,       0,     $nu, High-low beam switch
+>Spn: 64972, FDCC, 2878, #hold, 3.1,  8, $flt,  0.4,        0,       %, Operators desired back-light
+>Spn: 64972, FDCC, 2877, #hold, 4.1, 16, $int,  1,          0,     sec, Operators desired delayed lamp off time
+;
+>Spn: 64973, FDCD, 2864, #send, 1.1,  4, $dis,  @nrs,       0,     $nu, Front non-operator wiper switch
+>Spn: 64973, FDCD, 2863, #send, 1.5,  4, $dis,  @nrs,       0,     $nu, Front operator wiper switch
+>Spn: 64973, FDCD, 2865, #send, 2.5,  4, $dis,  @nrs,       0,     $nu, Rear wiper switch
+>Spn: 64973, FDCD, 2869, #send, 3.1,  8, $flt,  0.4,        0,       %, Front operator wiper delay control
+>Spn: 64973, FDCD, 2870, #send, 4.1,  8, $flt,  0.4,        0,       %, Front non-operator wiper delay control
+>Spn: 64973, FDCD, 2871, #send, 5.1,  8, $flt,  0.4,        0,       %, Rear wiper delay control
+>Spn: 64973, FDCD, 2867, #send, 6.3,  3, $dis,  @nrs,       0,     $nu, Front non-operator wiper switch
+>Spn: 64973, FDCD, 2866, #send, 6.6,  3, $dis,  @nrs,       0,     $nu, Front operator wiper switch
+>Spn: 64973, FDCD, 2868, #send, 7.6,  3, $dis,  @nrs,       0,     $nu, Rear washer function
+;
+>Spn: 64992, FDE0, 2610, #send, 1.1,  8, $flt,  0.4,        0,       %, Solar intensity percent
+>Spn: 64992, FDE0, 2611, #send, 2.1,  8, $flt,  0.4,        0, mW/cm^2, Solar sensor maximum
+>Spn: 64992, FDE0, 4490, #send, 3.1, 16, $flt,  0.01,       0,    g/kg, Specific humidity
+;
+>Spn: 65031, FE07, 2433, #send, 1.1, 16, $flt,  @frcA,   -273,       C, Engine exhaust gast temp right manifold
+>Spn: 65031, FE07, 2434, #send, 3.1, 16, $flt,  @frcA,   -273,       C, Engine exhaust gast temp left  manifold
+;
+>Spn: 65088, FE40, 2404, #send, 1.1,  2, $dis,  @nrs,       0,     $nu, Running light
+>Spn: 65088, FE40, 2352, #send, 1.3,  2, $dis,  @nrs,       0,     $nu, Alternate beam headlight
+>Spn: 65088, FE40, 2350, #send, 1.5,  2, $dis,  @nrs,       0,     $nu, Low beam headlight
+>Spn: 65088, FE40, 2348, #send, 1.7,  2, $dis,  @nrs,       0,     $nu, High beam headlight
+>Spn: 65088, FE40, 2388, #send, 2.1,  2, $dis,  @nrs,       0,     $nu, Running light
+>Spn: 65088, FE40, 2386, #send, 2.3,  2, $dis,  @nrs,       0,     $nu, Alternate beam headlight
+>Spn: 65088, FE40, 2370, #send, 2.5,  2, $dis,  @nrs,       0,     $nu, Low beam headlight
+>Spn: 65088, FE40, 2368, #send, 2.7,  2, $dis,  @nrs,       0,     $nu, High beam headlight
+>Spn: 65088, FE40, 2392, #send, 3.1,  2, $dis,  @nrs,       0,     $nu, Backup light and alarm horn
+>Spn: 65088, FE40, 2376, #send, 3.3,  2, $dis,  @nrs,       0,     $nu, Center stop light
+>Spn: 65088, FE40, 2374, #send, 3.5,  2, $dis,  @nrs,       0,     $nu, Right stop light
+>Spn: 65088, FE40, 2372, #send, 3.7,  2, $dis,  @nrs,       0,     $nu, Left stop light
+>Spn: 65088, FE40, 2384, #hold, 4.1,  2, $dis,  @nrs,       0,     $nu, Implement clearance light
+>Spn: 65088, FE40, 2382, #hold, 4.3,  2, $dis,  @nrs,       0,     $nu, Tractor clearance light
+>Spn: 65088, FE40, 2380, #hold, 4.5,  2, $dis,  @nrs,       0,     $nu, Implement marker light
+>Spn: 65088, FE40, 2378, #hold, 4.7,  2, $dis,  @nrs,       0,     $nu, Tractor marker light
+>Spn: 65088, FE40, 2390, #hold, 5.1,  2, $dis,  @nrs,       0,     $nu, Rear fog lights
+>Spn: 65088, FE40, 2358, #hold, 5.3,  2, $dis,  @nrs,       0,     $nu, Tractor underside mounted work lights
+>Spn: 65088, FE40, 2360, #hold, 5.5,  2, $dis,  @nrs,       0,     $nu, Tractor rear low  mounted work lights
+>Spn: 65088, FE40, 2362, #hold, 5.7,  2, $dis,  @nrs,       0,     $nu, Tractor rear high mounted work lights
+>Spn: 65088, FE40, 2364, #hold, 6.1,  2, $dis,  @nrs,       0,     $nu, Tractor side  low  mounted work lights
+>Spn: 65088, FE40, 2366, #hold, 6.3,  2, $dis,  @nrs,       0,     $nu, Tractor side  high mounted work lights
+>Spn: 65088, FE40, 2354, #hold, 6.5,  2, $dis,  @nrs,       0,     $nu, Tractor front low  mounted work lights
+>Spn: 65088, FE40, 2356, #hold, 6.7,  2, $dis,  @nrs,       0,     $nu, Tractor front high mounted work lights
+>Spn: 65088, FE40, 2398, #hold, 7.1,  2, $dis,  @nrs,       0,     $nu, Implement OEM Option 2 light
+>Spn: 65088, FE40, 2396, #hold, 7.3,  2, $dis,  @nrs,       0,     $nu, Implement OEM Option 1 light
+>Spn: 65088, FE40, 2407, #hold, 7.5,  2, $dis,  @nrs,       0,     $nu, Implement right facing work light
+>Spn: 65088, FE40, 2598, #hold, 7.7,  2, $dis,  @nrs,       0,     $nu, Implement left  facing work light
+>Spn: 65088, FE40, 2396, #hold, 8.3,  2, $dis,  @nrs,       0,     $nu, Implement right forward work light
+>Spn: 65088, FE40, 2407, #hold, 8.5,  2, $dis,  @nrs,       0,     $nu, Implement left  forward work light
+>Spn: 65088, FE40, 2598, #hold, 8.7,  2, $dis,  @nrs,       0,     $nu, Implement rear work light
+;
+>Spn: 65100, FE4D, 1834, #send, 1.1, 16, $flt,  0.05,       0,     L/h, Engine total average fuel rate
+>Spn: 65100, FE4D, 1835, #send, 3.1, 16, $flt,  @frcE,      0,    km/L, Engine total average fuel economy
+;
+>Spn: 65134, FE6E, 1592, #send, 1.1, 16, $flt,  @frcD,      0,   km/hr, Front axle left  wheel speed
+>Spn: 65134, FE6E, 1593, #send, 3.1, 16, $flt,  @frcD,      0,   km/hr, Front axle right wheel speed
+>Spn: 65134, FE6E, 1594, #send, 4.1, 16, $flt,  @frcD,      0,   km/hr, Rear  axle left  wheel speed
+>Spn: 65134, FE6E, 1595, #send, 5.1, 16, $flt,  @frcD,      0,   km/hr, Rear  axle right wheel speed
+;
+>Spn: 65171, FE93, 1204, #send, 1.1, 16, $flt,  0.05,       0,      kW, Electrical load
+>Spn: 65171, FE93, 1205, #send, 3.1,  2, $dis,  @nrs,       0,     $nu, Safety wire status
+;
+>Spn: 65191, FEA7, 1122, #send, 1.1,  8, $int,  1,        -40,       C, Engine alternator bearing 1 temp
+>Spn: 65191, FEA7, 1123, #send, 2.1,  8, $int,  1,        -40,       C, Engine alternator bearing 2 temp
+>Spn: 65191, FEA7, 1124, #send, 3.1,  8, $int,  1,        -40,       C, Engine alternator winding 1 temp
+>Spn: 65191, FEA7, 1125, #send, 4.1,  8, $int,  1,        -40,       C, Engine alternator winding 2 temp
+>Spn: 65191, FEA7, 1126, #send, 5.1,  8, $int,  1,        -40,       C, Engine alternator winding 3 temp
+;
+>Spn: 65215, FEBF,  904, #send, 1.1, 16, $flt,  @frcD,     -7.8125, km/hr, Front axle speed
+>Spn: 65215, FEBF,  905, #send, 3.1,  8, $flt,  0.0625,    -7.8125, km/hr, Relative speed front axle left  wheel
+>Spn: 65215, FEBF,  906, #send, 4.1,  8, $flt,  0.0625,    -7.8125, km/hr, Relative speed front axle right wheel
+>Spn: 65215, FEBF,  907, #send, 5.1,  8, $flt,  0.0625,    -7.8125, km/hr, Relative speed rear  axle #1 left  wheel
+>Spn: 65215, FEBF,  908, #send, 6.1,  8, $flt,  0.0625,    -7.8125, km/hr, Relative speed rear  axle #1 right wheel
+>Spn: 65215, FEBF,  909, #send, 7.1,  8, $flt,  0.0625,    -7.8125, km/hr, Relative speed rear  axle #2 left  wheel
+>Spn: 65215, FEBF,  910, #send, 8.1,  8, $flt,  0.0625,    -7.8125, km/hr, Relative speed rear  axle #2 right wheel
+;
+>Spn: 65217, FEC1,  917, #send, 1.1, 32, $lng,  5,          0,      km, High resolution total vehicle distance
+>Spn: 65217, FEC1,  918, #send, 5.1, 32, $lng,  5,          0,      km, High resolution trip distance
+;
+>Spn: 65237, FED5,  589, #send, 1.1, 16, $flt,  0.5,        0,     rpm, Alternator speed
+>Spn: 65237, FED5, 3353, #send, 3.1,  2, $dis,  @nrs,       0,     $nu, Alternator 1 status
+>Spn: 65237, FED5, 3354, #send, 3.3,  2, $dis,  @nrs,       0,     $nu, Alternator 2 status
+>Spn: 65237, FED5, 3355, #send, 3.5,  2, $dis,  @nrs,       0,     $nu, Alternator 3 status
+>Spn: 65237, FED5, 3356, #send, 3.7,  2, $dis,  @nrs,       0,     $nu, Alternator 4 status
+;
+>Spn: 65248, FEE0,  244, #send, 1.1, 32, $flt,  0.125,      0,      km, Trip distance
+>Spn: 65248, FEE0,  245, #send, 5.1, 32, $flt,  0.125,      0,      km, Total vehicle distance
+;
+>Spn: 65253, FEE5,  247, #send, 1.1, 32, $flt,  0.05,       0,      hr, Engine total hours of operation
+>Spn: 65253, FEE5,  249, #send, 5.1, 32, $lng,  1000,       0,       r, Engine total revolutions
+;
+>Spn: 65255, FEE7,  246, #send, 1.1, 32, $flt,  0.05,       0,      hr, Total vehicle hours
+>Spn: 65255, FEE7,  248, #send, 5.1, 32, $flt,  0.05,       0,      hr, Total power takeoff hours
+;
+>Spn: 65260, FEEC,  237, #send, 1.1, 99, $txt,  $nrs,       0,     $nu, VIN
+;
+>Spn: 65261, FEEC,   74, #send, 1.1,  8, $int,  1,          0,   km/hr, Max vehicle speed limit
+>Spn: 65261, FEEC,   87, #send, 2.1,  8, $int,  1,          0,   km/hr, Cruise control high set limit speed
+>Spn: 65261, FEEC,   88, #send, 3.1,  8, $int,  1,          0,   km/hr, Cruise control low  set limit speed
+;
+>Spn: 65262, FEEE,  110, #send, 1.1,  8, $int,  1,        -40,       C, Engine coolant temp
+>Spn: 65262, FEEE,  174, #send, 2.1,  8, $int,  1,        -40,       C, Engine fuel temp 1
+>Spn: 65262, FEEE,  175, #send, 3.1, 16, $flt,  @frcA,   -273,       C, Engine oil temp 1
+>Spn: 65262, FEEE,  176, #send, 5.1, 16, $flt,  @frcA,   -273,       C, Engine turbo oil temp
+>Spn: 65262, FEEE,   52, #send, 7.1,  8, $int,  1,        -40,       C, Engine intercooler temp
+>Spn: 65262, FEEE, 1134, #send, 8.1,  8, $flt,  0.4,        0,       %, Engine intercooler thermostat opening
+;
+>Spn: 65263, FEEF,   94, #send, 1.1,  8, $int,  4,          0,     kPa, Engine fuel delivery pressure
+>Spn: 65263, FEEF,   22, #send, 2.1,  8, $flt,  0.05,       0,     kPa, Engine extended crankcase blow-by pressure
+>Spn: 65263, FEEF,   98, #send, 3.1,  8, $flt,  0.04,       0,       %, Engine oil level
+>Spn: 65263, FEEF,  100, #send, 4.1,  8, $int,  4,          0,     kPa, Engine oil pressure
+>Spn: 65263, FEEF,  101, #send, 5.1, 16, $flt,  @frcC,   -250,     kPa, Engine turbo oil temp
+>Spn: 65263, FEEF,  109, #send, 7.1,  8, $int,  2,          0,     kPa, Engine coolant pressure
+>Spn: 65263, FEEF,  111, #send, 8.1,  8, $flt,  0.4,        0,       %, Engine coolant level
+;
+>Spn: 65265, FEF1,   69, #send, 1.1,  2, $dis,  @nrs,       0,     $nu, Two speed axle speed
+>Spn: 65265, FEF1,   70, #send, 1.3,  2, $dis,  @nrs,       0,     $nu, Parking brake switch
+>Spn: 65265, FEF1, 1633, #send, 1.5,  2, $dis,  @nrs,       0,     $nu, Cruise control pause switch
+>Spn: 65265, FEF1, 3807, #send, 1.7,  2, $dis,  @nrs,       0,     $nu, Park brake release inhibit request
+>Spn: 65265, FEF1,   84, #send, 2.1, 16, $flt,  @frcD,      0,   km/hr, Wheel-based vehicle speed
+>Spn: 65265, FEF1,  595, #send, 4.1,  2, $dis,  @nrs,       0,     $nu, Cruise control active
+>Spn: 65265, FEF1,  596, #send, 4.3,  2, $dis,  @nrs,       0,     $nu, Cruise control enable switch
+>Spn: 65265, FEF1,  597, #send, 4.5,  2, $dis,  @nrs,       0,     $nu, Brake switch
+>Spn: 65265, FEF1,  598, #send, 4.7,  2, $dis,  @nrs,       0,     $nu, Clutch switch
+>Spn: 65265, FEF1,  599, #send, 5.1,  2, $dis,  @nrs,       0,     $nu, Cruise control set switch
+>Spn: 65265, FEF1,  600, #send, 5.3,  2, $dis,  @nrs,       0,     $nu, Cruise control coast/decelerate switch
+>Spn: 65265, FEF1,  601, #send, 5.5,  2, $dis,  @nrs,       0,     $nu, Cruise control resume switch
+>Spn: 65265, FEF1,  602, #send, 5.7,  2, $dis,  @nrs,       0,     $nu, Cruise control accelerate switch
+>Spn: 65265, FEF1,   86, #send, 6.1,  8, $int,  1,          0,   km/hr, Cruise control speed
+>Spn: 65265, FEF1,  976, #send, 7.1,  2, $dis,  @nrs,       0,     $nu, PTO governor state
+>Spn: 65265, FEF1,  527, #send, 7.6,  2, $dis,  @nrs,       0,     $nu, Cruise control states
+>Spn: 65265, FEF1,  968, #send, 8.1,  2, $dis,  @nrs,       0,     $nu, Engine idle increment switch
+>Spn: 65265, FEF1,  967, #send, 8.3,  2, $dis,  @nrs,       0,     $nu, Engine idle decrement switch
+>Spn: 65265, FEF1,  966, #send, 8.5,  2, $dis,  @nrs,       0,     $nu, Engine test mode switch
+>Spn: 65265, FEF1, 1237, #send, 8.7,  2, $dis,  @nrs,       0,     $nu, Engine shutdown override switch
+;
+>Spn: 65266, FEF2,  183, #send, 1.1, 16, $flt,  0.05,       0,     L/h, Engine fuel rate
+>Spn: 65266, FEF2,  184, #send, 3.1, 16, $flt,  @frcE,      0,    km/h, Engine instantaneous fuel economy
+>Spn: 65266, FEF2,  185, #send, 5.1, 16, $flt,  @frcE,      0,    km/h, Engine instantaneous fuel economy
+>Spn: 65266, FEF2,   51, #send, 7.1,  8, $flt,  0.4,        0,       %, Engine throttle valve 1 position
+>Spn: 65266, FEF2, 3673, #send, 8.1,  8, $flt,  0.4,        0,       %, Engine throttle valve 2 position
+;
+>Spn: 65269, FEF5,  108, #send, 1.1,  8, $flt,  0.5,        0,     kPa, Barometric pressure
+>Spn: 65269, FEF5,  170, #send, 2.1, 16, $flt,  @frcA,   -273,       C, Cab interior temp
+>Spn: 65269, FEF5,  171, #send, 4.1, 16, $flt,  @frcA,   -273,       C, Ambient air temp
+>Spn: 65269, FEF5,  172, #send, 6.1,  8, $int,  1,        -40,       C, Engine air intake temp
+>Spn: 65269, FEF5,   79, #hold, 7.1, 16, $flt,  @frcA,   -273,       C, Road surface temp
+;
+>Spn: 65271, FEF7,  114, #send, 1.1,  8, $int,  1,       -125,       A, Net battery current
+>Spn: 65271, FEF7,  115, #send, 2.1,  8, $int,  1,          0,       A, Alternator current
+>Spn: 65271, FEF7,  167, #send, 3.1, 16, $flt,  0.05,       0,       V, Charging system voltage
+>Spn: 65271, FEF7,  168, #send, 5.1, 16, $flt,  0.05,       0,       V, Battery voltage/power input 1
+>Spn: 65271, FEF7,  158, #send, 7.1, 16, $flt,  0.05,       0,       V, Keyswitch battery voltage
+;
+>Spn: 65272, FEF8,  123, #send, 1.1,  8, $int, 16,          0,     kPa, Clutch pressure
+>Spn: 65272, FEF8,  124, #send, 2.1,  8, $flt,  0.04,       0,       %, Transmission oil level
+>Spn: 65272, FEF8,  126, #send, 3.1,  8, $int,  2,          0,     kPa, Transmission filter diff pressure
+>Spn: 65272, FEF8,  127, #send, 4.1,  8, $int, 16,          0,     kPa, Transmission oil pressure
+>Spn: 65272, FEF8,  177, #send, 5.1, 16, $flt,  @frcA,   -273,       C, Transmission oil temp
+>Spn: 65272, FEF8, 3027, #send, 7.1,  8, $flt,  0.5,      -62.5,     L, Transmission oil level high/low
+>Spn: 65272, FEF8, 3028, #send, 8.1,  8, $dis,  @nrs,       0,     $nu, Transmission oil level measurement status
+>Spn: 65272, FEF8, 3026, #hold, 8.2,  8, $dis,  @nrs,       0,     $nu, Transmission oil level countdown timer
+;
+;
+;

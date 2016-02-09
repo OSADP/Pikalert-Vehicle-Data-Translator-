@@ -1,0 +1,90 @@
+/**********************************************************************
+ * TDRP params for merge_frost
+ **********************************************************************/
+
+///////////// road_input_var_names //////////////////////////
+//
+// Road input frost variables
+// 
+// Type: string
+// 1D array - variable length.
+//
+
+file1_input_var_names = {
+		      "application_rate",
+		      "apply_chem",
+		      "available_H2O",
+		      "available_chem",
+		      "chem_form",
+		      "chem_type",
+		      "chemical_concentration",
+		      "do_plowing",
+		      "mobility",
+		      "nominal_chem",
+		      "phase_type",
+		      "precip_type",
+		      "road_T",
+		      "road_TempF",
+                      "snow_depth",
+		      "snow_depth_inches",
+		      "treatment_explanation",
+		      "treatment_explanation_index",
+		      "treatment_time"
+		      };
+
+///////////// road_output_var_names //////////////////////////
+//
+// Road output frost variables
+// 
+// Type: string
+// 1D array - variable length.
+//
+
+file1_output_var_names = {
+		      "application_rate",
+		      "apply_chem",
+		      "available_H2O",
+		      "available_chem",
+		      "chem_form",
+		      "chem_type",
+		      "chemical_concentration",
+		      "do_plowing",
+		      "mobility",
+		      "nominal_chem",
+		      "phase_type",
+		      "precip_type",
+		      "road_T",
+		      "road_TempF",
+                      "snow_depth",
+		      "snow_depth_inches",
+		      "treatment_explanation",
+		      "treatment_explanation_index",
+		      "treatment_time"
+		      };
+
+///////////// bridge_input_var_names //////////////////////////
+//
+// Bridge input frost variables
+// 
+// Type: string
+// 1D array - variable length.
+//
+
+file2_input_var_names = {
+		      "road_T",
+		      "road_TempF"
+		      };
+
+///////////// bridge_output_var_names //////////////////////////
+//
+// Bridge output frost variables
+// 
+// Type: string
+// 1D array - variable length.
+//
+
+file2_output_var_names = {
+		       "bridge_T",
+		       "bridge_TempF"
+		       };
+

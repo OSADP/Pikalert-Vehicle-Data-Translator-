@@ -1,0 +1,38 @@
+/**********************************************************************
+ * TDRP params for decoded2modfcst
+ **********************************************************************/
+
+///////////// mod_fcst_var_map ////////////////////////
+//
+// Array of structs containing the output variable name and it's 
+//   associate input variable name.
+// Data will be output in mod_fcst format for these variables.
+//
+// Type: struct
+//   typedef struct {
+//      char* out_name;
+//      char* in_name;
+//   }
+//
+// 1D array - variable length.
+//
+
+mod_fcst_var_map = {
+
+  { "num_sites", "num_sites" },
+  { "site_list", "site_list" },
+  { "T", "T_fhg" },
+  { "dewpt", "TD_fhg" },
+  { "wind_u", "u_fhg" },
+  { "wind_v", "v_fhg" },
+  { "cloud_cov", "N_atm" },
+  { "visibility", "vis_sfc" },
+  { "qpf03", "PRECIP3" },
+  { "precip_cn3", "precip_cn3" },
+  { "P_msl", "P_msl" },
+  { "P_sfc", "P_sfc" },
+  { "dswrf_sfc", "dswrf_sfc" },
+  { "dlwrf_sfc", "dlwrf_sfc" }
+
+};
+

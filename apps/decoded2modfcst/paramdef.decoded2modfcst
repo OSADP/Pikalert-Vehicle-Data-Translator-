@@ -1,0 +1,19 @@
+/* Struct definition to map output variables to input variables */
+typedef struct {     
+  char* out_name;
+  char* in_name;	
+} out_var_map_t;
+
+/* Input / Output variables */
+paramdef struct out_var_map_t {
+  p_default =
+  {
+  { "num_sites", "num_sites" },
+  { "site_list", "site_list" },
+  { "T", "T_sfc" },
+  { "dewpt", "TD_sfc" },
+  { "wind_speed", "SPD_sfc" }
+  };
+  p_descr = "Array of structs containing the output variable name and it's associate input variable name";
+  p_help = "Data will be output in mod_fcst format for these variables";
+} mod_fcst_var_map[];

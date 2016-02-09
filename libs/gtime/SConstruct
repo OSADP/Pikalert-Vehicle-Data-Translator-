@@ -1,0 +1,23 @@
+
+import os
+
+env = Environment(CPPPATH='./',
+                  LIBPATH=os.environ['LOCAL_LIB_DIR'],
+                  CCFLAGS=os.environ['CCFLAGS'])
+
+    
+env.Library('gtime', [
+    'gtime.cc',
+    'calc_sun.cc'
+    ])
+
+env.Install(env['LIBPATH'], 'libgtime.a')
+
+install_include = '%s/gtime' % os.environ['LOCAL_INC_DIR']
+env.Install(install_include, [
+    'gtime.h',
+    'calc_sun.hh'
+    ])
+
+env.Alias('install', [env['LIBPATH'], install_include])
+env.Alias('install_include', install_include)

@@ -1,0 +1,44 @@
+import os
+
+# set the name of the application
+program = 'fec'
+
+env = Environment(
+        CPPPATH=['.', os.environ['LOCAL_INC_DIR'], os.environ['NETCDF_INC_DIR'],
+                 os.environ['HDF_INC_DIR'], os.environ['ZLIB_INC_DIR']], 
+        LIBPATH=[os.environ['LOCAL_LIB_DIR'], os.environ['NETCDF_LIB_DIR'],
+                 os.environ['HDF5_LIB_DIR'], os.environ['ZLIB_LIB_DIR']],
+        CCFLAGS=os.environ['CCFLAGS'])
+
+
+env.Program(
+    program,[
+        'Params.cc',
+        'get_site_info.cc',
+        'alloc_data.cc',
+        'get_data.cc',
+        'fec.cc',
+        'get_alt.cc',
+        'get_fcst.cc',
+        'read_fcst_data.cc',
+        'read_nbr_file.cc',
+        'read_obs_data.cc',
+        'write_output.cc',
+        'main.cc'
+        ],
+    LIBS=[
+        'log',
+        'tdrp',
+        'ncf',
+        'nxncf',
+        'site_list',
+        'netcdf_c++',
+        'netcdf',
+        'hdf5_hl',
+        'hdf5',
+        'z'
+        ],
+    )
+
+env.Install(os.environ['LOCAL_BIN_DIR'], program)
+env.Alias('install', os.environ['LOCAL_BIN_DIR'])

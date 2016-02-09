@@ -1,0 +1,664 @@
+scons: Reading SConscript files ...
+scons: done reading SConscript files.
+scons: Building targets ...
+g++ -o process.o -c -O -std=c++0x -Wall -g -DNO_NCBYTE -I. -I/usr/include -I/usr/local/netcdf/include -I/usr/local/hdf5/include -I/d2/vdttest/include -I/d2/local/include process.cc
+In file included from /usr/local/netcdf/include/netcdfcpp.h:13:0,
+                 from /usr/local/netcdf/include/netcdf.hh:1,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/ncvalues.h:244:20: error: expected ')' before ',' token
+/usr/local/netcdf/include/ncvalues.h:265:5: error: reference to 'NcType' is ambiguous
+/usr/local/netcdf/include/ncvalues.h:33:6: error: candidates are: enum NcType
+In file included from /usr/local/netcdf/include/ncAtt.h:1:0,
+                 from /usr/local/netcdf/include/netcdf:7,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncType.h:13:9: error:                 class netCDF::NcType
+In file included from /usr/local/netcdf/include/netcdfcpp.h:13:0,
+                 from /usr/local/netcdf/include/netcdf.hh:1,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/ncvalues.h:265:5: error: 'NcType' does not name a type
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:59:5: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:18:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:59:5: error: 'NcDim' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:60:5: error: reference to 'NcVar' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:19:7: error: candidates are: class NcVar
+In file included from /usr/local/netcdf/include/netcdf:30:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncVar.h:33:9: error:                 class netCDF::NcVar
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:60:5: error: 'NcVar' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:61:5: error: reference to 'NcAtt' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:20:7: error: candidates are: class NcAtt
+In file included from /usr/local/netcdf/include/netcdf:7:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncAtt.h:13:9: error:                 class netCDF::NcAtt
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:61:5: error: 'NcAtt' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:63:5: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:18:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:63:5: error: 'NcDim' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:64:5: error: reference to 'NcVar' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:19:7: error: candidates are: class NcVar
+In file included from /usr/local/netcdf/include/netcdf:30:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncVar.h:33:9: error:                 class netCDF::NcVar
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:64:5: error: 'NcVar' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:65:5: error: reference to 'NcAtt' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:20:7: error: candidates are: class NcAtt
+In file included from /usr/local/netcdf/include/netcdf:7:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncAtt.h:13:9: error:                 class netCDF::NcAtt
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:65:5: error: 'NcAtt' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:66:5: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:18:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:66:5: error: 'NcDim' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:70:13: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:18:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:70:13: error: 'NcDim' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:71:13: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:18:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:71:13: error: 'NcDim' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:73:13: error: reference to 'NcVar' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:19:7: error: candidates are: class NcVar
+In file included from /usr/local/netcdf/include/netcdf:30:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncVar.h:33:9: error:                 class netCDF::NcVar
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:73:13: error: 'NcVar' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:79:13: error: reference to 'NcVar' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:19:7: error: candidates are: class NcVar
+In file included from /usr/local/netcdf/include/netcdf:30:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncVar.h:33:9: error:                 class netCDF::NcVar
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:79:13: error: 'NcVar' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:121:5: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:18:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:121:5: error: 'NcDim' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:122:5: error: reference to 'NcVar' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:19:7: error: candidates are: class NcVar
+In file included from /usr/local/netcdf/include/netcdf:30:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncVar.h:33:9: error:                 class netCDF::NcVar
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:122:5: error: 'NcVar' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:123:5: error: reference to 'NcVar' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:19:7: error: candidates are: class NcVar
+In file included from /usr/local/netcdf/include/netcdf:30:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncVar.h:33:9: error:                 class netCDF::NcVar
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:123:5: error: 'NcVar' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:154:5: error: reference to 'NcFile' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:27:7: error: candidates are: class NcFile
+In file included from /usr/local/netcdf/include/netcdf:16:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncFile.h:18:9: error:                 class netCDF::NcFile
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:154:5: error: 'NcFile' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:158:17: error: expected ')' before '*' token
+/usr/local/netcdf/include/netcdfcpp.h:159:17: error: expected ')' before '*' token
+/usr/local/netcdf/include/netcdfcpp.h:179:13: error: reference to 'NcType' is ambiguous
+In file included from /usr/local/netcdf/include/netcdfcpp.h:13:0,
+                 from /usr/local/netcdf/include/netcdf.hh:1,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/ncvalues.h:33:6: error: candidates are: enum NcType
+In file included from /usr/local/netcdf/include/ncAtt.h:1:0,
+                 from /usr/local/netcdf/include/netcdf:7,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncType.h:13:9: error:                 class netCDF::NcType
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:179:13: error: 'NcType' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:200:5: error: reference to 'NcFile' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:27:7: error: candidates are: class NcFile
+In file included from /usr/local/netcdf/include/netcdf:16:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncFile.h:18:9: error:                 class netCDF::NcFile
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:200:5: error: 'NcFile' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:201:29: error: expected ')' before '*' token
+/usr/local/netcdf/include/netcdfcpp.h:217:5: error: reference to 'NcType' is ambiguous
+In file included from /usr/local/netcdf/include/netcdfcpp.h:13:0,
+                 from /usr/local/netcdf/include/netcdf.hh:1,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/ncvalues.h:33:6: error: candidates are: enum NcType
+In file included from /usr/local/netcdf/include/ncAtt.h:1:0,
+                 from /usr/local/netcdf/include/netcdf:7,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncType.h:13:9: error:                 class netCDF::NcType
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:217:5: error: 'NcType' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:220:5: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:220:5: error: 'NcDim' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:223:5: error: reference to 'NcAtt' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:20:7: error: candidates are: class NcAtt
+In file included from /usr/local/netcdf/include/netcdf:7:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncAtt.h:13:9: error:                 class netCDF::NcAtt
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:223:5: error: 'NcAtt' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:224:5: error: reference to 'NcAtt' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:20:7: error: candidates are: class NcAtt
+In file included from /usr/local/netcdf/include/netcdf:7:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncAtt.h:13:9: error:                 class netCDF::NcAtt
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:224:5: error: 'NcAtt' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:311:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:311:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:319:15: error: expected ';' at end of member declaration
+/usr/local/netcdf/include/netcdfcpp.h:319:23: error: 'NcValues* NcVar::get_rec' conflicts with a previous declaration
+/usr/local/netcdf/include/netcdfcpp.h:318:15: note: previous declaration 'NcVar::get_rec'
+/usr/local/netcdf/include/netcdfcpp.h:319:28: error: expected ')' before '*' token
+/usr/local/netcdf/include/netcdfcpp.h:320:15: error: expected ';' at end of member declaration
+/usr/local/netcdf/include/netcdfcpp.h:320:23: error: 'NcValues* NcVar::get_rec' conflicts with a previous declaration
+/usr/local/netcdf/include/netcdfcpp.h:318:15: note: previous declaration 'NcVar::get_rec'
+/usr/local/netcdf/include/netcdfcpp.h:320:28: error: expected ')' before '*' token
+/usr/local/netcdf/include/netcdfcpp.h:332:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:332:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:333:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:333:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:334:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:334:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:335:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:335:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:336:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:336:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:337:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:337:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:338:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:338:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:350:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:350:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:351:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:351:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:352:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:352:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:353:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:353:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:354:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:354:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:355:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:355:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:356:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:356:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:368:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:368:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:369:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:369:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:370:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:370:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:371:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:371:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:372:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:372:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:373:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:373:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:374:21: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:374:21: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:379:20: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:379:20: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:385:22: error: reference to 'NcDim' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:142:7: error: candidates are: class NcDim
+In file included from /usr/local/netcdf/include/netcdf:12:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncDim.h:13:9: error:                 class netCDF::NcDim
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:385:22: error: 'NcDim' has not been declared
+/usr/local/netcdf/include/netcdfcpp.h:393:17: error: expected ')' before '*' token
+/usr/local/netcdf/include/netcdfcpp.h:415:5: error: reference to 'NcType' is ambiguous
+In file included from /usr/local/netcdf/include/netcdfcpp.h:13:0,
+                 from /usr/local/netcdf/include/netcdf.hh:1,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/ncvalues.h:33:6: error: candidates are: enum NcType
+In file included from /usr/local/netcdf/include/ncAtt.h:1:0,
+                 from /usr/local/netcdf/include/netcdf:7,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncType.h:13:9: error:                 class netCDF::NcType
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:415:5: error: 'NcType' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:423:11: error: reference to 'NcVar' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:212:7: error: candidates are: class NcVar
+In file included from /usr/local/netcdf/include/netcdf:30:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncVar.h:33:9: error:                 class netCDF::NcVar
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:423:11: error: 'NcVar' does not name a type
+/usr/local/netcdf/include/netcdfcpp.h:427:18: error: expected ')' before '*' token
+/usr/local/netcdf/include/netcdfcpp.h:428:18: error: expected ')' before '*' token
+/usr/local/netcdf/include/netcdfcpp.h:432:17: error: reference to 'NcVar' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:212:7: error: candidates are: class NcVar
+In file included from /usr/local/netcdf/include/netcdf:30:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncVar.h:33:9: error:                 class netCDF::NcVar
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:432:17: error: reference to 'NcVar' is ambiguous
+/usr/local/netcdf/include/netcdfcpp.h:212:7: error: candidates are: class NcVar
+In file included from /usr/local/netcdf/include/netcdf:30:0,
+                 from /d2/vdttest/include/rwx/rwx_cdf_field_reader.hh:22,
+                 from process.cc:27:
+/usr/local/netcdf/include/ncVar.h:33:9: error:                 class netCDF::NcVar
+In file included from /usr/local/netcdf/include/netcdf.hh:1:0,
+                 from ncfc_utils.hh:26,
+                 from stat_utils.hh:9,
+                 from process.hh:29,
+                 from process.cc:31:
+/usr/local/netcdf/include/netcdfcpp.h:432:43: error: non-member function 'NcAtt* get_att(NcToken)' cannot have cv-qualifier
+process.cc: In member function 'int process::run()':
+process.cc:50:16: warning: unused variable 's' [-Wunused-variable]
+In file included from /d2/local/include/boost/filesystem/v3/path_traits.hpp:23:0,
+                 from /d2/local/include/boost/filesystem/v3/path.hpp:25,
+                 from /d2/local/include/boost/filesystem.hpp:35,
+                 from process.cc:21:
+/d2/local/include/boost/system/error_code.hpp: At global scope:
+/d2/local/include/boost/system/error_code.hpp:214:36: warning: 'boost::system::posix_category' defined but not used [-Wunused-variable]
+/d2/local/include/boost/system/error_code.hpp:215:36: warning: 'boost::system::errno_ecat' defined but not used [-Wunused-variable]
+/d2/local/include/boost/system/error_code.hpp:216:36: warning: 'boost::system::native_ecat' defined but not used [-Wunused-variable]
+scons: *** [process.o] Error 1
+scons: building terminated because of errors.

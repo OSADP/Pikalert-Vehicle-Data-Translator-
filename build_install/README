@@ -1,0 +1,20 @@
+After running ./create_tar.csh, I did the following:
+
+cd vdt4/src/scripts/python
+rm alaska2probe_message.py alaska_reader.py frmt_and_run_alaska2probe_message.py get_AK_mobile_data.py
+rm -r statistics
+rmdir static
+
+cd vdt4/static/cdl
+rm  mi_roads.20130412.nc mi_roads.20130807.nc mi_roads.20131018.nc mi_roads.20131028.nc mn_roads.20130412.nc mn_roads.20130807.nc mn_roads.20131028.nc nv_roads.20130412.nc nv_roads.20130807.nc nv_roads.20131028.nc
+
+cd vdt4/build_install
+rm README
+
+cd ../../
+tar -cvzf vdt_topr4_201402.tar.gz vdt4/ display/
+
+rm vdt_topr4.tar.gz
+
+
+#### Need to update INSTALL with proper vdt tar file name

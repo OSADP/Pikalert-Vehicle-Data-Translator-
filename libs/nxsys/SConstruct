@@ -1,0 +1,25 @@
+
+import os
+
+
+env = Environment(CPPPATH=['.', os.environ['LOCAL_INC_DIR']],
+                  LIBPATH=[os.environ['LOCAL_LIB_DIR']],
+                  CCFLAGS=os.environ['CCFLAGS'])
+
+    
+env.Library('nxsys', [
+    'check_led.cc',
+    'get_led.cc',
+    'unix2gmtime.cc'
+    ])
+
+env.Install(os.environ['LOCAL_LIB_DIR'], 'libnxsys.a')
+
+install_include = '%s/nxsys' % os.environ['LOCAL_INC_DIR']
+env.Install(install_include, [
+    'led.h',
+    'unix2gmtime.h'
+    ])
+
+env.Alias('install', [os.environ['LOCAL_LIB_DIR'], install_include])
+env.Alias('install_include', install_include)

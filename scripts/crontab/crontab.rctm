@@ -1,0 +1,54 @@
+#
+# Example crontab for running the RCTM
+#
+# Set up environment
+#
+SHELL=/bin/csh
+#
+# Set these to your local system
+#
+RCTM_ROOT_DIR = "/usr/local/data/rctm"
+#
+LD_LIBRARY_PATH = "$HOME/lib:/usr/local/lib:/usr/lib:/usr/local/netcdf/lib:/usr/local/hdf5/lib:/usr/local/zlib/lib"
+#
+# NOTE!
+#
+# Before installing this crontab:
+#
+# 1) Make sure to copy the static_data directory from the distribution
+#    into $RCTM_ROOT_DIR (this is done for you in test_rctm.csh).
+#
+# 2) Make the following directories and symlinks (also done in the test script)
+#
+#    mkdir $RCTM_ROOT_DIR/log
+#    mkdir $RCTM_ROOT_DIR/lock
+#    mkdir $RCTM_ROOT_DIR/tmp
+#    ln -s bc_rec_tmt $RCTM_ROOT_DIR/bc_init
+#    ln -s rc_rec_tmt $RCTM_ROOT_DIR/rc_init
+#
+# 3) The RCTM requires a weather forecast to run in real-time. A simple
+#    weather forecast can be created using the RWFS. A symbolic link should
+#    be created to point to the location of the weather forecast files once
+#    the RWFS is installed and running. For example,
+#
+#    ln -s $RWFS_ROOT_DIR/derive_rdwx $RCTM_ROOT_DIR/rdwx_fcst
+#
+# 4) Mesonet RWIS observation files can be used to improve the RCTM forecasts.
+#    The format of these files is the same as MADIS files. There are samples of
+#    these files under the test/data/rctm/dec_data directory. The RCTM scripts 
+#    will look for files under $RCTM_ROOT_DIR/dec_data/obs/mesonet/YYYYMMDD/
+#    path in real-time.
+#
+# 5) Always look in the files under the log/ directory for help getting the
+#    RCTM running.
+#
+#------------------------------------------------------------------------------
+#
+# Note: It is assumed that the system clock is set to UTC time zone.
+#
+#
+# Road Temperature Calculation chain (obs processing, compute road
+# and bridge temps, forward error correction, merge data). Run hourly.
+#
+15 * * * * rctm_ep.py ep_dump_meso_rc.py ep_concat_meso_rc.py ep_obs_hist.py ep_rc_no_tmt.py ep_fec_rc_no_tmt.py ep_rc_cur_tmt.py ep_fec_rc_cur_tmt.py ep_rc_rec_tmt.py ep_fec_rc_rec_tmt.py ep_bc_no_tmt.py ep_bc_cur_tmt.py ep_bc_rec_tmt.py ep_merge_no_tmt.py ep_merge_cur_tmt.py ep_merge_rec_tmt.py ep_dump_fcst_rc.py 1800 >& /dev/null
+#

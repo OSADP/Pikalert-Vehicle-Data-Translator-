@@ -1,0 +1,21 @@
+###############################################################################
+#
+# Road Weather Forecast System (RWFS)
+#
+###############################################################################
+
+This is the Road Weather Forecast System. It is a simplified forecast system
+that uses freely-available Numerical Weather Prediction (NWP) model data to 
+produce data in a format that can be used by the Road Condition Treamtment
+Module (RCTM).
+
+The RWFS requires only NWP data to run. This distribution contains all the
+software and scripts to run it and sample data to test the build.
+
+This distribution is configured to make RWFS forecasts for sites in Michigan,
+Minnesota and Nevada from February 2015. Sample input data files are located
+in test/data/rwfs/. These sample files are used for testing the build.
+
+See the INSTALL.rwfs file for further information.
+
+###############################################################################

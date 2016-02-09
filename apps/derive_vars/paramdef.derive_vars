@@ -1,0 +1,216 @@
+/* Core forecast variables */
+paramdef string {
+  p_default = {
+	       "T",
+	       "max_T",
+	       "min_T",
+	       "dewpt",
+	       "wind_u",
+	       "wind_v",
+	       "wind_speed",
+	       "cloud_cov",
+	       "visibility",
+	       "prob_fog",
+	       "prob_thunder",
+	       "cprob_rain",
+	       "cprob_snow",
+	       "cprob_ice",
+	       "prob_precip03",
+	       "prob_precip06",
+	       "prob_precip24",
+	       "qpf03",
+	       "qpf06",
+	       "P_sfc",
+	       "T_cb",
+	       "T_bls",
+               "T_lbls0",
+               "T_lbls1",
+               "T_lbls2",
+               "T_lbls3",
+	       "snow_depth",
+	       "cloud_low",
+	       "cloud_middle",
+	       "cloud_high"
+	       };
+  p_descr = "Forecast variables";
+  p_help = "Variables which need to be copied over to output file";
+} fcst_var_names[];
+
+paramdef string {
+  p_default = {
+	       "prob_precip01",
+	       "qpf01",
+	       "wind_dir",
+	       "wind_speed_mph",
+	       "rh",
+               "rh_pct",
+               "TempF",
+               "dewptF",
+               "precip_rate",
+               "precip_rate_inches",
+	       "precip_type",
+	       "precip_accum",
+	       "precip_accum_inches",
+               "snow_rate",
+               "snow_rate_inches",
+	       "snow_accum_total",
+	       "snow_accum_total_inches",
+	       "snow_accum",
+	       "snow_accum_inches",
+	       "prob_precip03_pct",
+	       "blowing_snow_potential",
+	       };
+  p_descr = "Derived variables";
+  p_help = "Variables which need to be derived from forecast variables";
+} derived_var_names[];
+
+paramdef long {
+  p_default = {4};
+  p_descr = "Maximum history in days";
+  p_help = "Maximum number of days to allow for history used for "
+           "blowing snow calculation";
+} max_history;
+
+paramdef float {
+  p_default = {0.25};
+  p_descr = "Probability of precipitation threshold";
+  p_help = "POP value which must be attained before declaring precipitation.";
+} pop_threshold;
+
+paramdef float {
+  p_default = {0.05};
+  p_descr = "Quantitative precipitation forecast threshold";
+  p_help = "QPF value which must be attained before declaring precipitation.";
+} qpf_threshold;
+
+paramdef float {
+  p_default = {0.25};
+  p_descr = "Freezing precipitation threshold";
+  p_help = "CPOI value which must be attained before declaring freezing precipitation.";
+} ice_threshold;
+
+paramdef float {
+  p_default = {0.40};
+  p_descr = "Frozen (snow) precipitation threshold";
+  p_help = "CPOS value which must be attained before declaring frozen precipitation.";
+} snow_threshold;
+
+
+/* max-T timeseries tolerance ====  THIS IS USED FOR LOCAL MAX ONLY - NOT DAYTIME MAX */
+paramdef float {
+  p_descr = "Allowed difference between dicast (utc) max-T value and timeseries max-T (deg C)";
+  p_help = "If the dicast max-T is within this range of the timeseries, use the dicast value as is, otherwise use the time-series max plus the tolerance";
+  p_default = 1.0;
+} max_ts_tolerance;
+
+
+/* min-T timeseries tolerance ====  THIS IS USED FOR LOCAL MIN ONLY */
+paramdef float {
+  p_descr = "Allowed difference between dicast (utc) min-T value and timeseries min-T (deg C)";
+  p_help = "If the dicast min-T is within this range of the timeseries, use the dicast value as is, otherwise use the time-series min minus the tolerance";
+  p_default = 2.5;
+} min_ts_tolerance;
+
+
+/* Local min_T start */
+paramdef int
+{
+  p_descr = "Offset from midnight to start looking for the daily local minimum temperature in the time-series";
+  p_help = "This is an integer value that can be negative or postive. For example: -5 is 7pm on the day before, 0 is 12am on the current day";
+  p_default = 0;
+} local_min_start;
+
+
+/* Local min_T end */
+paramdef int
+{
+  p_descr = "Offset from midnight to end looking for the daily local minimum temperature in the time-series";
+  p_help = "This is an integer value that can be negative or postive. For example: 8 is 8am on the current day, 24 is 11:59pm on the current day";
+  p_default = 24;
+} local_min_end;
+
+
+/* Local max_T start */
+paramdef int
+{
+  p_descr = "Offset from midnight to start looking for the daily local maximum temperature in the time-series";
+  p_help = "This is an integer value that can be negative or postive. For example: 7 is 7am on the current day, 0 is 12am on the current day";
+  p_default = 0;
+} local_max_start;
+
+
+/* Local max_T end */
+paramdef int
+{
+  p_descr = "Offset from midnight to end looking for the daily local maximum temperature in the time-series";
+  p_help = "This is an integer value that can be negative or postive. For example: 19 is 7pm on the current day, 24 is 11:59pm on the current day";
+  p_default = 24;
+} local_max_end;
+
+
+
+/* Daytime max-T timeseries tolerance */
+paramdef float {
+  p_descr = "Allowed difference between dicast (utc) max-T value and timeseries max-T (deg C)";
+  p_help = "If the dicast max-T is within this range of the timeseries, use the dicast value as is, otherwise use the time-series max plus the tolerance";
+  p_default = 1.0;
+} daytime_max_ts_tolerance;
+
+/* Daytime max-T timeseries correction */
+paramdef float {
+  p_descr = "Correction to dicast T timeseries if outside tolerence range (deg C)";
+  p_help = "If the dicast max-T is not within range of the timeseries plus tolerence, use the time-series min minus this correction";
+  p_default = 1.0;
+} daytime_max_ts_correction;
+
+
+/* min-T timeseries tolerance */
+paramdef float {
+  p_descr = "Allowed difference between dicast (utc) min-T value and timeseries min-T (deg C)";
+  p_help = "If the dicast min-T is not within range of the timeseries plus tolerence, use the time-series min minus this correction";
+  p_default = 2.5;
+} nighttime_min_ts_tolerance;
+
+/* Nighttime min-T timeseries correction */
+paramdef float {
+  p_descr = "Correction to dicast T timeseries if outside tolerence range (deg C)";
+  p_help = "If the dicast min-T is within this range of the timeseries, use the dicast value as is, otherwise use the time-series min minus the tolerance";
+  p_default = 0.8;
+} nighttime_min_ts_correction;
+
+
+
+/* Nighttime min_T start */
+paramdef int
+{
+  p_descr = "Offset from midnight to start looking for the daily nighttime minimum temperature in the time-series";
+  p_help = "This is an integer value that can be negative or postive. For example: -5 is 7pm on the day before, 0 is 12am on the current day";
+  p_default = -6;
+} nighttime_min_start;
+
+
+/* Nighttime min_T end */
+paramdef int
+{
+  p_descr = "Offset from midnight to end looking for the daily nighttime minimum temperature in the time-series";
+  p_help = "This is an integer value that can be negative or postive. For example: 8 is 8am on the current day, 24 is 11:59pm on the current day";
+  p_default = 8;
+} nighttime_min_end;
+
+
+/* Daytime max_T start */
+paramdef int
+{
+  p_descr = "Offset from midnight to start looking for the daily daytime maximum temperature in the time-series";
+  p_help = "This is an integer value that can be negative or postive. For example: 7 is 7am on the current day, 0 is 12am on the current day";
+  p_default = 7;
+} daytime_max_start;
+
+
+/* Daytime max_T end */
+paramdef int
+{
+  p_descr = "Offset from midnight to end looking for the daily daytime maximum temperature in the time-series";
+  p_help = "This is an integer value that can be negative or postive. For example: 19 is 7pm on the current day, 24 is 11:59pm on the current day";
+  p_default = 19;
+} daytime_max_end;

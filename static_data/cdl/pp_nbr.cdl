@@ -1,0 +1,21 @@
+netcdf module_forecast {
+dimensions:
+	max_site_num = UNLIMITED;  // number of locations
+	max_nbr = 10;              // max number of nbrs in list
+	param_vals = 2;            // nbr id, dist (km)
+
+	
+variables:
+	int	num_sites;
+		num_sites:long_name = "number of actual_sites";
+
+	int	site_list(max_site_num);
+		site_list:long_name = "forecast site id numbers";
+
+	float	site_density;
+
+	double	nbr_list(max_site_num, max_nbr, param_vals);
+		nbr_list:long_name = "list of nearest nbrs";
+
+
+}

@@ -1,0 +1,85 @@
+/* Input file type */
+paramdef string
+{
+  p_descr = "Input file type";
+  p_help = "Either wx (dicast weather file), rc (rctm road file), or bc (rctm bridge file)";
+  p_default = "wx";
+} input_file_type;
+
+
+/* FEC technique enumeration */
+typedef enum {
+	POINT_OBS,
+	SPATIAL_OBS
+} fec_obs_type_t;
+
+/* Struct definition for the FEC variables */
+typedef struct {
+  string		var_name;
+  fec_obs_type_t	obs_gen_type;
+  int			min_corr_hrs;
+  int			max_corr_hrs;
+} fec_vars_t;
+
+/* Core variables to FEC */
+paramdef struct fec_vars_t {
+ p_default = {
+	      {"T", POINT_OBS, 6, 10},
+              {"dewpt", POINT_OBS, 6, 10},
+              {"wind_u", POINT_OBS, 6, 10},
+              {"wind_v", POINT_OBS, 6, 10},
+              {"wind_speed", SPATIAL_OBS, 6, 10},
+              {"cloud_cov", SPATIAL_OBS, 6, 10},
+ 	      {"visibility", POINT_OBS, 6, 10},
+              {"prob_fog", SPATIAL_OBS, 6, 10},
+              {"prob_thunder", SPATIAL_OBS, 6, 10},
+              {"cprob_rain", SPATIAL_OBS, 6, 10},
+              {"cprob_snow", SPATIAL_OBS, 6, 10},
+              {"cprob_ice", SPATIAL_OBS, 6, 10},
+              {"prob_precip01", SPATIAL_OBS, 6, 10},
+              {"prob_precip03", SPATIAL_OBS, 6, 10},
+              {"prob_precip06", SPATIAL_OBS, 6, 10}
+             };
+  p_descr = "Array of structs containing the forecast variable names, the fec technique and the minimum and maximum number of correction hours allowed.";
+  p_help = "Only variables listed here will be fec'd. If the minimum is 6 hours the correction factors will be: 1.00, 0.83, 0.67, 0.50, 0.33, 0.17"; 
+} fec_vars[];
+
+
+/* Additional variables that will not be FEC'd but copied to output file */
+paramdef string {
+  p_default = {
+               "qpf01",
+	       "qpf03",
+               "qpf06",
+               "P_sfc",
+               "P_msl",
+               "T_bls",
+               "T_lbls0",
+               "T_lbls1",
+               "T_lbls2",
+               "T_lbls3",
+               "cloud_low",
+               "cloud_middle",
+               "cloud_high",
+               "dlwrf_sfc",
+               "dswrf_sfc"
+	       };
+  p_descr = "List of additional variables that will be copied to the output file";
+  p_help = "These variables will not be fec'd";
+} other_var_names[];
+
+	      
+/* Length scale */
+paramdef float {
+  p_default = {25.};
+  p_descr = "length scale for averaging observations";
+  p_help = "distance at which obs has about 1/2 wgt of co-located obs";
+} length_scale;
+
+
+/* Max distance */
+paramdef float {
+  p_default = {100.};
+  p_descr = "maximum distance for bos inclusion in pseudo-obs";
+  p_help = "distance beyond which nbrs obs do not go into spatial average";
+} max_distance;

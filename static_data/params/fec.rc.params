@@ -1,0 +1,89 @@
+/**********************************************************************
+ * TDRP params for ./fec
+ **********************************************************************/
+
+///////////// input_file_type /////////////////////////
+//
+// Input file type.
+// Either wx (dicast weather file), rc (rctm road file), or bc (rctm
+//   bridge file).
+// Type: string
+//
+
+input_file_type = "rc";
+
+///////////// fec_vars ////////////////////////////////
+//
+// Array of structs containing the forecast variable names, the fec 
+//   technique and the minimum and maximum number of correction hours 
+//   allowed.
+// Only variables listed here will be fec'd. If the minimum is 6 hours 
+//   the correction factors will be: 1.00, 0.83, 0.67, 0.50, 0.33, 0.17.
+//
+// Type: struct
+//   typedef struct {
+//      string var_name;
+//      fec_obs_type_t obs_gen_type;
+//        Options:
+//          POINT_OBS
+//          SPATIAL_OBS
+//      int min_corr_hrs;
+//      int max_corr_hrs;
+//   }
+//
+// 1D array - variable length.
+//
+
+fec_vars = {
+  { "road_T", POINT_OBS, 6, 10}
+};
+
+///////////// other_var_names /////////////////////////
+//
+// List of additional variables that will be copied to the output file.
+// These variables will not be fec'd.
+// Type: string
+// 1D array - variable length.
+//
+
+other_var_names = {
+		  "application_rate",
+		  "apply_chem",
+		  "available_H2O",
+		  "available_chem",
+		  "chem_form",
+		  "chem_type",
+		  "chemical_concentration",
+		  "do_plowing",
+		  "mobility",
+		  "nominal_chem",
+		  "phase_type",
+                  "subsurface_T",
+		  "precip_type",
+		  "road_TempF",
+		  "snow_depth",
+                  "snow_depth_inches",
+                  "solution_type",
+                  "treatment_explanation",
+                  "treatment_explanation_index",
+                  "treatment_time" 
+		  };
+
+///////////// length_scale ////////////////////////////
+//
+// length scale for averaging observations.
+// distance at which obs has about 1/2 wgt of co-located obs.
+// Type: float
+//
+
+length_scale = 25;
+
+///////////// max_distance ////////////////////////////
+//
+// maximum distance for bos inclusion in pseudo-obs.
+// distance beyond which nbrs obs do not go into spatial average.
+// Type: float
+//
+
+max_distance = 100;
+

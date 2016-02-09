@@ -1,0 +1,47 @@
+
+/*
+ * Struct for parameter list. Name of variable, and method of interpolation
+ * to perform (linear or spline).
+ */
+
+typedef struct {
+  char* name;
+  char* method;
+} var_init_t;
+
+
+/* Array of structs to define the variable list */
+
+paramdef struct var_init_t {
+  p_default = 
+  {
+    { "T", "cubic_spline" },
+    { "dewpt", "linear" },
+    { "max_T", "linear" },
+    { "min_T", "linear" },
+    { "wind_u", "linear" },
+    { "wind_v", "linear" },
+    { "wind_speed","linear" },
+    { "cloud_cov","linear" },
+    { "visibility","linear" },
+    { "qpf03", "linear" },
+    { "qpf06", "linear" },
+    { "prob_precip03", "linear" },
+    { "prob_precip06", "linear" },
+    { "prob_precip24", "linear" },
+    { "cprob_rain", "linear" },
+    { "cprob_snow", "linear" },
+    { "cprob_ice", "linear" },
+    { "prob_thunder", "linear" },
+    { "prob_fog", "linear" }
+  }
+  p_descr = "Forecast variables to interpolate";
+  p_help = "Variables to be temporally interpolated, along with floor and ceiling values, if applicable.";
+} var_list[];
+
+paramdef double {
+  p_default = 21600;
+  p_descr = "The max distance in seconds.";
+  p_help = "The max distance allowed between spline interpolated dates before the interpolation is skipped.";
+} dist_threshold;
+

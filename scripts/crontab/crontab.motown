@@ -1,0 +1,226 @@
+SHELL=/bin/csh
+MAILTO="jpresto@ucar.edu,bpetzke@ucar.edu"
+
+#*    *    *    *    *   *    command to be executed                                                                                              
+#-    -    -    -    -   -                                                                                                                        
+#|    |    |    |    |   |                                                                                                                        
+#|    |    |    |    |   +- Year (optional)                                                                                                       
+#|    |    |    |    +----- day of week (0 - 6) (Sunday=0)                                                                                        
+#|    |    |    +---------- month (1 - 12)
+#|    |    +--------------- day of month (1 - 31)
+#|    +-------------------- hour (0 - 23)
+#+------------------------- min (0 - 59)
+
+#
+# NV
+#
+
+# Grab the raw Nevada data from the http site
+* * * * * csh -c "get_raw_nevada_data.py -l $VII_DATA/log/get_raw_nevada_data vii_config `date +\%Y\%m\%d` >& /dev/null"
+
+# Create Nevada netcdf file for each csv file
+* * * * * csh -c "run_nevada2probe_message.py -l $VII_DATA/log/run_nevada2probe_message vii_paths.py `date +\%Y\%m\%d` /d2/vii/data/raw/nevada/ /d2/vii/data/processed/nv_csv2nc /d2/vii/data/static/cdl/probe_message.cdl >& /dev/null"
+
+# Create fifteen minute Nevada files for VDT
+#*/5 * * * * csh -c "group_nevada_probe_message_files.py -l $VII_DATA/log/group_nevada_probe_message_files -d 2 vii_paths.py /d2/vii/data/static/cdl/probe_message.cdl $VII_DATA/tmp $VII_DATA/processed/nv_csv2nc $VII_DATA/processed/nv_probe_message >& /dev/null"
+*/15 * * * * csh -c "group_nevada_probe_message_files.py -l $VII_DATA/log/group_nevada_probe_message_files -d 2 vii_paths.py /d2/vii/data/static/cdl/probe_message.cdl $VII_DATA/tmp $VII_DATA/processed/nv_csv2nc $VII_DATA/processed/nv_probe_message >& /dev/null"
+
+# Create probe message history file for NV
+#*/5 * * * * csh -c "/home/vii/scripts/python/run_create_probe_msg_history_nv.py -l /d2/vii/data/log/run_create_probe_msg_history_nv >& /dev/null" >& /dev/null
+#*/15 * * * * csh -c "/home/vii/scripts/python/run_create_probe_msg_history_nv.py -l /d2/vii/data/log/run_create_probe_msg_history_nv >& /dev/null" >& /dev/null
+
+# Run probe message dataset manager for NV
+#1,6,11,16,21,26,31,36,41,46,51,56 * * * * vii_ep.py vii_config run_probe_message_dataset_manager_nv.py 300 >& /dev/null
+
+# Create data statistics for NV data that gets output to ftp server each day for the previous day's data
+0 6 * * * csh -c "run_nevada_data_status.py `date -d yesterday +\%Y\%m\%d` `date -d yesterday +\%Y\%m\%d` >& /dev/null"
+
+# Create monthly data statistics for NV on the first day of the month
+0 12 1 * * csh -c "create_monthly_stats.py -l $VII_DATA/log/create_monthly_stats_Nevada `date -d yesterday +\%Y` `date -d yesterday +\%m` Nevada /ftp/restricted/ftp_vdt/root/download/nevada/daily_statistics /ftp/restricted/ftp_vdt/root/download/nevada/monthly_statistics >& /dev/null"
+
+# Create copy of raw file with the "first noticed" time included in order to be able to generate timing (latency) statistics
+* * * * * csh -c "create_nevada_noticed_time.py -l $VII_DATA/log/create_nevada_noticed_time `date +\%Y\%m\%d` /d2/vii/data/raw/nevada/ /d2/vii/data/raw/nevada_timing/ >& /dev/null"
+
+# Create daily NV timing file
+30 6 * * * csh -c "run_nevada_timing.py `date -d yesterday +\%Y\%m\%d` `date -d yesterday +\%Y\%m\%d` /d2/vii/data/raw/nevada_timing/ /ftp/restricted/ftp_vdt/root/download/nevada/daily_statistics/>& /dev/null"
+
+# Create weekly NV timing (latency) file
+00 7 * * 0 weekly_timing.py `date -d "1 week ago" +\%Y\%m\%d` `date -d yesterday +\%Y\%m\%d` /ftp/restricted/ftp_vdt/root/download/nevada/daily_statistics/ /ftp/restricted/ftp_vdt/root/download/nevada/weekly_statistics
+
+
+#
+# MI
+#
+
+# PROCESSES ARE NOW CONSOLIDATED AND RUN ON SENTINEL
+
+# Move raw Michigan data from ftp area to VDT area
+#* * * * * csh -c "get_michigan_umtri_data.py -l $VII_DATA/log/get_michigan_umtri_data vii_config /var/autofs/mnt/ftp/restricted/ftp_vdt/root/upload/michigan/ /d2/vii/data/raw/umtri/ >& /dev/null"
+
+# Create Michigan netcdf file for each csv file
+#* * * * * csh -c "run_umtri2probe_message.py -l $VII_DATA/log/run_umtri2probe_message vii_paths.py `date +\%Y\%m\%d` /d2/vii/data/raw/umtri/ /d2/vii/data/processed/mi_csv2nc /d2/vii/data/static/cdl/probe_message.cdl >& /dev/null"
+
+# Create fifteen minute Michigan files for VDT
+#*/5 * * * * csh -c "group_umtri_probe_message_files.py -l $VII_DATA/log/group_umtri_probe_message_files -d 2 vii_paths.py /d2/vii/data/static/cdl/probe_message.cdl $VII_DATA/tmp $VII_DATA/processed/mi_csv2nc $VII_DATA/processed/mi_probe_message >& /dev/null"
+#*/15 * * * * csh -c "group_umtri_probe_message_files.py -l $VII_DATA/log/group_umtri_probe_message_files -d 2 vii_paths.py /d2/vii/data/static/cdl/probe_message.cdl $VII_DATA/tmp $VII_DATA/processed/mi_csv2nc $VII_DATA/processed/mi_probe_message >& /dev/null"
+#* * * * * csh -c "group_umtri_probe_message_files.py -l $VII_DATA/log/group_umtri_probe_message_files -d 2 vii_paths.py /d2/vii/data/static/cdl/probe_message.cdl $VII_DATA/tmp $VII_DATA/processed/mi_csv2nc $VII_DATA/processed/mi_probe_message >& /dev/null"
+#* * * * * csh -c "run_group_umtri_probe_message_files.py -l $VII_DATA/log/run_group_umtri_probe_message_files >& /dev/null"
+
+# Create probe message history file for MI
+#*/5 * * * * csh -c "/home/vii/scripts/python/run_create_probe_msg_history_mi.py -l /d2/vii/data/log/run_create_probe_msg_history_mi >& /dev/null" >& /dev/null
+#*/15 * * * * csh -c "/home/vii/scripts/python/run_create_probe_msg_history_mi.py -l /d2/vii/data/log/run_create_probe_msg_history_mi >& /dev/null" >& /dev/null
+
+# Run probe message dataset manager for MI
+#1,6,11,16,21,26,31,36,41,46,51,56 * * * * vii_ep.py vii_config run_probe_message_dataset_manager_mi.py 300 >& /dev/null
+
+# Create data statistics for MI data that gets output to ftp server each day for the previous day's data
+#0 6 * * * csh -c "run_michigan_data_status.py `date -d yesterday +\%Y\%m\%d` `date -d yesterday +\%Y\%m\%d` >& /dev/null"
+
+# Create monthly data statistics for MI on the first day of the month
+#0 12 1 * * csh -c "create_monthly_stats.py -l $VII_DATA/log/create_monthly_stats_Michigan `date -d yesterday +\%Y` `date -d yesterday +\%m` Michigan /ftp/restricted/ftp_vdt/root/download/michigan/daily_statistics /ftp/restricted/ftp_vdt/root/download/michigan/monthly_statistics >& /dev/null"
+
+# Create daily MI timing file
+#30 6 * * * csh -c "run_michigan_timing.py `date -d yesterday +\%Y\%m\%d` `date -d yesterday +\%Y\%m\%d` /d2/vii/data/raw/umtri /ftp/restricted/ftp_vdt/root/download/michigan/daily_statistics/>& /dev/null"
+
+# Create weekly MI timing (latency) file
+#00 7 * * 0 weekly_timing.py `date -d "1 week ago" +\%Y\%m\%d` `date -d yesterday +\%Y\%m\%d` /ftp/restricted/ftp_vdt/root/download/michigan/daily_statistics/ /ftp/restricted/ftp_vdt/root/download/michigan/weekly_statistics
+
+#
+# INRIX
+#
+
+# Move raw INRIX data from ftp area to MI VDT area
+#* * * * * csh -c "get_inrix_data.py -l $VII_DATA/log/get_inrix_data vii_config /var/autofs/mnt/ftp/restricted/ftp_inrix/root/upload/ /d2/vii/data/raw/umtri/ >& /dev/null"
+#* * * * * csh -c "get_inrix_data.py -l $VII_DATA/log/get_inrix_data vii_config /var/autofs/mnt/ftp/restricted/ftp_inrix/root/upload/ /d2/vii/data/raw/inrix/ >& /dev/null"
+
+
+#
+# MN
+#
+
+# Get raw ameritrak data
+*/5 * * * * vii_ep.py vii_config run_ameritrak_ingest.py 300 >& /dev/null
+
+# Convert raw ameritrak input to netcdf format then run probe message dataset manager
+#*/5 * * * * vii_ep.py vii_config run_ameritrak2probe_message.py run_probe_message_dataset_manager.py 300 >& /dev/null
+*/5 * * * * vii_ep.py vii_config run_ameritrak2probe_message.py 300 >& /dev/null
+
+# Create ameritrak data statistics for Minnesota data that gets output to ftp server each day for the previous day's data
+0 6 * * * csh -c "run_ameritrak_data_status.py `date -d yesterday +\%Y\%m\%d` `date -d yesterday +\%Y\%m\%d` >& /dev/null"
+
+# Create monthly data statistics for ameritrak on the first day of the month
+0 12 1 * * csh -c "create_monthly_stats.py -l $VII_DATA/log/create_monthly_stats_Minnesota `date -d yesterday +\%Y` `date -d yesterday +\%m` Minnesota /ftp/restricted/ftp_vdt/root/download/minnesota/daily_statistics /ftp/restricted/ftp_vdt/root/download/minnesota/monthly_statistics >& /dev/null"
+
+# Create VDT output for Minnesota in csv format and put on the ftp server each day for the previous day's data
+#0 5 * * * csh -c "run_cdf_to_csv.py -l $VII_DATA/log/run_cdf_to_csv /d2/vii/data/static/config/ `date -d yesterday +\%Y\%m\%d` /d2/vii/data/processed/mn_vdt_output/ /var/autofs/mnt/ftp/restricted/ftp_vdt/root/download/minnesota/csv_output/ >& /dev/null"
+
+# Create probe message history file for MN
+#*/5 * * * * csh -c "/home/vii/scripts/python/run_create_probe_msg_history.py -l /d2/vii/data/log/run_create_probe_msg_history >& /dev/null" >& /dev/null
+
+*/5 * * * * vii_ep.py vii_config sync_ameritrak_data_with_content.sh 300 >& /dev/null
+
+# Stop ameritrak ingest to recycle
+24 6 * * * vii_ep.py vii_config stop_ameritrak_ingest.py 300 >& /dev/null
+
+#
+# Copy over real-time probe message, csv files to local archive
+#
+30 6 * * * csh -c "mkdir /d5/vii/mn_probe_message/`date -d yesterday +\%Y\%m\%d`; rsync -t --size-only /d2/vii/data/processed/mn_probe_message/`date -d yesterday +\%Y\%m\%d`/* /d5/vii/mn_probe_message/`date -d yesterday +\%Y\%m\%d`/ >& /dev/null"
+
+45 6 * * * csh -c "rsync -t --size-only /d2/vii/data/derived/mn_time_range/*`date -d yesterday +\%Y\%m\%d`* /d5/vii/mn_time_range/ >& /dev/null"
+
+#
+# Run code to check the MN data for CANbus and spreader data
+#
+00 7 * * * csh -c "run_mn_data_check.py `date -d yesterday +\%Y\%m\%d` `date -d yesterday +\%Y\%m\%d` >& /dev/null"
+
+#
+# Run get_ameritrak_images
+#
+
+#* * * * * csh -c "run_get_ameritrak_images.py -l $VII_DATA/log/run_get_ameritrak_images `date +\%Y\%m\%d\%H\%M` /d2/vii/data/raw/ameritrak_images 60 >& /dev/null"
+0 7 * * * csh -c "run_run_get_ameritrak_images.py -l $VII_DATA/log/run_run_get_ameritrak_images `date -d yesterday +\%Y\%m\%d` `date -d yesterday +\%Y\%m\%d` /d2/vii/data/raw/ameritrak_images 60 >& /dev/null"
+
+#
+# Run get_minnesota_images
+#
+30 * * * * csh -c "get_minnesota_images.py -l $VII_DATA/log/get_minnesota_images /d2/vii/data/raw/minnesota_images/ >& /dev/null"
+
+
+#
+# Other Data
+#
+
+#
+# Run cloud classification package
+#
+#12-59/15 * * * * csh -c "ep.py -s .epl -E 7200 -L $VII_DATA/lock/gini_cloud_class_package.lock -l $VII_DATA/log/gini_cloud_class_package gini_cloud_class_package.py -l gini_cloud_class -L /d2/vii/data/log gini_cloud_class_package_config >& /dev/null"
+
+#
+# Convert ldm metar input to netcdf format
+#
+*/5 * * * * vii_ep.py vii_config run_metar2nc.py 300 >& /dev/null
+
+#
+# Convert cloud mask/cloud classifier output to images
+#
+*/15 * * * * vii_ep.py vii_config run_cloud_class_nc2png.py run_sat_field_1km_nc2png.py 900 >& /dev/null
+
+#
+# Run cloud mask code
+#
+*/5 * * * * vii_ep.py vii_config run_awc_rename.py run_gini2nc.py run_compare_index_files.py run_convert_gzip.py run_cloud_mask_byte.py run_blend_latest.py run_cloud_cnv_mn_grid.py 300 >& /dev/null
+
+#
+# Get storm warnings
+#
+*/5 * * * * vii_ep.py vii_config run_get_storm_warnings.sh run_get_nws_ww.sh run_get_spc_reports.py 300 >& /dev/null
+
+#
+# Get twitter data
+#
+*/15 * * * * vii_ep.py vii_config get_twitter_wx.sh 900 >& /dev/null
+#*/5 * * * * vii_ep.py vii_config get_unr_timestamped_data.sh run_nv2probe_message.py 300 >& /dev/null
+
+#
+# Get RTMA data
+#
+57 * * * * vii_ep.py vii_config run_getrtma.sh 900 >& /dev/null
+
+#
+# Create radar images
+#
+*/5 * * * * vii_ep.py vii_config run_radarnc2png.sh 300 >& /dev/null
+
+#
+# Get UNR time stamped data
+#
+#*/5 * * * * vii_ep.py vii_config get_unr_timestamped_data.sh 300 >& /dev/null
+
+#
+# Format and processes Alaska mobile data (put in probe_message netcdf file)
+#
+*/5 * * * * vii_ep.py vii_config ep_frmt_and_run_alaska2probe_message.py 300 >& /dev/null
+
+#
+# Scrub, scrub, scrub
+#
+0 * * * * csh -c "fclean.py -v -p $VII_DATA -l $VII_DATA/log/fclean $VII_DATA/static/config/fclean_vii.conf"
+
+#5 00 * * * $HOME/util/scrub -d 7 /tmp >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 7 /d2/vii/data/raw/rtma >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 7 /d2/vii/data/raw/metar >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 7 /d2/vii/data/raw/radar >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 7 /d2/vii/data/raw/rsas >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 60 /d2/vii/data/raw/nws_ww >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 60 /d2/vii/data/raw/storm_warn >& /dev/null
+
+#5 00 * * * $HOME/util/scrub -d 7 /d2/vii/data/derived >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 7 /d2/vii/data/processed >& /dev/null
+#5 00 * * * $HOME/util/scrub -d 28 /d2/vii/data/log >& /dev/null
+#25,50 * * * * $HOME/util/scrub -d 1 /d3/vii >& /dev/null
+
+#
+#Get WXT Data
+#
+* * * * * run_wxt_data_chain.sh /d2/vii/data/log/wxt_data_chain && run_group_probe_message_rt.sh $VII_DATA/processed/mi_wxt_probe $VII_DATA/processed/mi_group_netcdf /d2/vii/data/log/group_wxt && run_group_probe_message_rt.sh $VII_DATA/processed/mn_wxt_probe $VII_DATA/processed/mn_group_netcdf /d2/vii/data/log/group_wxt && run_group_probe_message_rt.sh $VII_DATA/processed/nv_wxt_probe $VII_DATA/processed/nv_group_netcdf /d2/vii/data/log/group_wxt && csh -c "fclean.py -v -p $VII_DATA -l $VII_DATA/log/fclean_wxt $VII_DATA/static/config/fclean_vii_wxt.conf"

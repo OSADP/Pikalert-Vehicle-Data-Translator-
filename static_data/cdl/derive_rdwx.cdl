@@ -1,0 +1,213 @@
+netcdf derive_vars {
+dimensions:
+	max_site_num = UNLIMITED;  // number of locations
+	days = 5;		   // number of days
+	fc_times_per_day = 24;	   // number of forecasts per day
+	daily_time = 1;		   // same, for once-a-day variables
+
+	
+variables:
+	double	creation_time;
+		creation_time:long_name = "time at which forecast file was created";
+		creation_time:units = "seconds since 1970-1-1 00:00:00" ;
+
+	double 	forc_time;
+		forc_time:long_name = "time of earliest forecast";
+		forc_time:units = "seconds since 1970-1-1 00:00:00" ;
+
+	int	num_sites;
+		num_sites:long_name = "number of actual_sites";
+
+	int	site_list(max_site_num);
+		site_list:long_name = "forecast site list";
+		site_list:_FillValue = -99999;
+
+	float	T(max_site_num, days, fc_times_per_day);
+		T:long_name = "temperature";
+		T:units = "Celsius";
+
+	float	TempF(max_site_num, days, fc_times_per_day);
+		TempF:long_name = "temperature";
+		TempF:units = "Fahrenheit";
+
+	float	dewptF(max_site_num, days, fc_times_per_day);
+		dewptF:long_name = "dewpoint";
+		dewptF:units = "Fahrenheit";
+
+	float	dewpt(max_site_num, days, fc_times_per_day);
+		dewpt:long_name = "dewpoint";
+		dewpt:units = "Celsius";
+
+	float	rh(max_site_num, days, fc_times_per_day);
+		rh:long_name = "relative humidity";
+		rh:units = "1";
+
+	float	rh_pct(max_site_num, days, fc_times_per_day);
+		rh_pct:long_name = "percent relative humidity";
+		rh_pct:units = "percent";
+
+	float	cloud_cov(max_site_num, days, fc_times_per_day);
+		cloud_cov:long_name = "cloud cover";
+		cloud_cov:units = "1";
+
+        float   visibility(max_site_num, days, fc_times_per_day) ;
+                visibility:long_name = "visibility" ;
+                visibility:units = "km" ;
+
+        float   prob_fog(max_site_num, days, fc_times_per_day);
+                prob_fog:long_name = "probability of fog";
+                prob_fog:units = "1";
+
+	float 	wind_u(max_site_num, days, fc_times_per_day);
+		wind_u:long_name = "eastward-component of wind";
+		wind_u:units = "meters per second";
+
+	float	wind_v(max_site_num, days, fc_times_per_day);	
+		wind_v:long_name = "northward-component of wind";
+		wind_v:units = "meters per second";
+
+	float 	wind_speed(max_site_num, days, fc_times_per_day);
+		wind_speed:long_name = "windspeed";
+		wind_speed:units = "meters per second";
+
+	float 	wind_speed_mph(max_site_num, days, fc_times_per_day);
+		wind_speed_mph:long_name = "windspeed in mph";
+		wind_speed_mph:units = "miles per hour";
+
+	float	wind_dir(max_site_num, days, fc_times_per_day);	
+		wind_dir:long_name = "wind direction clockwise from north";
+		wind_dir:units = "degrees north";
+
+	float	cprob_rain(max_site_num, days, fc_times_per_day);
+		cprob_rain:long_name = "conditional probability of rain";
+		cprob_rain:units = "1";
+
+	float	cprob_snow(max_site_num, days, fc_times_per_day);
+		cprob_snow:long_name = "conditional probability of snow";
+		cprob_snow:units = "1";
+
+	float	cprob_ice(max_site_num, days, fc_times_per_day);
+		cprob_ice:long_name = "conditional probability of ice";
+		cprob_ice:units = "1";
+
+	float	qpf01(max_site_num, days, fc_times_per_day);
+		qpf01:long_name = "amount of precipitation";
+		qpf01:units = "mm";
+
+	float	qpf03(max_site_num, days, fc_times_per_day);
+		qpf03:long_name = "amount of precipitation";
+		qpf03:units = "mm";
+
+	float	qpf06(max_site_num, days, fc_times_per_day);
+		qpf06:long_name = "amount of precipitation";
+		qpf06:units = "mm";
+
+        float   precip_cn1(max_site_num, days, fc_times_per_day);
+                precip_cn1:long_name = "amount of convective precipitation";
+                precip_cn1:units = "mm";
+
+        float   precip_cn3(max_site_num, days, fc_times_per_day);
+                precip_cn3:long_name = "amount of convective precipitation";
+                precip_cn3:units = "mm";
+
+	float	precip_rate(max_site_num, days, fc_times_per_day);
+		precip_rate:long_name = "precip (SWE) rate";
+                precip_rate:units = "mm/hr";
+
+        float   precip_rate_inches(max_site_num, days, fc_times_per_day);
+                precip_rate_inches:long_name = "precip (SWE) rate";
+                precip_rate_inches:units = "in/hr";
+
+        float   prob_precip01(max_site_num, days, fc_times_per_day);
+                prob_precip01:long_name = "probability of precipitation, 1 hr";
+                prob_precip01:units = "1";
+
+        float   prob_precip03(max_site_num, days, fc_times_per_day);
+                prob_precip03:long_name = "probability of precipitation, 3 hr";
+                prob_precip03:units = "1";
+
+        float   prob_precip06(max_site_num, days, fc_times_per_day);
+                prob_precip06:long_name = "probability of precipitation, 1 hr";
+                prob_precip06:units = "1";
+
+	float	precip_type(max_site_num, days, fc_times_per_day);
+		precip_type:long_name = "precipitation type";
+		precip_type:units = "0=NONE, 1=RAIN, 2=SNOW, 5=ICE";
+
+	float	precip_accum(max_site_num, days, fc_times_per_day);
+		precip_accum:long_name = "3 hr precip accumulation";
+                precip_accum:units = "mm";
+
+        float   precip_accum_inches(max_site_num, days, fc_times_per_day);
+                precip_accum_inches:long_name = "3 hr precip accumulation";
+                precip_accum_inches:units = "inches";
+
+	float   snow_rate(max_site_num, days, fc_times_per_day);
+		snow_rate:long_name = "snowfall rate";
+                snow_rate:units = "mm/hr";
+
+        float   snow_rate_inches(max_site_num, days, fc_times_per_day);
+                snow_rate_inches:long_name = "snowfall rate";
+                snow_rate_inches:units = "in/hr";
+
+	float	snow_accum(max_site_num, days, fc_times_per_day);
+		snow_accum:long_name = "3 hr snowfall accumulation";
+                snow_accum:units = "mm";
+
+        float   snow_accum_inches(max_site_num, days, fc_times_per_day);
+                snow_accum_inches:long_name = "3 hr snowfall accumulation";
+                snow_accum_inches:units = "inches";
+
+	float	snow_accum_total(max_site_num, days, fc_times_per_day);
+		snow_accum_total:long_name = "snowfall accumulation since start of forecast";
+                snow_accum_total:units = "mm";
+
+	float	prob_precip03_pct(max_site_num, days, fc_times_per_day);
+		prob_precip03_pct:long_name = "probability of precipitation, 3 hr";
+		prob_precip03_pct:units = "percent";
+
+        float   blowing_snow_potential(max_site_num, days, fc_times_per_day);
+                blowing_snow_potential:long_name = "blowing snow potential";
+                blowing_snow_potential:units = "index (0-3) (low-high)";
+
+        float   blowing_snow_pot_vals(max_site_num, days, fc_times_per_day);
+                blowing_snow_pot_vals:long_name = "blowing snow potential values";
+                blowing_snow_pot_vals:units = "1";
+
+	float	snow_depth(max_site_num, days, fc_times_per_day);
+		snow_depth:long_name = "water equiv of accum snow depth";
+		snow_depth:units = "kg/m2";
+
+        float   T_lbls0(max_site_num, days, fc_times_per_day);
+                T_lbls0:long_name = "0-10 cm layer sub-sfc temperature";
+                T_lbls0:units = "Celsius";
+
+        float   T_lbls1(max_site_num, days, fc_times_per_day);
+                T_lbls1:long_name = "10-40 cm layer sub-sfc temperature";
+                T_lbls1:units = "Celsius";
+
+        float   T_lbls2(max_site_num, days, fc_times_per_day);
+                T_lbls2:long_name = "40-100 cm layer sub-sfc temperature";
+                T_lbls2:units = "Celsius";
+
+        float   T_lbls3(max_site_num, days, fc_times_per_day);
+                T_lbls3:long_name = "100-200 cm layer sub-sfc temperature";
+                T_lbls3:units = "Celsius";
+
+	float	P_msl(max_site_num, days, fc_times_per_day) ;
+		P_msl:long_name = "Pressure reduced to sea level";
+		P_msl:units = "millibars" ;
+
+	float	P_sfc(max_site_num, days, fc_times_per_day) ;
+		P_sfc:long_name = "Pressure at 2m above sfc";
+		P_sfc:units = "millibars" ;
+
+        float   dlwrf_sfc(max_site_num, days, fc_times_per_day) ;
+                dlwrf_sfc:long_name = "downward long wave radiation flux at surface" ;
+                dlwrf_sfc:units = "W/m2" ;
+
+        float   dswrf_sfc(max_site_num, days, fc_times_per_day) ;
+                dswrf_sfc:long_name = "downward short wave radiation flux at surface" ;
+                dswrf_sfc:units = "W/m2" ;
+
+}

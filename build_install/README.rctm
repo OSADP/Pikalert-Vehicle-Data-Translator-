@@ -1,0 +1,33 @@
+###############################################################################
+#
+# Road Condition and Treatment Module (RCTM)
+#
+# The RCTM is a collection of software that has been developed over many
+# years by a number of organizations, including:
+#
+# NCAR/RAL: National Center for Atmospheric Research/Research Applications Lab
+# MIT/LL: Massachusetts Institute of Technology/Lincoln Labs
+# EC/CMC: Environment Canada/Canadian Meteorological Center
+# 
+###############################################################################
+
+This is the Road Condition and Treatment Module used by the FHWA Maintenance
+Decision Support System (MDSS), The Enhanced MDSS (EMDSS) and PikAlert systems.
+
+Given roadway information at specific locations, a weather forecast and recent
+observations at those locations, the RCTM will produce a road temperature
+forecast as well as provide treatment recommendations for the locations.
+
+This distribution contains all the software that composes the RCTM, scripts to
+run it and sample data to test the build.
+
+Note that the RCTM requires an input weather forecast and recent observations 
+at forecast sites. This distribution contains sample datasets covering roadways
+in Michigan, Minnesota and Nevada from February 2015. The sample netCDF data
+files are located in test/data/rctm/. These sample files are used for testing
+the software build and also provide an example of the data input requirements
+if a user chooses to run the RCTM in real-time mode.
+
+See the INSTALL.rctm file for further information.
+
+###############################################################################

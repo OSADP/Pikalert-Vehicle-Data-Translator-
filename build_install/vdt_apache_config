@@ -1,0 +1,89 @@
+# Note: move to main server config context (apache2.conf)
+# Additional directories to search for Python modules
+<IfModule mod_wsgi.c>
+WSGIPythonPath /opt/python/lib/python2.7/site-packages:/home/dicast/mdss_view:/home/dicast/scripts/python:/home/dicast/akmdss_view:/home/vii/scripts/python
+</IfModule>
+
+# Note: move to main server config context (ports.conf)
+Listen 8080
+
+# Begin Mobile DICast virtual host.
+<VirtualHost *:8080>
+
+	DocumentRoot /d1/local/htdocs
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+	<Directory /d1/local/htdocs/>
+		Options Indexes FollowSymLinks MultiViews
+		AllowOverride None
+		Order allow,deny
+		allow from all
+	</Directory>
+
+	ScriptAlias /cgi-bin/ /usr/lib/cgi-bin/
+	<Directory "/usr/lib/cgi-bin">
+		AllowOverride None
+		Options +ExecCGI -MultiViews +SymLinksIfOwnerMatch
+		Order allow,deny
+		Allow from all
+	</Directory>
+
+	# Possible values include: debug, info, notice, warn, error, crit, alert, emerg.
+	# LogLevel warn
+    LogLevel info
+	CustomLog ${APACHE_LOG_DIR}/access.log combined
+	ErrorLog ${APACHE_LOG_DIR}/error.log
+
+	# Deal with user agents that deliberately violate open standards
+	<IfModule setenvif_module>
+	    BrowserMatch "MSIE 10.0;" bad_DNT
+	</IfModule>
+	<IfModule headers_module>
+	    RequestHeader unset DNT env=bad_DNT
+	</IfModule>
+
+	Alias /radar_images /d1/radar_images
+
+	<Directory "/d1/radar_images">
+	    Options +Indexes
+	    Order Allow,Deny
+	    Allow from all
+	</Directory>
+
+	<Directory /home/dicast/akmdss_view>
+	    Order Allow,Deny
+	    Allow from all
+	</Directory>
+
+	<Directory /home/dicast/mdss_view>
+	    Order Allow,Deny
+	    Allow from all
+	</Directory>
+
+	<Directory /home/dicast/akmdss_view_dev>
+	    Order Allow,Deny
+	    Allow from all
+	</Directory>
+
+	# WSGI Configuration Directives: https://code.google.com/p/modwsgi/wiki/ConfigurationDirectives
+	<IfModule mod_wsgi.c>
+	WSGIScriptAlias /latest_vehicles /home/dicast/mdss_view/latest_vehicles.wsgi
+	WSGIScriptAlias /datatime /home/dicast/mdss_view/data_time.wsgi
+	WSGIScriptAlias /district_alerts /home/dicast/mdss_view/district_alerts.wsgi
+	WSGIScriptAlias /plots /home/dicast/mdss_view/plots.wsgi
+	WSGIScriptAlias /maw_alerts /home/dicast/mdss_view/alertsMAW.wsgi
+	WSGIScriptAlias /maw_alerts_test /home/dicast/mdss_view/alertsMAW-testdata.wsgi
+	WSGIScriptAlias /maw_alerts_confirm /home/dicast/mdss_view/alertsMAW-confirm.wsgi
+	WSGIScriptAlias /maw_alerts_adhoc /home/dicast/mdss_view/alertsMAW-adhoc.wsgi
+	WSGIScriptAlias /datatime_dev /home/vii/scripts/python/data_time.wsgi
+	WSGIScriptAlias /district_alerts_dev /home/vii/scripts/python/district_alerts.wsgi
+	WSGIScriptAlias /plots_dev /home/vii/scripts/python/plots.wsgi
+
+	WSGIScriptAlias /maw_login_dev /home/vii/scripts/python/maw_login.wsgi
+
+	</IfModule>
+
+# End Mobile DICast virtual host.
+</VirtualHost>

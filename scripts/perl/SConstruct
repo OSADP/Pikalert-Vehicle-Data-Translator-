@@ -1,0 +1,6 @@
+import os
+
+# Simply installs the python scripts in their destination.
+
+Install(os.environ['LOCAL_PERL_SCRIPTS_DIR'], Glob('*.pl'))
+Alias('install', os.environ['LOCAL_PERL_SCRIPTS_DIR'])

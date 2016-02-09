@@ -1,0 +1,1038 @@
+netcdf nam {
+
+dimensions:
+
+	max_site_num = 200 ;	// max number of sites
+	record = UNLIMITED ;	// (reference time, forecast time)
+
+	level = 39 ;		// isobaric levels for most parameters
+	level_c = 8 ;		// mandatory (mostly) isobaric levels
+	level_a = 3 ;		// temp advection isobaric levels
+	level_m = 2 ;		// moisture divergence isobaric levels
+	fhg = 2 ;		// fixed height above ground level
+	fhg2m = 1 ;		// fixed height (2m) above ground level
+	fhg10m = 1 ;		// fixed height (10m) above ground level
+	hybr = 2 ;		// hybrid levels
+	hybr1 = 1 ;		// hybrid level 1
+	ls = 1;			// layer between two sigma levels
+	lpdg = 6 ;		// boundary layer levels
+	lpdg_bndry = 1 ;	// boundary layer
+	lpdg_bndry30 = 1 ;	// boundary layer 0-30
+	bls = 1 ;		// level below surface
+	lbls = 4 ;		// layers below surface
+	lbls_100 = 1 ;		// layer below surface 0-100
+	lbls_200 = 1 ;		// layer below surface 0-200
+	datetime_len = 21 ; 	// string length for datetime strings
+	accum = 2 ;		// time range for accumulations
+
+variables:
+
+	double	reftime(record) ;	// reference time of the model
+		reftime:long_name = "reference time" ;
+		reftime:units = "hours since 1992-1-1" ;
+
+	double	valtime(record) ;       // forecast time ("valid" time)
+		valtime:long_name = "valid time" ;
+		valtime:units = "hours since 1992-1-1" ;
+
+	:record = "reftime, valtime" ;	// "dimension attribute" -- means
+					// (reftime, valtime) uniquely
+					// determine record
+
+	char	datetime(record, datetime_len) ; // derived from reftime
+		datetime:long_name = "reference date and time" ;
+		// units YYYY-MM-DD hh:mm:ssZ  (ISO 8601)
+
+	float	valtime_offset(record) ; // derived as valtime-reftime
+		valtime_offset:long_name = "hours from reference time" ;
+		valtime_offset:units = "hours" ;
+
+	int	num_sites;
+		num_sites:long_name = "actual number of sites";
+
+        int     site_list(max_site_num);
+                site_list:long_name = "forecast site list";
+                site_list:_FillValue = -99999;
+
+	float	lat(max_site_num);
+                lat:long_name = "latitude";
+                lat:_FillValue = -99999.f;
+
+	float	lon(max_site_num);
+                lon:long_name = "longitude";
+                lon:_FillValue = -99999.f;
+
+	float	elev(max_site_num);
+                elev:long_name = "elevation";
+		elev:units = "meters";
+                elev:_FillValue = -99999.f;
+
+	float	level(level) ;
+		level:long_name = "level" ;
+		level:units = "hectopascals" ;
+
+	float	level_a(level_a) ;
+		level_a:long_name = "level subset" ;
+		level_a:units = "hectopascals" ;
+
+	float	level_c(level_c) ;
+		level_c:long_name = "level subset" ;
+		level_c:units = "hectopascals" ;
+
+	float	level_m(level_m) ;
+		level_m:long_name = "level subset" ;
+		level_m:units = "hectopascals" ;
+
+	:ls = "ls_bot, ls_top" ;
+		
+	float	ls_bot(ls) ;
+		ls_bot:long_name = "bottom level of layer between 2 sigma levels" ;
+		ls_bot:units = "" ;
+		
+	float	ls_top(ls) ;
+		ls_top:long_name = "top level of layer between 2 sigma levels" ;
+		ls_top:units = "" ;
+
+	:lpdg = "lpdg_bot, lpdg_top" ;
+		
+	float	lpdg_bot(lpdg) ;
+		lpdg_bot:long_name = "bottom level of layer between 2 presure levels" ;
+		lpdg_bot:units = "hPa" ;
+		
+	float	lpdg_top(lpdg) ;
+		lpdg_top:long_name = "top level of layer between 2 presure levels" ;
+		lpdg_top:units = "hPa" ;
+
+	:lpdg_bndry = "lpdg_bndry_bot, lpdg_bndry_top" ;
+		
+	float	lpdg_bndry_bot(lpdg_bndry) ;
+		lpdg_bndry_bot:long_name = "bottom level of boundary layer between 2 pressure levels" ;
+		lpdg_bndry_bot:units = "hPa" ;
+		
+	float	lpdg_bndry_top(lpdg_bndry) ;
+		lpdg_bndry_top:long_name = "top level of boundary layer between 2 pressure levels" ;
+		lpdg_bndry_top:units = "hPa" ;
+
+	:lpdg_bndry30 = "lpdg_bndry30_bot, lpdg_bndry30_top" ;
+		
+	float	lpdg_bndry30_bot(lpdg_bndry30) ;
+		lpdg_bndry30_bot:long_name = "bottom level of boundary layer between 2 pressure levels" ;
+		lpdg_bndry30_bot:units = "hPa" ;
+		
+	float	lpdg_bndry30_top(lpdg_bndry30) ;
+		lpdg_bndry30_top:long_name = "top level of boundary layer between 2 pressure levels" ;
+		lpdg_bndry30_top:units = "hPa" ;
+
+	:lbls = "lbls_top, lbls_bot" ; // (lbls_top, lbls_bot) uniquely
+				       // determines lbls
+		
+	float	lbls_top(lbls) ;
+		lbls_top:long_name = "top level of layer below surface from ground to level" ;
+		lbls_top:units = "cm" ;
+
+	float	lbls_bot(lbls) ;
+		lbls_bot:long_name = "bottom level of layer below surface from ground to level" ;
+		lbls_bot:units = "cm" ;
+
+	:lbls_100 = "lbls_100_top, lbls_100_bot" ; // (lbls_100_top, lbls_100_bot) uniquely
+				       // determines lbls_100
+		
+	float	lbls_100_top(lbls_100) ;
+		lbls_100_top:long_name = "top level of layer below surface from ground to level" ;
+		lbls_100_top:units = "cm" ;
+
+	float	lbls_100_bot(lbls_100) ;
+		lbls_100_bot:long_name = "bottom level of layer below surface from ground to level" ;
+		lbls_100_bot:units = "cm" ;
+
+	:lbls_200 = "lbls_200_top, lbls_200_bot" ; // (lbls_200_top, lbls_200_bot) uniquely
+				       // determines lbls_200
+		
+	float	lbls_200_top(lbls_200) ;
+		lbls_200_top:long_name = "top level of layer below surface from ground to level" ;
+		lbls_200_top:units = "cm" ;
+
+	float	lbls_200_bot(lbls_200) ;
+		lbls_200_bot:long_name = "bottom level of layer below surface from ground to level" ;
+		lbls_200_bot:units = "cm" ;
+
+	float	bls(bls) ;
+		bls:long_name = "level below surface" ;
+		bls:units = "cm" ;
+
+	float	hybr1(hybr1) ;
+		hybr1:long_name = "hybrid level 1" ;
+		hybr1:units = "" ;
+
+	float	hybr(hybr) ;
+		hybr:long_name = "hybrid levels" ;
+		hybr:units = "" ;
+		
+	float	fhg(fhg) ;
+		fhg:long_name = "fixed height above ground" ;
+		fhg:units = "meters" ;
+
+	float	fhg2m(fhg2m) ;		 // 2m above ground
+		fhg2m:long_name = "fixed height above ground" ;
+		fhg2m:units = "meters" ;
+
+	float	fhg10m(fhg10m) ;		 // 10m above ground
+		fhg10m:long_name = "fixed height above ground" ;
+		fhg10m:units = "meters" ;
+
+
+// Start of met variables
+
+
+//	float	absvor(record, level_c, max_site_num) ;
+//		absvor:long_name = "absolute vorticity" ;
+//		absvor:units = "1/s" ;
+//		absvor:interpolation_method = "bilinear" ;
+//		absvor:_FillValue = -9999.f ;
+
+
+//	float	albedo_sfc(record, max_site_num) ;
+//		albedo_sfc:long_name = "albedo at surface" ;
+//		albedo_sfc:units = "percent" ;
+//		albedo_sfc:interpolation_method = "bilinear" ;
+//		albedo_sfc:_FillValue = -9999.f ;
+
+
+//	float	bgrun(record, max_site_num) ;
+//		bgrun:long_name = "baseflow groundwater runoff" ;
+//		bgrun:units = "kg/m2" ;
+//		bgrun:interpolation_method = "bilinear" ;
+//		bgrun:_FillValue = -9999.f ;
+
+
+//	float	bmixl_hybr(record, hybr1, max_site_num) ;
+//		bmixl_hybr:long_name = "Blackadar's mixing length scale at hybrid level" ;
+//		bmixl_hybr:units = "m" ;
+//		bmixl_hybr:interpolation_method = "bilinear" ;
+//		bmixl_hybr:_FillValue = -9999.f ;
+
+
+//	float	c_ice(record, level, max_site_num) ;
+//		c_ice:long_name = "cloud ice" ;
+//		c_ice:units = "kg/m2" ;
+//		c_ice:interpolation_method = "bilinear" ;
+//		c_ice:_FillValue = -9999.f ;
+
+
+//	float	c_ice_hybr(record, hybr1, max_site_num) ;
+//		c_ice_hybr:long_name = "cloud ice at hybrid level" ;
+//		c_ice_hybr:units = "kg/m2" ;
+//		c_ice_hybr:interpolation_method = "bilinear" ;
+//		c_ice_hybr:_FillValue = -9999.f ;
+
+
+//	float	c_wat(record, max_site_num) ;
+//		c_wat:long_name = "plant canopy surface water" ;
+//		c_wat:units = "kg/m2" ;
+//		c_wat:interpolation_method = "bilinear" ;
+//		c_wat:_FillValue = -9999.f ;
+
+
+//	float	cape_lpdg(record, lpdg_bndry, max_site_num) ;
+//		cape_lpdg:long_name = "boundary convective available potential energy" ;
+//		cape_lpdg:units = "J/kg" ;
+//		cape_lpdg:interpolation_method = "bilinear" ;
+//		cape_lpdg:_FillValue = -9999.f ;
+
+
+//	float	cape_sfc(record, max_site_num) ;
+//		cape_sfc:long_name = "surface convective available potential energy" ;
+//		cape_sfc:units = "J/kg" ;
+//		cape_sfc:interpolation_method = "bilinear" ;
+//		cape_sfc:_FillValue = -9999.f ;
+
+
+//	float	cd_sfc(record, max_site_num) ;
+//		cd_sfc:long_name = "drag coefficient" ;
+//		cd_sfc:units = "non-dim" ;
+//		cd_sfc:interpolation_method = "bilinear" ;
+//		cd_sfc:_FillValue = -9999.f ;
+
+
+//	float	cfrzrn(record, max_site_num) ;
+//		cfrzrn:long_name = "categorical freezing rain" ;
+//		cfrzrn:units = "1" ;
+//		cfrzrn:interpolation_method = "nearest_neighbor" ;
+//		cfrzrn:_FillValue = -9999.f ;
+
+
+//	float	cicepl(record, max_site_num) ;
+//		cicepl:long_name = "categorical ice pellets" ;
+//		cicepl:units = "1" ;
+//		cicepl:interpolation_method = "nearest_neighbor" ;
+//		cicepl:_FillValue = -9999.f ;
+
+
+//	float	cin_lpdg(record, lpdg_bndry, max_site_num) ;
+//		cin_lpdg:long_name = "boundary convective inhibition" ;
+//		cin_lpdg:units = "J/kg" ;
+//		cin_lpdg:interpolation_method = "bilinear" ;
+//		cin_lpdg:_FillValue = -9999.f ;
+
+	
+//	float	cin_sfc(record, max_site_num) ;
+//		cin_sfc:long_name = "surface convective inhibition" ;
+//		cin_sfc:units = "J/kg" ;
+//		cin_sfc:interpolation_method = "bilinear" ;
+//		cin_sfc:_FillValue = -9999.f ;
+
+
+//	float	clwmr(record, level, max_site_num) ;
+//		clwmr:long_name = "cloud water mixing ratio" ;
+//		clwmr:units = "kg/kg" ;
+//		clwmr:interpolation_method = "bilinear" ;
+//		clwmr:_FillValue = -9999.f ;
+
+
+//	float	clwmr_hybr(record, hybr1, max_site_num) ;
+//		clwmr_hybr:long_name = "cloud water mixing ratio at hybrid level" ;
+//		clwmr_hybr:units = "kg/kg" ;
+//		clwmr_hybr:interpolation_method = "bilinear" ;
+//		clwmr_hybr:_FillValue = -9999.f ;
+
+
+//	float	crain(record, max_site_num) ;
+//		crain:long_name = "categorical rain" ;
+//		crain:units = "1" ;
+//		crain:interpolation_method = "nearest_neighbor" ;
+//		crain:_FillValue = -9999.f ;
+
+
+//	float	csnow(record, max_site_num) ;
+//		csnow:long_name = "categorical snow" ;
+//		csnow:units = "1" ;
+//		csnow:interpolation_method = "nearest_neighbor" ;
+//		csnow:_FillValue = -9999.f ;
+
+
+	float	dlwrf_sfc(record, max_site_num) ;
+		dlwrf_sfc:long_name = "downward long wave radiation flux at surface" ;
+		dlwrf_sfc:units = "W/m2" ;
+		dlwrf_sfc:interpolation_method = "bilinear" ;
+		dlwrf_sfc:_FillValue = -9999.f ;
+
+
+	float	dswrf_sfc(record, max_site_num) ;
+		dswrf_sfc:long_name = "downward short wave radiation flux at surface" ;
+		dswrf_sfc:units = "W/m2" ;
+		dswrf_sfc:interpolation_method = "bilinear" ;
+		dswrf_sfc:_FillValue = -9999.f ;
+
+
+//	float	evap3_sfc(record, max_site_num) ;
+//		evap3_sfc:long_name = "evaporation over time interval" ;
+//		evap3_sfc:units = "kg/m2" ;
+//		evap3_sfc:interpolation_method = "bilinear" ;
+//		evap3_sfc:_FillValue = -9999.f ;
+
+
+//	float	evap3_sfc_accum_times(record, accum) ;
+//		evap3_sfc_accum_times:long_name = "evaporation accumulation intervals" ;
+//		evap3_sfc_accum_times:units = "hours" ;
+//		evap3_sfc_accum_times:interpolation_method = "bilinear" ;
+//		evap3_sfc_accum_times:_FillValue = -9999.f ;
+
+
+//	float	fricv_sfc(record, max_site_num) ;
+//		fricv_sfc:long_name = "friction velocity" ;
+//		fricv_sfc:units = "m/s" ;
+//		fricv_sfc:interpolation_method = "bilinear" ;
+//		fricv_sfc:_FillValue = -9999.f ;
+
+
+//	float	gflux(record, max_site_num) ;
+//		gflux:long_name = "ground heat flux" ;
+//		gflux:units = "W/m2" ;
+//		gflux:interpolation_method = "bilinear" ;
+//		gflux:_FillValue = -9999.f ;
+
+
+//	float	ice_conc(record, max_site_num) ;
+//		ice_conc:long_name = "ice cover" ;
+//		ice_conc:units = "1" ;
+//		ice_conc:interpolation_method = "bilinear" ;
+//		ice_conc:_FillValue = -9999.f ;
+
+
+//	float	lat_ht_sfc(record, max_site_num) ;
+//		lat_ht_sfc:long_name = "surface latent heat net flux" ;
+//		lat_ht_sfc:units = "W/m2" ;
+//		lat_ht_sfc:interpolation_method = "bilinear" ;
+//		lat_ht_sfc:_FillValue = -9999.f ;
+
+
+//	float	LI4_lpdg(record, lpdg_bndry, max_site_num) ;
+//		LI4_lpdg:long_name = "best (4 layer) lifted index" ;
+//		LI4_lpdg:units = "degK" ;
+//		LI4_lpdg:interpolation_method = "bilinear" ;
+//		LI4_lpdg:_FillValue = -9999.f ;
+
+
+//	float	mois_div(record, level_m, max_site_num) ;
+//		mois_div:long_name = "horizontal moisture divergence" ;
+//		mois_div:units = "kg/kg/s" ;
+//		mois_div:interpolation_method = "bilinear" ;
+//		mois_div:_FillValue = -9999.f ;
+
+
+//	float	mois_div_lpdg(record, lpdg_bndry30, max_site_num) ;
+//		mois_div_lpdg:long_name = "horizontal moisture divergence in the boundary layer" ;
+//		mois_div_lpdg:units = "kg/kg/s" ;
+//		mois_div_lpdg:interpolation_method = "bilinear" ;
+//		mois_div_lpdg:_FillValue = -9999.f ;
+
+
+//	float	mstr_avl_lbls(record, lbls_100, max_site_num) ;
+//		mstr_avl_lbls:long_name = "moisture availability" ;
+//		mstr_avl_lbls:units = "percent" ;
+//		mstr_avl_lbls:interpolation_method = "bilinear" ;
+//		mstr_avl_lbls:_FillValue = -9999.f ;
+
+
+	float	N_atm(record, max_site_num) ;
+		N_atm:long_name = "total cloud cover entire atmosphere" ;
+		N_atm:units = "1" ;
+		N_atm:interpolation_method = "bilinear" ;
+		N_atm:_FillValue = -9999.f ;
+
+
+//	float	Nh_hcy(record, max_site_num) ;
+//		Nh_hcy:long_name = "high cloud cover at high cloud layer" ;
+//		Nh_hcy:units = "percent" ;
+//		Nh_hcy:interpolation_method = "bilinear" ;
+//		Nh_hcy:_FillValue = -9999.f ;
+
+
+//	float	Nl_lcy(record, max_site_num) ;
+//		Nl_lcy:long_name = "low cloud cover at low cloud layer" ;
+//		Nl_lcy:units = "percent" ;
+//		Nl_lcy:interpolation_method = "bilinear" ;
+//		Nl_lcy:_FillValue = -9999.f ;
+
+
+//	float	Nm_mcy(record, max_site_num) ;
+//		Nm_mcy:long_name = "middle cloud cover at middle cloud layer" ;
+//		Nm_mcy:units = "percent" ;
+//		Nm_mcy:interpolation_method = "bilinear" ;
+//		Nm_mcy:_FillValue = -9999.f ;
+
+
+//	float	omega(record, level, max_site_num) ;
+//		omega:long_name = "pressure vertical velocity" ;
+//		omega:units = "Pa/s" ;
+//		omega:interpolation_method = "bilinear" ;
+//		omega:_FillValue = -9999.f ;
+
+//	float	omega_lpdg(record, lpdg, max_site_num) ;
+//		omega_lpdg:long_name = "pressure vertical velocity in boundary layer" ;
+//		omega_lpdg:units = "Pa/s" ;
+//		omega_lpdg:interpolation_method = "bilinear" ;
+//		omega_lpdg:_FillValue = -9999.f ;
+
+
+//	float	omega_hybr(record, hybr1, max_site_num) ;
+//		omega_hybr:long_name = "pressure vertical velocity at hybrid level" ;
+//		omega_hybr:units = "Pa/s" ;
+//		omega_hybr:interpolation_method = "bilinear" ;
+//		omega_hybr:_FillValue = -9999.f ;
+
+
+//	float	P_hybr(record, hybr1, max_site_num) ;
+//		P_hybr:long_name = "pressure at hybrid level" ;
+//		P_hybr:units = "Pa" ;
+//		P_hybr:interpolation_method = "bilinear" ;
+//		P_hybr:_FillValue = -9999.f ;
+
+
+//	float	P_lpdg(record, lpdg, max_site_num) ;
+//		P_lpdg:long_name = "pressure in boundary layer" ;
+//		P_lpdg:units = "Pa" ;
+//		P_lpdg:interpolation_method = "bilinear" ;
+//		P_lpdg:_FillValue = -9999.f ;
+
+
+	float	P_msl(record, max_site_num) ;
+		P_msl:long_name = "pressure reduced to MSL" ;
+		P_msl:units = "millibars" ;
+		P_msl:interpolation_method = "bilinear" ;
+		P_msl:_FillValue = -9999.f ;
+
+
+	float	P_sfc(record, max_site_num) ;
+		P_sfc:long_name = "pressure at surface" ;
+		P_sfc:units = "millibars" ;
+		P_sfc:interpolation_method = "bilinear" ;
+		P_sfc:_FillValue = -9999.f ;
+
+
+//	float	P_trop(record, max_site_num) ;
+//		P_trop:long_name = "pressure at tropopause" ;
+//		P_trop:units = "Pa" ;
+//		P_trop:interpolation_method = "bilinear" ;
+//		P_trop:_FillValue = -9999.f ;
+
+
+//	float	pevpr_sfc(record, max_site_num) ;
+//		pevpr_sfc:long_name = "potential evaporation rate" ;
+//		pevpr_sfc:units = "W/m2" ;
+//		pevpr_sfc:interpolation_method = "bilinear" ;
+//		pevpr_sfc:_FillValue = -9999.f ;
+
+
+//	float	pevap3_sfc(record, max_site_num) ;
+//		pevap3_sfc:long_name = "potential evaporation over time interval" ;
+//		pevap3_sfc:units = "kg/m2" ;
+//		pevap3_sfc:interpolation_method = "bilinear" ;
+//		pevap3_sfc:_FillValue = -9999.f ;
+
+
+//	float	pevap3_sfc_accum_times(record, accum) ;
+//		pevap3_sfc_accum_times:long_name = "potential evaporation time intervals" ;
+//		pevap3_sfc_accum_times:units = "hours" ;
+//		pevap3_sfc_accum_times:interpolation_method = "bilinear" ;
+//		pevap3_sfc_accum_times:_FillValue = -9999.f ;
+
+
+//	float	pli_lpdg(record, lpdg_bndry30, max_site_num) ;
+//		pli_lpdg:long_name = "parcel lifted index(to 500 hPa)" ;
+//		pli_lpdg:units = "degK" ;
+//		pli_lpdg:interpolation_method = "bilinear" ;
+//		pli_lpdg:_FillValue = -9999.f ;
+
+
+//	float	pr_water_atm(record, max_site_num) ;
+//		pr_water_atm:long_name = "precipitable water" ;
+//		pr_water_atm:units = "kg/m2" ;
+//		pr_water_atm:interpolation_method = "bilinear" ;
+//		pr_water_atm:_FillValue = -9999.f ;
+
+
+//	float	pr_water_lpdg(record, lpdg_bndry30, max_site_num) ;
+//		pr_water_lpdg:long_name = "precipitable water in boundary layer" ;
+//		pr_water_lpdg:units = "kg/m2" ;
+//		pr_water_lpdg:interpolation_method = "bilinear" ;
+//		pr_water_lpdg:_FillValue = -9999.f ;
+
+
+	float	PRECIP3(record, max_site_num) ;
+		PRECIP3:long_name = "total precipitation over accumulation interval" ;
+		PRECIP3:units = "kg/m2" ;
+		PRECIP3:interpolation_method = "nearest_neighbor" ;
+		PRECIP3:_FillValue = -9999.f ;
+
+
+//	float	PRECIP3_accum_times(record, accum) ;
+//		PRECIP3_accum_times:long_name = "precipitation accumulation interval" ;
+//		PRECIP3_accum_times:units = "hours" ;
+//		PRECIP3_accum_times:interpolation_method = "bilinear" ;
+//		PRECIP3_accum_times:_FillValue = -9999.f ;
+
+
+	float	precip_cn3(record, max_site_num) ;
+		precip_cn3:long_name = "convective precipitation over accumulation interval" ;
+		precip_cn3:units = "kg/m2" ;
+		precip_cn3:interpolation_method = "nearest_neighbor" ;
+		precip_cn3:_FillValue = -9999.f ;
+
+
+//	float	precip_cn3_accum_times(record, accum) ;
+//		precip_cn3_accum_times:long_name = "convective precipitation accumulation interval" ;
+//		precip_cn3_accum_times:units = "hours" ;
+//		precip_cn3_accum_times:interpolation_method = "bilinear" ;
+//		precip_cn3_accum_times:_FillValue = -9999.f ;
+
+
+//	float	precip_ls(record, max_site_num) ;
+//		precip_ls:long_name = "large scale precipitation over accumulation interval" ;
+//		precip_ls:units = "kg/m2" ;
+//		precip_ls:interpolation_method = "bilinear" ;
+//		precip_ls:_FillValue = -9999.f ;
+
+
+//	float	Psl_et(record, max_site_num) ;
+//		Psl_et:long_name = "mean sea level pressure (ETA model reduction)" ;
+//		Psl_et:units = "Pa" ;
+//		Psl_et:interpolation_method = "bilinear" ;
+//		Psl_et:_FillValue = -9999.f ;
+
+
+//	float	RH(record, level, max_site_num) ;
+//		RH:long_name = "relative humidity" ;
+//		RH:units = "percent" ;
+//		RH:interpolation_method = "bilinear" ;
+//		RH:_FillValue = -9999.f ;
+
+
+//	float	RH_fhg(record, fhg2m, max_site_num) ;
+//		RH_fhg:long_name = "relative humidity at fixed height above ground" ;
+//		RH_fhg:units = "1" ;
+//		RH_fhg:interpolation_method = "bilinear" ;
+//		RH_fhg:_FillValue = -9999.f ;
+
+
+//	float	RH_frzlvl(record, max_site_num) ;
+//		RH_frzlvl:long_name = "relative humidity at freezing level" ;
+//		RH_frzlvl:units = "percent" ;
+//		RH_frzlvl:interpolation_method = "bilinear" ;
+//		RH_frzlvl:_FillValue = -9999.f ;
+
+
+//	float	RH_hybr(record, hybr1, max_site_num) ;
+//		RH_hybr:long_name = "relative humidity at hybrid level" ;
+//		RH_hybr:units = "percent" ;
+//		RH_hybr:interpolation_method = "bilinear" ;
+//		RH_hybr:_FillValue = -9999.f ;
+
+
+//	float	RH_lpdg(record, lpdg, max_site_num) ;
+//		RH_lpdg:long_name = "relative humidity in boundary layer" ;
+//		RH_lpdg:units = "percent" ;
+//		RH_lpdg:interpolation_method = "bilinear" ;
+//		RH_lpdg:_FillValue = -9999.f ;
+
+
+//	float	RH_ls(record, ls, max_site_num) ;
+//		RH_ls:long_name = "relative humidity in layer between sigma levels" ;
+//		RH_ls:units = "percent" ;
+//		RH_ls:interpolation_method = "bilinear" ;
+//		RH_ls:_FillValue = -9999.f ;
+
+
+//	float	sen_ht_sfc(record, max_site_num) ;
+//		sen_ht_sfc:long_name = "surface sensible heat net flux" ;
+//		sen_ht_sfc:units = "W/m2" ;
+//		sen_ht_sfc:interpolation_method = "bilinear" ;
+//		sen_ht_sfc:_FillValue = -9999.f ;
+
+
+//	float	sno_m(record, max_site_num) ;
+//		sno_m:long_name = "snow melt" ;
+//		sno_m:units = "kg/m2" ;
+//		sno_m:interpolation_method = "bilinear" ;
+//		sno_m:_FillValue = -9999.f ;
+
+
+//	float	snohf(record, max_site_num) ;
+//		snohf:long_name = "snow phase-change heat flux at surface" ;
+//		snohf:units = "W/m2" ;
+//		snohf:interpolation_method = "bilinear" ;
+//		snohf:_FillValue = -9999.f ;
+
+
+//	float	snow_wat(record, max_site_num) ;
+//		snow_wat:long_name = "water equivalent of accumulated snow depth" ;
+//		snow_wat:units = "kg/m2" ;
+//		snow_wat:interpolation_method = "bilinear" ;
+//		snow_wat:_FillValue = -9999.f ;
+
+
+//	float	snow_wat3(record, max_site_num) ;
+//		snow_wat3:long_name = "water equivalent of accumulated snow depth" ;
+//		snow_wat3:units = "kg/m2" ;
+//		snow_wat3:interpolation_method = "bilinear" ;
+//		snow_wat3:_FillValue = -9999.f ;
+
+
+//	float	snow_wat3_accum_times(record, accum) ;
+//		snow_wat3_accum_times:long_name = "water equivalent of accumulated snow depth times" ;
+//		snow_wat3_accum_times:units = "hours" ;
+//		snow_wat3_accum_times:interpolation_method = "bilinear" ;
+//		snow_wat3_accum_times:_FillValue = -9999.f ;
+
+
+//	float	soil_mst_lbls(record, lbls_200, max_site_num) ;
+//		soil_mst_lbls:long_name = "soil moisture content" ;
+//		soil_mst_lbls:units = "kg/m2" ;
+//		soil_mst_lbls:interpolation_method = "bilinear" ;
+//		soil_mst_lbls:_FillValue = -9999.f ;
+
+
+//	float	soilw_lbls(record, lbls, max_site_num) ;
+//		soilw_lbls:long_name = "volumetric soil moisture content" ;
+//		soilw_lbls:units = "1" ;
+//		soilw_lbls:interpolation_method = "bilinear" ;
+//		soilw_lbls:_FillValue = -9999.f ;
+
+
+//	float	spec_hum(record, level, max_site_num) ;
+//		spec_hum:long_name = "specific humidity" ;
+//		spec_hum:units = "kg/kg" ;
+//		spec_hum:interpolation_method = "bilinear" ;
+//		spec_hum:_FillValue = -9999.f ;
+
+
+//	float	spec_hum_fhg(record, fhg, max_site_num) ;
+//		spec_hum_fhg:long_name = "specific humidity at fixed height above ground" ;
+//		spec_hum_fhg:units = "kg/kg" ;
+//		spec_hum_fhg:interpolation_method = "bilinear" ;
+//		spec_hum_fhg:_FillValue = -9999.f ;
+
+
+//	float	spec_hum_hybr(record, hybr1, max_site_num) ;
+//		spec_hum_hybr:long_name = "specific humidity at hybrid level" ;
+//		spec_hum_hybr:units = "kg/kg" ;
+//		spec_hum_hybr:interpolation_method = "bilinear" ;
+//		spec_hum_hybr:_FillValue = -9999.f ;
+
+
+//	float	spec_hum_lpdg(record, lpdg, max_site_num) ;
+//		spec_hum_lpdg:long_name = "specific humidity in boundary layer" ;
+//		spec_hum_lpdg:units = "kg/kg" ;
+//		spec_hum_lpdg:interpolation_method = "bilinear" ;
+//		spec_hum_lpdg:_FillValue = -9999.f ;
+
+
+//	float	spec_hum_sfc(record, max_site_num) ;
+//		spec_hum_sfc:long_name = "specific humidity at the surface" ;
+//		spec_hum_sfc:units = "kg/kg" ;
+//		spec_hum_sfc:interpolation_method = "bilinear" ;
+//		spec_hum_sfc:_FillValue = -9999.f ;
+
+
+//	float	srf_rn(record, max_site_num) ;
+//		srf_rn:long_name = "surface roughness" ;
+//		srf_rn:units = "m" ;
+//		srf_rn:interpolation_method = "bilinear" ;
+//		srf_rn:_FillValue = -9999.f ;
+
+
+//	float	ssrun(record, max_site_num) ;
+//		ssrun:long_name = "storm surface runoff" ;
+//		ssrun:units = "kg/m2" ;
+//		ssrun:interpolation_method = "bilinear" ;
+//		ssrun:_FillValue = -9999.f ;
+
+
+//	float	SST(record, max_site_num) ;
+//		SST:long_name = "water temperature" ;
+//		SST:units = "degK" ;
+//		SST:interpolation_method = "bilinear" ;
+//		SST:_FillValue = -9999.f ;
+
+
+//	float	T(record, level, max_site_num) ;
+//		T:long_name = "temperature" ;
+//		T:units = "degK" ;
+//		T:interpolation_method = "bilinear" ;
+//		T:_FillValue = -9999.f ;
+
+
+//	float	T_gradx(record, level_a, max_site_num) ;
+//		T_gradx:long_name = "temperature gradient in x-direction" ;
+//		T_gradx:units = "degK/m" ;
+//		T_gradx:interpolation_method = "bilinear" ;
+//		T_gradx:_FillValue = -9999.f ;
+
+
+//	float	T_grady(record, level_a, max_site_num) ;
+//		T_grady:long_name = "temperature gradient in y-direction" ;
+//		T_grady:units = "degK/m" ;
+//		T_grady:interpolation_method = "bilinear" ;
+//		T_grady:_FillValue = -9999.f ;
+
+
+	float	T_fhg(record, fhg2m, max_site_num) ;
+		T_fhg:long_name = "temperature at fixed height above ground" ;
+		T_fhg:units = "degK" ;
+		T_fhg:interpolation_method = "bilinear" ;
+		T_fhg:_FillValue = -9999.f ;
+
+
+//	float	T_hybr(record, hybr1, max_site_num) ;
+//		T_hybr:long_name = "temperature at hybrid level" ;
+//		T_hybr:units = "degK" ;
+//		T_hybr:interpolation_method = "bilinear" ;
+//		T_hybr:_FillValue = -9999.f ;
+
+
+//	float	T_lpdg(record, lpdg, max_site_num) ;
+//		T_lpdg:long_name = "temperature in boundary layer" ;
+//		T_lpdg:units = "degK" ;
+//		T_lpdg:interpolation_method = "bilinear" ;
+//		T_lpdg:_FillValue = -9999.f ;
+
+
+//	float	T_sfc(record, max_site_num) ;
+//		T_sfc:long_name = "temperature at surface" ;
+//		T_sfc:units = "degK" ;
+//		T_sfc:interpolation_method = "bilinear" ;
+//		T_sfc:_FillValue = -9999.f ;
+
+
+//	float	T_soil_bls(record, bls, max_site_num) ;
+//		T_soil_bls:long_name = "soil temperature at level below surface" ;
+//		T_soil_bls:units = "degK" ;
+//		T_soil_bls:interpolation_method = "bilinear" ;
+//		T_soil_bls:_FillValue = -9999.f ;
+
+
+//	float	T_soil_lbls(record, lbls, max_site_num) ;
+//		T_soil_lbls:long_name = "soil temperature at layer below surface" ;
+//		T_soil_lbls:units = "degK" ;
+//		T_soil_lbls:interpolation_method = "bilinear" ;
+//		T_soil_lbls:_FillValue = -9999.f ;
+
+
+//	float	T_trop(record, max_site_num) ;
+//		T_trop:long_name = "temperature at tropopause" ;
+//		T_trop:units = "degK" ;
+//		T_trop:interpolation_method = "bilinear" ;
+//		T_trop:_FillValue = -9999.f ;
+
+
+//	float	TD(record, level_c, max_site_num) ;
+//		TD:long_name = "dew point temperature" ;
+//		TD:units = "degK" ;
+//		TD:interpolation_method = "bilinear" ;
+//		TD:_FillValue = -9999.f ;
+
+
+	float	TD_fhg(record, fhg2m, max_site_num) ;
+		TD_fhg:long_name = "dew point temperature at fixed height above ground" ;
+		TD_fhg:units = "degK" ;
+		TD_fhg:interpolation_method = "bilinear" ;
+		TD_fhg:_FillValue = -9999.f ;
+
+
+//	float	TD_lpdg(record, lpdg_bndry30, max_site_num) ;
+//		TD_lpdg:long_name = "dew point temperature in boundary layer" ;
+//		TD_lpdg:units = "degK" ;
+//		TD_lpdg:interpolation_method = "bilinear" ;
+//		TD_lpdg:_FillValue = -9999.f ;
+
+
+//	float	theta_fhg(record, fhg10m, max_site_num) ;
+//		theta_fhg:long_name = "potential temperature at fixed height above ground" ;
+//		theta_fhg:units = "degK" ;
+//		theta_fhg:interpolation_method = "bilinear" ;
+//		theta_fhg:_FillValue = -9999.f ;
+
+
+//	float	theta_lpdg(record, lpdg_bndry30, max_site_num) ;
+//		theta_lpdg:long_name = "potential temperature in boundary layer" ;
+//		theta_lpdg:units = "degK" ;
+//		theta_lpdg:interpolation_method = "bilinear" ;
+//		theta_lpdg:_FillValue = -9999.f ;
+
+
+//	float	tke(record, level, max_site_num) ;
+//		tke:long_name = "turbulent kinetic energy" ;
+//		tke:units = "J/kg" ;
+//		tke:interpolation_method = "bilinear" ;
+//		tke:_FillValue = -9999.f ;
+
+
+//	float	tke_hybr(record, hybr1, max_site_num) ;
+//		tke_hybr:long_name = "turbulent kinetic energy at hybrid level" ;
+//		tke_hybr:units = "J/kg" ;
+//		tke_hybr:interpolation_method = "bilinear" ;
+//		tke_hybr:_FillValue = -9999.f ;
+
+
+//	float	u(record, level, max_site_num) ;
+//		u:long_name = "u-component of wind" ;
+//		u:units = "meters/second" ;
+//		u:interpolation_method = "bilinear" ;
+//		u:_FillValue = -9999.f ;
+
+
+	float	u_fhg(record, fhg10m, max_site_num) ;
+		u_fhg:long_name = "u-component of wind at fixed height above ground" ;
+		u_fhg:units = "meters/second" ;
+		u_fhg:interpolation_method = "bilinear" ;
+		u_fhg:_FillValue = -9999.f ;
+
+
+//	float	u_flx_sfc(record, max_site_num) ;
+//		u_flx_sfc:long_name = "momentum flux, u-component" ;
+//		u_flx_sfc:units = "N/m2" ;
+//		u_flx_sfc:interpolation_method = "bilinear" ;
+//		u_flx_sfc:_FillValue = -9999.f ;
+
+
+//	float	u_hybr(record, hybr, max_site_num) ;
+//		u_hybr:long_name = "u-component of wind at hybrid level" ;
+//		u_hybr:units = "meters/second" ;
+//		u_hybr:interpolation_method = "bilinear" ;
+//		u_hybr:_FillValue = -9999.f ;
+
+
+//	float	u_lpdg(record, lpdg, max_site_num) ;
+//		u_lpdg:long_name = "u-component of wind in boundary layer" ;
+//		u_lpdg:units = "meters/second" ;
+//		u_lpdg:interpolation_method = "bilinear" ;
+//		u_lpdg:_FillValue = -9999.f ;
+
+
+//	float	u_trop(record, max_site_num) ;
+//		u_trop:long_name = "u-component of wind at tropopause" ;
+//		u_trop:units = "meters/second" ;
+//		u_trop:interpolation_method = "bilinear" ;
+//		u_trop:_FillValue = -9999.f ;
+
+
+//	float	ulwrf_sfc(record, max_site_num) ;
+//		ulwrf_sfc:long_name = "upward long wave radiation flux at surface" ;
+//		ulwrf_sfc:units = "W/m2" ;
+//		ulwrf_sfc:interpolation_method = "bilinear" ;
+//		ulwrf_sfc:_FillValue = -9999.f ;
+
+
+//	float	ulwrf_topa(record, max_site_num) ;
+//		ulwrf_topa:long_name = "upward long wave radiation flux at top of atmosphere" ;
+//		ulwrf_topa:units = "W/m2" ;
+//		ulwrf_topa:interpolation_method = "bilinear" ;
+//		ulwrf_topa:_FillValue = -9999.f ;
+
+
+//	float	uswrf_sfc(record, max_site_num) ;
+//		uswrf_sfc:long_name = "upward short wave radiation flux at surface" ;
+//		uswrf_sfc:units = "W/m2" ;
+//		uswrf_sfc:interpolation_method = "bilinear" ;
+//		uswrf_sfc:_FillValue = -9999.f ;
+
+
+//	float	uswrf_topa(record, max_site_num) ;
+//		uswrf_topa:long_name = "upward short wave radiation flux at top of atmosphere" ;
+//		uswrf_topa:units = "W/m2" ;
+//		uswrf_topa:interpolation_method = "bilinear" ;
+//		uswrf_topa:_FillValue = -9999.f ;
+
+
+//	float	v(record, level, max_site_num) ;
+//		v:long_name = "v-component of wind" ;
+//		v:units = "meters/second" ;
+//		v:interpolation_method = "bilinear" ;
+//		v:_FillValue = -9999.f ;
+
+
+//	float	v_flx_sfc(record, max_site_num) ;
+//		v_flx_sfc:long_name = "momentum flux, v-component" ;
+//		v_flx_sfc:units = "N/m2" ;
+//		v_flx_sfc:interpolation_method = "bilinear" ;
+//		v_flx_sfc:_FillValue = -9999.f ;
+
+
+	float	v_fhg(record, fhg10m, max_site_num) ;
+		v_fhg:long_name = "v-component of wind at fixed height above ground" ;
+		v_fhg:units = "meters/second" ;
+		v_fhg:interpolation_method = "bilinear" ;
+		v_fhg:_FillValue = -9999.f ;
+
+
+//	float	v_hybr(record, hybr, max_site_num) ;
+//		v_hybr:long_name = "v-component of wind at hybrid level" ;
+//		v_hybr:units = "meters/second" ;
+//		v_hybr:interpolation_method = "bilinear" ;
+//		v_hybr:_FillValue = -9999.f ;
+
+
+//	float	v_lpdg(record, lpdg, max_site_num) ;
+//		v_lpdg:long_name = "v-component of wind in boundary layer" ;
+//		v_lpdg:units = "meters/second" ;
+//		v_lpdg:interpolation_method = "bilinear" ;
+//		v_lpdg:_FillValue = -9999.f ;
+
+
+//	float	v_trop(record, max_site_num) ;
+//		v_trop:long_name = "v-component of wind at tropopause" ;
+//		v_trop:units = "meters/second" ;
+//		v_trop:interpolation_method = "bilinear" ;
+//		v_trop:_FillValue = -9999.f ;
+
+
+//	float	veg(record, max_site_num) ;
+//		veg:long_name = "vegetation at surface" ;
+//		veg:units = "percent" ;
+//		veg:interpolation_method = "bilinear" ;
+//		veg:_FillValue = -9999.f ;
+
+
+//	float	vert_sshr_trop(record, max_site_num) ;
+//		vert_sshr_trop:long_name = "vertical speed shear at tropopause" ;
+//		vert_sshr_trop:units = "1/s" ;
+//		vert_sshr_trop:interpolation_method = "bilinear" ;
+//		vert_sshr_trop:_FillValue = -9999.f ;
+
+
+	float	vis_sfc(record, max_site_num) ;
+		vis_sfc:long_name = "visibility at surface" ;
+		vis_sfc:units = "km" ;
+		vis_sfc:interpolation_method = "bilinear" ;
+		vis_sfc:_FillValue = -9999.f ;
+
+
+//	float	xchg_cof_sfc(record, max_site_num) ;
+//		xchg_cof_sfc:long_name = "exchange coefficient at the surface" ;
+//		xchg_cof_sfc:units = "kg/m2/s" ;
+//		xchg_cof_sfc:interpolation_method = "bilinear" ;
+//		xchg_cof_sfc:_FillValue = -9999.f ;
+
+
+//	float	Z(record, level, max_site_num) ;
+//		Z:long_name = "geopotential height" ;
+//		Z:units = "gp m" ;
+//		Z:interpolation_method = "bilinear" ;
+//		Z:_FillValue = -9999.f ;
+
+
+//	float	Z_hybr(record, hybr1, max_site_num) ;
+//		Z_hybr:long_name = "geopotential height at hybrid level" ;
+//		Z_hybr:units = "gp m" ;
+//		Z_hybr:interpolation_method = "bilinear" ;
+//		Z_hybr:_FillValue = -9999.f ;
+
+
+//	float	Z_frzlvl(record, max_site_num) ;
+//		Z_frzlvl:long_name = "geopotential height at freezing level" ;
+//		Z_frzlvl:units = "gp m" ;
+//		Z_frzlvl:interpolation_method = "bilinear" ;
+//		Z_frzlvl:_FillValue = -9999.f ;
+
+
+//	float	Z_sfc(record, max_site_num) ;
+//		Z_sfc:long_name = "terrain" ;
+//		Z_sfc:units = "gp m" ;
+//		Z_sfc:interpolation_method = "bilinear" ;
+//		Z_sfc:_FillValue = -9999.f ;
+
+
+
+// global attributes:
+		:history = "created by grib2site" ;
+
+data:
+
+ level = 1000, 975, 950, 925, 900, 875, 850, 825, 800, 775, 750, 725, 700, 675,
+         650, 625, 600, 575, 550, 525, 500, 475, 450, 425, 400, 375, 350, 325,
+	 300, 275, 250, 225, 200, 175, 150, 125, 100, 75, 50 ;
+ level_a = 925, 850, 700 ;
+ level_c = 1000, 850, 750, 700, 500, 400, 300, 250 ;
+ level_m = 950, 850 ;
+ fhg = 2, 10 ;
+ fhg2m = 2 ;
+ fhg10m = 10 ;
+ hybr1 = 1 ;
+ hybr = 1, 2 ;
+ lpdg_top = 30, 60, 90, 120, 150, 180 ;
+ lpdg_bot =  0, 30, 60,  90, 120, 150 ;
+ lpdg_bndry_top = 180 ;
+ lpdg_bndry_bot = 0 ;
+ lpdg_bndry30_top = 30 ;
+ lpdg_bndry30_bot = 0 ;
+ lbls_top =  0, 10,  40, 100 ;
+ lbls_bot = 10, 40, 100, 200 ;
+ lbls_100_top =   0 ;
+ lbls_100_bot = 100 ;
+ lbls_200_top =   0 ;
+ lbls_200_bot = 200 ;
+ bls = 300 ;
+ ls_top = .47 ;
+ ls_bot = 1.00 ;
+
+}

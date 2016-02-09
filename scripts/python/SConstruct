@@ -1,0 +1,6 @@
+import os
+
+# Simply installs the python scripts in their destination.
+
+Install(os.environ['LOCAL_PYTHON_SCRIPTS_DIR'], Glob('*.py'))
+Alias('install', os.environ['LOCAL_PYTHON_SCRIPTS_DIR'])

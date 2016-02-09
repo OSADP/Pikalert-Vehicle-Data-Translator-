@@ -1,0 +1,125 @@
+// The following two lines import the default Sencha Touch theme. If you are building
+// a new theme, remove them and the add your own CSS on top of the base CSS (which
+// is already included in your app.json file).
+@import 'sencha-touch/default';
+@import 'sencha-touch/default/all';
+
+// Custom code goes here..
+.site_list_time {
+  float: left;
+  font-size: 1.2em;
+  // padding-bottom: 25px;
+  // clear: both;
+}
+
+.site_list_alert_img {
+  float: right;
+  position: absolute;
+  left: 250px;
+}
+
+.site_list_alert_explanation {
+  float: right;
+  font-size: 0.7em;
+  position: absolute;
+  left: 300px;
+}
+
+.district_name {
+  // background-color: #00e;
+  // border: 1px solid #aaaaaa;
+  float: left;
+  font-size: 1.6em;
+  margin-left: 0px;
+  margin-right: 15px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.district_zoom {
+  padding-top: 5px;
+}
+
+.district_summary {
+  padding-bottom: 25px;
+  clear: both;
+}
+
+.data_time {
+  font-size: 0.7em;
+  text-align: right;
+}
+
+.map_times {
+  font-size: 0.9em;
+  text-align: right;
+}
+
+.site_node {
+  clear: both;
+}
+
+.site_description {
+  font-size: 1.0em;
+  margin-left: 25px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.site_alert {
+  font-size: 0.8em;
+  margin-left: 25px;
+  margin-top: 0px;
+  margin-bottom: 15px;
+}
+
+.vehicle_node {
+  clear: both;
+}
+
+.vehicle_description {
+  font-size: 1.0em;
+  margin-left: 25px;
+  margin-top: 0px;
+  margin-bottom: 15px;
+}
+
+.vehicle_report {
+  font-size: 0.8em;
+  margin-left: 50px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+img.alert_missing {
+  width: 14px;
+  height: 14px;
+  background: url(../icons/Alert_Images.png) 0 0;
+}
+
+img.alert_treatment_alert_code {
+  width: 14px;
+  height: 14px;
+  background: url(../icons/Alert_Images.png) 0 0;
+}
+
+img.alert_clear {
+  width: 14px;
+  height: 14px;
+  background: url(../icons/Alert_Images.png) -14px 0;
+}
+
+img.alert_warning {
+  width: 14px;
+  height: 14px;
+  background: url(../icons/Alert_Images.png) -28px 0;
+}
+
+img.alert_alert {
+  width: 14px;
+  height: 14px;
+  background: url(../icons/Alert_Images.png) -42px 0;
+}
+
+// Examples of using the icon mixin:
+// @include icon('user');

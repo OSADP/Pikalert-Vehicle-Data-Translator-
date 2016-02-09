@@ -1,0 +1,37 @@
+
+import os
+
+
+env = Environment(CPPPATH=['.', os.environ['NETCDF_INC_DIR'],
+                           os.environ['HDF_INC_DIR'],
+                           os.environ['ZLIB_INC_DIR'],
+                           os.environ['LOCAL_INC_DIR']],
+                  LIBPATH=[os.environ['NETCDF_LIB_DIR'],
+                           os.environ['HDF5_LIB_DIR'],
+                           os.environ['ZLIB_LIB_DIR'],
+                           os.environ['LOCAL_LIB_DIR']],
+                  CCFLAGS=os.environ['CCFLAGS'])
+
+    
+env.Library('ncfc', [
+    'cdfinput.cc',
+    'get_dims.cc',
+    'get_unlim.cc',
+    'get_variables.cc',
+    'get_var_info.cc',
+    'get_var_list.cc',
+    'make_cdf.cc',
+    'put_variables.cc',
+    'var_input.cc',
+    'var_output.cc'
+    ])
+
+env.Install(os.environ['LOCAL_LIB_DIR'], 'libncfc.a')
+
+install_include = '%s/ncfc' % os.environ['LOCAL_INC_DIR']
+env.Install(install_include, [
+    'ncfc.hh'
+])
+
+env.Alias('install', [os.environ['LOCAL_LIB_DIR'], install_include])
+env.Alias('install_include', install_include)

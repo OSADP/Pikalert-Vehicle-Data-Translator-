@@ -1,0 +1,40 @@
+import os
+
+# set the name of the application
+program = 'grib2site'
+
+env = Environment(
+        CPPPATH=['.', os.environ['LOCAL_INC_DIR'], os.environ['NETCDF_INC_DIR'],
+                 os.environ['HDF_INC_DIR'], os.environ['ZLIB_INC_DIR'],
+                 os.environ['UDUNITS2_INC_DIR']], 
+        LIBPATH=[os.environ['LOCAL_LIB_DIR'], os.environ['NETCDF_LIB_DIR'],
+                 os.environ['HDF5_LIB_DIR'], os.environ['ZLIB_LIB_DIR'],
+                 os.environ['UDUNITS2_LIB_DIR']],
+        CCFLAGS=os.environ['CCFLAGS'])
+
+
+env.Program(
+    program,[
+        Glob('*.cc')
+        ],
+    LIBS=[
+        'grib2c',
+        'dmapf',
+        'log',
+        'tdrp',
+        'ncf',
+        'nxncf',
+        'site_list',
+        'netcdf_c++',
+        'netcdf',
+        'udunits2',
+        'hdf5_hl',
+        'hdf5',
+        'z',
+        'jasper',
+        'png'
+        ],
+    )
+
+env.Install(os.environ['LOCAL_BIN_DIR'], program)
+env.Alias('install', os.environ['LOCAL_BIN_DIR'])

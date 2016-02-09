@@ -1,0 +1,81 @@
+netcdf module_forecast {
+dimensions:
+	max_site_num = 200;  // number of locations
+	days = 5;		   // number of days
+	fc_times_per_day = 8;	   // number of forecasts per day
+	daily_time = 1;		   // same, for once-a-day variables
+
+	
+variables:
+        int     type;
+                type:long_name = "cdl file type";
+
+	double 	forc_time;
+		forc_time:long_name = "time of earliest forecast";
+		forc_time:units = "seconds since 1970-1-1 00:00:00" ;
+
+	double	creation_time;
+		creation_time:long_name = "time at which forecast file was created";
+		creation_time:units = "seconds since 1970-1-1 00:00:00" ;
+
+        int	model_id;
+		model_id:long_name = "id of model used to generate forecast";
+
+	int	num_sites;
+		num_sites:long_name = "number of actual_sites";
+
+	int	site_list(max_site_num);
+		site_list:long_name = "forecast site id numbers";
+
+	float	T(max_site_num, days, fc_times_per_day);
+		T:long_name = "temperature";
+		T:units = "degrees Celsius";
+
+	float	dewpt(max_site_num, days, fc_times_per_day);
+		dewpt:long_name = "dewpoint";
+		dewpt:units = "degrees Celsius";
+
+	float 	wind_u(max_site_num, days, fc_times_per_day);
+		wind_u:long_name = "u-component of wind";
+		wind_u:units = "meters per second";
+
+	float	wind_v(max_site_num, days, fc_times_per_day);	
+		wind_v:long_name = "v-component of wind";
+		wind_v:units = "meters per second";
+
+	float	cloud_cov(max_site_num, days, fc_times_per_day);
+		cloud_cov:long_name = "cloud cover";
+		cloud_cov:units = "1";
+
+        float   visibility(max_site_num, days, fc_times_per_day) ;
+                visibility:long_name = "visibility" ;
+                visibility:units = "km" ;
+
+	float	qpf03(max_site_num, days, fc_times_per_day);
+		qpf03:long_name = "amount of precipitation";
+		qpf03:units = "mm";
+
+	float	precip_cn3(max_site_num, days, fc_times_per_day);
+		precip_cn3:long_name = "amount of convective precipitation";
+		precip_cn3:units = "mm";
+
+        float   P_msl(max_site_num, days, fc_times_per_day) ;
+                P_msl:long_name = "Pressure reduced to sea level";
+                P_msl:units = "millibars" ;
+
+        float   P_sfc(max_site_num, days, fc_times_per_day) ;
+                P_sfc:long_name = "Pressure at 2m above sfc";
+                P_sfc:units = "millibars" ;
+
+        float   dlwrf_sfc(max_site_num, days, fc_times_per_day) ;
+                dlwrf_sfc:long_name = "downward long wave radiation flux at surface" ;
+                dlwrf_sfc:units = "W/m2" ;
+
+        float   dswrf_sfc(max_site_num, days, fc_times_per_day) ;
+                dswrf_sfc:long_name = "downward short wave radiation flux at surface" ;
+                dswrf_sfc:units = "W/m2" ;
+
+
+data:
+	type = 2;
+}
