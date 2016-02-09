@@ -1,0 +1,8 @@
+*.o
+*~
+*.a
+*.dblite
+*.csv
+*./vdt4
+*#
+*.pyc
