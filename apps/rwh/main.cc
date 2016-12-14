@@ -67,7 +67,7 @@ int main(int argc, char **argv)
     }
 
   // Run processing
-  if (process.run() < 0)
+  if (process.run() != 0)
     {
       Logg->write_time("Error: processing failed\n");
       Logg->write_time_ending(args.program_name.c_str(), 1);

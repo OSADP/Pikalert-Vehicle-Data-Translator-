@@ -15,9 +15,34 @@ import math
 from netCDF4 import Dataset
 import pyproj
 
-class RoadWeatherLocator(object):
 
-    def __init__(self, flann_file, numpy_seg_pts_file, numpy_seg_id_file, degree_radius):
+def print_fun_io(func):
+    """
+    A decorator to print function input/output.
+    To use add this before the function: @print_fun_io
+    """
+    def wrapper(*args, **kwargs):
+        ret = func(*args, **kwargs)
+        print "%s(%s) -> %r" % (func.__name__, ", ".join(map(str,args)), ret)
+        return ret
+    return wrapper
+
+
+def build_save_numpy_index(road_segment_file, latitude_field_name, longitude_field_name, seg_id_field_name, output_numpy_seg_pts_file, output_numpy_seg_id_file):
+
+        cdf = Dataset(road_segment_file, "r")
+        latitude = cdf.variables[latitude_field_name]
+        longitude = cdf.variables[longitude_field_name]
+        seg_id = cdf.variables[seg_id_field_name]
+
+        seg_pts = numpy.vstack((latitude, longitude)).T
+        numpy.save(output_numpy_seg_pts_file, seg_pts)
+        numpy.save(output_numpy_seg_id_file, seg_id)
+
+
+class RoadWeatherLocator(object):
+    #@print_fun_io
+    def __init__(self, numpy_seg_pts_file, numpy_seg_id_file, degree_radius):
 
         self.seg_pts = numpy.load(numpy_seg_pts_file)
         self.seg_id = numpy.load(numpy_seg_id_file)
@@ -31,6 +56,7 @@ class RoadWeatherLocator(object):
 
         
     @staticmethod
+    #@print_fun_io
     def bearing_sector(bear, half_theta):
         """
         Returns begin,end that is half_theta degrees less/greater than bearing.
@@ -41,6 +67,7 @@ class RoadWeatherLocator(object):
 
     
     @staticmethod
+    #@print_fun_io
     def azimuth_to_bearing(az):
         """
         Converts a pyproj azimuth in the range [0,-180] or [0,180] to a bearing in range [0,360]
@@ -53,6 +80,7 @@ class RoadWeatherLocator(object):
 
         
     @staticmethod
+    #@print_fun_io 
     def in_sector(bear, begin, end):
         """
         >>> all([RoadWeatherLocator.in_sector((bear-1)%360,*RoadWeatherLocator.bearing_sector(bear, half_theta)) for half_theta in range(1,180) for bear in range(361)])
@@ -65,8 +93,9 @@ class RoadWeatherLocator(object):
            return begin <= bear <= 360 or 0 <= bear <= end
         else:
             return begin <= bear <= end
+
         
-        
+    #@print_fun_io  
     def radius(self, lat, lon, meter_radius, bearing=None, sector_half_theta=None):
         q = numpy.array([lat, lon])
         sq_dist = numpy.array([numpy.inner(q-x, q-x) for x in self.seg_pts])
@@ -74,11 +103,10 @@ class RoadWeatherLocator(object):
         sorted_dist = sq_dist[sorted_indices]
         index = numpy.searchsorted(sorted_dist, self.degree_radius * self.degree_radius, side='right')
 
-        az12, az21, dist = self.geod.inv([lon]*len(self.lon), [lat]*len(self.lat), self.lon[sorted_indices], self.lat[sorted_indices])
-
         final_sorted_dist = []
         final_sorted_indices = []
         if index > 0:
+            az12, az21, dist = self.geod.inv([lon]*len(self.lon), [lat]*len(self.lat), self.lon[sorted_indices], self.lat[sorted_indices])
             sector = ()
             if bearing and sector_half_theta:
                 sector = self.bearing_sector(bearing,sector_half_theta)
@@ -98,8 +126,17 @@ class RoadWeatherLocator(object):
 
 def main():
 
+    print "building numpy index from mn_roads.nc"
+    build_save_numpy_index("/d2/vii/data/static/cdl/mn_roads.nc", "latitude", "longitude", "seg_id", "mn_numpy_seg_pts", "mn_numpy_seg_id")
+
+    print "building numpy index from mi_roads.nc"
+    build_save_numpy_index("/d2/vii/data/static/cdl/mi_roads.nc", "latitude", "longitude", "seg_id", "mi_numpy_seg_pts", "mi_numpy_seg_id")
+
+    print "building numpy index from nv_roads.20131111.nc"
+    build_save_numpy_index("/d2/vii/data/static/cdl/nv_roads.nc", "latitude", "longitude", "seg_id", "nv_numpy_seg_pts", "nv_numpy_seg_id")
+
     print "establishing locator"
-    michigan_wx_locator = RoadWeatherLocator("/d1/mdss_view/config/mi_flann_index.dat", "/d1/mdss_view/config/mi_numpy_seg_pts.npy", "/d1/mdss_view/config/mi_numpy_seg_id.npy", 20)
+    michigan_wx_locator = RoadWeatherLocator("mi_numpy_seg_pts.npy", "mi_numpy_seg_id.npy", 20)
 
     print "getting radius"
     

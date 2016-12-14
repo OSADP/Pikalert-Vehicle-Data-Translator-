@@ -28,6 +28,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <math.h>
+#include <algorithm>
 
 using boost::str;
 using boost::format;
@@ -83,6 +84,27 @@ unsigned char range_check(int min, int max, int value)
     }
 
   return vdt_probe_message_qc::FAILED;
+}
+
+unsigned char exclude_check(const std::vector<double>& excluded, double value, double tol)
+{
+  if (std::any_of(excluded.begin(), excluded.end(), [=](double exclude){return abs(exclude - value) < tol;}))
+  {
+    return vdt_probe_message_qc::FAILED;
+  }
+
+  return vdt_probe_message_qc::PASSED;
+}
+
+//Ignore tol in the int case
+unsigned char exclude_check(const std::vector<int>& excluded, int value, int tol)
+{
+  if (std::any_of(excluded.begin(), excluded.end(), [=](int exclude){return exclude == value;}))
+  {
+    return vdt_probe_message_qc::FAILED;
+  }
+
+  return vdt_probe_message_qc::PASSED;
 }
 
 unsigned char climate_range_check(double min, double max, double value)

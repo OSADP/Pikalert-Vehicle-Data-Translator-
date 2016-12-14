@@ -44,6 +44,7 @@ def application(environ, start_response):
 
     if input_date_string == "":
 	(file_name, yyyymmddhhmm) = data_time_index.get_latest_file(cf.product_dictionary["latest_vehicles"])
+	logg.write_info("latest file and date: %s, %s" % (file_name, yyyymmddhhmm))
     else:
         yyyymmddhhmm = "%s%s" % (input_date_string[0:8], input_date_string[9:13])
     

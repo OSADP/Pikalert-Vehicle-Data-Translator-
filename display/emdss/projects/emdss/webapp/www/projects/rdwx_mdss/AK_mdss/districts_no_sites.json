@@ -1,0 +1,24 @@
+{
+	"state": "Alaska",
+	"districts": [
+		{
+			"min_lat": 61.25,
+			"min_lon": -149.8,
+			"max_lat": 63.25,
+			"max_lon": -147.8,
+			"district_name": "district1"
+		}, {
+			"min_lat": 66.22,
+			"min_lon": -145.8,
+			"max_lat": 68.22,
+			"max_lon": -144.8,
+			"district_name": "district2"
+		}, {
+			"min_lat": 77.22,
+			"min_lon": -143.8,
+			"max_lat": 78.22,
+			"max_lon": -142.8,
+			"district_name": "district3"
+		}
+	]
+}

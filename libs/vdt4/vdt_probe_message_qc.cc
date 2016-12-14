@@ -92,6 +92,8 @@ void vdt_probe_message_qc::init()
   setattr("model_bar_pressure", static_cast<double>(vdt_const::FILL_VALUE));
   setattr("radar_ref", static_cast<double>(vdt_const::FILL_VALUE));
   setattr("radar_cref", static_cast<double>(vdt_const::FILL_VALUE));
+  setattr("radar_dual_pol_hc", static_cast<double>(vdt_const::FILL_VALUE));
+  setattr("radar_dual_pol_hr", static_cast<double>(vdt_const::FILL_VALUE));    
   setattr("radar_precip_flag", static_cast<int>(vdt_const::FILL_VALUE));
   setattr("radar_precip_type", static_cast<int>(vdt_const::FILL_VALUE));
   setattr("cloud_mask", static_cast<int>(vdt_const::FILL_VALUE));

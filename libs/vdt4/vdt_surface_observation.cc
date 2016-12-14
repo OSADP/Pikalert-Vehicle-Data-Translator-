@@ -106,6 +106,7 @@ vdt_surface_observation::vdt_surface_observation()
   wind_speed = FILL_VALUE;
   wind_gust = FILL_VALUE;
   pres_wx = "";
+  road_state_1 = static_cast<int>(FILL_VALUE);
 }
 
 float vdt_surface_observation::get_avg_air_temp(const vector<vdt_surface_observation>& obs)

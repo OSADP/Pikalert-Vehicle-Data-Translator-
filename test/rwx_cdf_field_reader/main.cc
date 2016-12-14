@@ -40,7 +40,7 @@ void example1()
   dimension_map["count"] = 10;
 
   // Open output file
-  rwx_cdf_field_writer::rwx_cdf_field_writer cdf_file("test_write.nc", dimension_map);
+  rwx::rwx_cdf_field_writer cdf_file("test_write.nc", dimension_map);
 
   vector<short> test_short_field(10, 5);
   vector<string> field_dimension_names;
@@ -71,7 +71,7 @@ void example1()
 void example2()
 {
   // Open output file
-  rwx_cdf_field_writer::rwx_cdf_field_writer cdf_file("test_write.cdl", "test_write2.nc");
+  rwx::rwx_cdf_field_writer cdf_file("test_write.cdl", "test_write2.nc");
 
   vector<short> test_short_field(10, 5);
   vector<int> test_int_field(10, 4);

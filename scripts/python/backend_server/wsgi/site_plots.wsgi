@@ -81,8 +81,8 @@ def application(environ, start_response):
     current_utc_hour = int(date_str[9:11])
     logg.write_info("getting summary plot information")
     if rdwx_fpath != None and os.path.exists(rdwx_fpath):
-        summary_plot = plots.get_summary_plot(cf, rdwx_fpath, tmt_fpath, site, current_utc_hour, cf.timezone)
-        #summary_plot = plots.get_summary_plot(cf, rdwx_fpath, tmt_fpath, site, current_utc_hour, cf.timezone, "/tmp/outfile.png")
+        summary_plot = plots.get_summary_plot(logg, cf, rdwx_fpath, tmt_fpath, site, current_utc_hour, cf.timezone)
+        #summary_plot = plots.get_summary_plot(logg, cf, rdwx_fpath, tmt_fpath, site, current_utc_hour, cf.timezone, "/tmp/outfile.png")
         #summary_plot = "R0lGODlhDwAPAKECAAAAzMzM/////wAAACwAAAAADwAPAAACIISPeQHsrZ5ModrLlN48CXF8m2iQ3YmmKqVlRtW4MLwWACH+H09wdGltaXplZCBieSBVbGVhZCBTbWFydFNhdmVyIQAAOw=="
         output["summary_plot"] = summary_plot
 

@@ -37,6 +37,19 @@ public:
   float nss_air_temp_mean;	// in fahreheit
   float nss_bar_press_mean;	// in mb
   float radar_ref;		// in dbZ
+  float radar_hc;		// classification
+  float radar_hr;		// in dbZ
+  float model_dew_temp;         // in fahrenheit
+  float speed_mean;             // in mph
+  int num_wipers_off;
+  int num_wipers_intermittent;
+  int num_wipers_low;
+  int num_wipers_high;
+  int num_msg_valid_speed;
+  float veh_air_temp_mean;         // in fahrenheit
+  float veh_bar_pressure_mean;     // in mb
+  float veh_surface_temp_mean;     // in fahrenheit
+  
 };
 
 /**
@@ -53,6 +66,19 @@ public:
   static const std::string nss_air_temp_mean_string;
   static const std::string nss_bar_press_mean_string;
   static const std::string radar_ref_string;
+  static const std::string radar_hc_string;
+  static const std::string radar_hr_string;
+  static const std::string model_dew_temp_string;
+  static const std::string speed_mean_string;
+  static const std::string num_wipers_off_string;
+  static const std::string num_wipers_intermittent_string;
+  static const std::string num_wipers_low_string;
+  static const std::string num_wipers_high_string;
+  static const std::string num_msg_valid_speed_string;
+  static const std::string veh_air_temp_mean_string;
+  static const std::string veh_bar_pressure_mean_string;
+  static const std::string veh_surface_temp_mean_string;
+  
 
   int site_num;
   vector<obs_stats_info> info_vec;

@@ -104,9 +104,18 @@ public:
   /** @brief radar precipitation type having values no_radar_coverage, no_precipitation, liquid, frozen associated with -1, 0, 1, 3 */
   short radar_precip_type;
 
+  /** @brief dual-pol level 3 Hydrometeor classification from radar grid */
+  float radar_dual_pol_hc;
+  
+  /** @brief dual-pol level 3 digital reflectivity from radar grid */
+  float radar_dual_pol_hr;
+  
   /** @brief cloud_mask cloud mask value */
   short cloud_mask;
 
+   /** @brief road_state_1, RWIS indication of current pavement-condition from sensor 1. Integer (short) values represent a condtion, e.g. value 6 is Ice, ect */
+  short road_state;
+  
   /** @brief mean air temperature in celsius for the nearest surface stations */
   float nss_air_temp_mean;
 

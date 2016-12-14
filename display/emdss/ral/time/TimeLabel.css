@@ -1,0 +1,9 @@
+.TimeLabel
+{
+  border       : 1px solid black;
+  border-radius: 5px;
+  color        : #3333bb;
+  font-family  : Avenir, Arial, Helvetica, sans-serif;
+  font-size    : 14pt;
+  text-align   : center;
+}

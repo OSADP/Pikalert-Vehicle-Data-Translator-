@@ -25,7 +25,7 @@ import data_time_index
 import district_alerts
 import log_msg
 import get_site_time_series
-import get_latest_alaska_files
+#import get_latest_alaska_files
 import merge_image_data
 import tempfile
 import glob
@@ -80,17 +80,18 @@ def application(environ, start_response):
     yyyymmddhhmm = date_str[0:8] + date_str[9:13]
     
     # Get latest road weather and treatment forecast file paths and times
-    logg.write_info("processing state, site, time: %s, %d, %s" % (state, site, yyyymmddhhmm))
+    logg.write_info("state, site, time: %s, %d, %s\n" % (state, site, yyyymmddhhmm))
     (rdwx_fpath, rdwx_fpath_time) = data_time_index.get_latest_file_using_time(sys_path.File_time_delta, yyyymmddhhmm, cf.rdwx_dir)
     (tmt_fpath, tmt_fpath_time) = data_time_index.get_latest_file_using_time(sys_path.File_time_delta, yyyymmddhhmm, cf.tmt_dir)
-    logg.write_info("read rdwx and treatment files: %s, %s" % (rdwx_fpath, tmt_fpath))
+    logg.write_info("read rdwx and treatment files: %s, %s\n" % (rdwx_fpath, tmt_fpath))
 
     # Get plotting data
     output = {}
     current_utc_hour = int(date_str[9:11])
-    logg.write_info("getting summary plot information")
+    logg.write_info("getting summary plot information\n")
     if rdwx_fpath != None and os.path.exists(rdwx_fpath):
-        summary_plot = plots.get_summary_plot(cf, rdwx_fpath, tmt_fpath, site, current_utc_hour, cf.timezone)
+        summary_plot = plots.get_summary_plot(logg, cf, rdwx_fpath, tmt_fpath, site, current_utc_hour, cf.timezone)
+        #summary_plot = "R0lGODlhDwAPAKECAAAAzMzM/////wAAACwAAAAADwAPAAACIISPeQHsrZ5ModrLlN48CXF8m2iQ3YmmKqVlRtW4MLwWACH+H09wdGltaXplZCBieSBVbGVhZCBTbWFydFNhdmVyIQAAOw=="
         output["summary_plot"] = summary_plot
 
     # Get district alerts time series information
@@ -108,8 +109,10 @@ def application(environ, start_response):
     output["time_series"] = time_series
     
     # Get all sites dict
-    logg.write_info("getting all sites dict from %s" % cf.rwis_sites_file)
+    logg.write_info("getting all sites dict from %s\n" % cf.rwis_sites_file)
     all_sites_dict = sites.get_all_site_dict(cf.rwis_sites_file)
+    logg.write_info("all sites dict keys\n")
+    logg.write_info("all sites dict has %d keys\n" % len(all_sites_dict.keys()))
     
     # Get rwis observations
     rwis_site_dict = sites.get_rwis_site_dict(all_sites_dict)
@@ -140,8 +143,9 @@ def application(environ, start_response):
 
     # Translate site number into appropriate site id
     output["image"] = ""
-    if state == "alaska":
-        logg.write_info("getting latest image files for site: %d" % site)
+    if state == "alaska_vdt":
+        """
+        logg.write_info("getting latest image files for site: %d\n" % site)
         alaska_image_dict = get_latest_alaska_files.get_latest_alaska_files(3600, site, sys_path.alaska_image_dir)
 
         # Produce image file for site id
@@ -160,9 +164,20 @@ def application(environ, start_response):
 
         # Base64 encode image file and store
         #output["image"] = encode_image.encode_image("/home/dicast/mdss_view/test.jpg")
-    
+        """
+    elif state == "minnesota_vdt":
+        logg.write_info("getting latest image files for site: %d\n" % site)
+        latest_file = get_latest_minnesota_image_file.get_latest_minnesota_image_file(3600, site, sys_path.minnesota_image_dir)
+	if latest_file != "":
+	    output["image"] = encode_image.encode_image(latest_file)
+        else:
+            logg.write_info("did not get image data for %d" % site)
+
+        # Base64 encode image file and store
+        #output["image"] = encode_image.encode_image("/home/dicast/mdss_view/test.jpg")
+	    
     # Create json output
-    logg.write_info("dumping json final output")
+    logg.write_info("dumping json final output for state %s\n" % state)
 
     json_output = json.dumps(output)
     logg.write_ending(0, sys_path.plots_log)

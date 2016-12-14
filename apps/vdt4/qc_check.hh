@@ -36,6 +36,8 @@ unsigned char range_check( double min, double max, double value);
 unsigned char range_check(int min, int max, int value);
 unsigned char climate_range_check(double min, double max, double value);
 unsigned char climate_range_check(int min, int max, int value);
+unsigned char exclude_check(const std::vector<double>& excluded, double value, double tol);
+unsigned char exclude_check(const std::vector<int>& excluded, int value, int tol);
 
 inline unsigned char range_check(const std::string& min, const std::string& max, const std::string& value)
 {
@@ -76,7 +78,6 @@ public:
   virtual void operator()(vdt_probe_message& msg) const{};
 };
 
-
 template <class T>
 class qc_range_check : public qc_check2
 {
@@ -110,6 +111,28 @@ public:
     msg.setattr(create_out_key(), range_check_result);
     visit_result(value, range_check_result, msg);
     //msg.dump();
+  }
+};
+
+template <class T>
+class qc_range_exclude_check : public qc_range_check<T>
+{
+protected:
+  std::vector<T> excluded_;
+  T tol_;
+
+public:
+  qc_range_exclude_check(const std::string& fieldname, const T& min, const T& max, const std::vector<T>& excluded, const T& tol) : qc_range_check<T>(fieldname, min, max), excluded_(excluded), tol_(tol)
+  {
+  }
+
+  virtual void visit_result (T value, unsigned char range_check_result, vdt_probe_message& msg) const
+  {
+    if(range_check_result == vdt_probe_message_qc::PASSED)
+    {
+      unsigned char exclude_check_result = exclude_check(excluded_, value, tol_); 
+      msg.setattr(qc_range_check<T>::create_out_key(), exclude_check_result);
+    }
   }
 };
 
@@ -163,7 +186,7 @@ public:
     dft_range_check_visitor(const std::string& fieldname) : fieldname(fieldname)
     {
     }
-
+  
     template <typename T, typename U>
     QC_CHECK_PTR operator()( const T& min, const U& max) const
     {

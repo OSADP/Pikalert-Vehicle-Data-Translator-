@@ -126,6 +126,12 @@ variables:
         	radar_ref:units = "dBZ" ;
         	radar_ref:_FillValue = -9999.f;
         
+        float radar_cref(rec_num) ;
+                radar_cref:long_name = "composite reflectivity from radar grid" ;
+                radar_cref:valid_range = -25, 70 ;
+                radar_cref:units = "dBZ" ;
+                radar_cref:_FillValue = -9999.f ;
+
     	short radar_precip_flag(rec_num);
         	radar_precip_flag:long_name = "precip from radar grid";
 		radar_precip_flag:_FillValue = -9999s;
@@ -899,4 +905,26 @@ variables:
                 wx:reference = "WMO #306, code table 4658" ;
                 wx:units = "" ;
 
+	short road_state_1(rec_num) ;
+                road_state_1:long_name = "Road State - sensor 1" ;
+                road_state_1:value0 = "No report" ;
+                road_state_1:value1 = "Dry" ;
+                road_state_1:value2 = "Moist" ;
+                road_state_1:value3 = "Moist and chemically treated" ;
+                road_state_1:value4 = "Wet" ;
+                road_state_1:value5 = "Wet and chemically treated" ;
+                road_state_1:value6 = "Ice" ;
+                road_state_1:value7 = "Frost" ;
+                road_state_1:value8 = "Snow" ;
+                road_state_1:value9 = "Snow/Ice Watch" ;
+                road_state_1:value10 = "Snow/Ice Warning" ;
+                road_state_1:value11 = "Wet Above Freezing" ;
+                road_state_1:value12 = "Wet Below Freezing" ;
+                road_state_1:value13 = "Absorption" ;
+                road_state_1:value14 = "Absorption at Dewpoint" ;
+                road_state_1:value15 = "Dew" ;
+                road_state_1:value16 = "Black Ice Warning" ;
+                road_state_1:value17 = "Other" ;
+                road_state_1:value18 = "Slush" ;
+                road_state_1:_FillValue = -9999s ;
 }

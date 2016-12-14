@@ -2,34 +2,47 @@
 #include <vdt4/vdt_const.hh>
 #include "rwx_road_segment_assessment.hh"
 
-// Forecast precip-type
+// Input Forecast precip-type definitions
 const int rwx_road_segment_assessment::FCST_NONE = 0;
 const int rwx_road_segment_assessment::FCST_RAIN = 1;
 const int rwx_road_segment_assessment::FCST_SNOW = 2;
 const int rwx_road_segment_assessment::FCST_ICE = 5;
 
-// Forecast precip-intensity thresholds
-// This is now set dynamically below in set_precip_thresholds()
-//const int rwx_road_segment_assessment::FCST_LIGHT_PRECIP_WINTER = 0.254; // <= 0.254 mm. (0.01 in.)
-//const int rwx_road_segment_assessment::FCST_MODERATE_PRECIP_WINTER = 2.54; // <= 2.54 mm. (0.10 in.)
-// FCST_HEAVY_PRECIP_WINTER is: > 2.54 mm (0.10 in.)
-//const int rwx_road_segment_assessment::FCST_LIGHT_PRECIP_SUMMER = 2.54; // <= 2.54 mm. (0.10 in.)
-//const int rwx_road_segment_assessment::FCST_MODERATE_PRECIP_SUMMER = 7.62; // <= 7.62 mm. (0.30 in.)
-// FCST_HEAVY_PRECIP_SUMMER is: > 7.62 mm (0.30 in.)
+// Input Dual-Pol Radar Hydrometeor-Class definitions
+const int rwx_road_segment_assessment::HID_BIO_SCATTER = 10;
+const int rwx_road_segment_assessment::HID_GROUND_CLUTTER = 20;
+const int rwx_road_segment_assessment::HID_ICE_CRYSTALS = 30;
+const int rwx_road_segment_assessment::HID_DRY_SNOW = 40;
+const int rwx_road_segment_assessment::HID_WET_SNOW = 50;
+const int rwx_road_segment_assessment::HID_LGT_MDT_RAIN = 60;
+const int rwx_road_segment_assessment::HID_HVY_RAIN = 70;
+const int rwx_road_segment_assessment::HID_BIG_DROPS = 80;
+const int rwx_road_segment_assessment::HID_GRAUPEL = 90;
+const int rwx_road_segment_assessment::HID_HAIL = 100;
+const int rwx_road_segment_assessment::HID_UNKNOWN = 140;
 
-// VDT radar reflectivity precip-intensity thresholds
-// This is now set dynamically below in set_precip_thresholds()
-//const int rwx_road_segment_assessment::DEF_RADAR_LIGHT_PRECIP = 15; // <= 15 reflectivity (dBZ)
-//const int rwx_road_segment_assessment::DEF_RADAR_MODERATE_PRECIP = 30; // <= 30 reflectivity (dBZ)
-// DEF_RADAR_HEAVY_PRECIP is: > 30 reflectivity (dBZ)
-//const int rwx_road_segment_assessment::WINTER_RADAR_LIGHT_PRECIP = 10; // <= 10 reflectivity (dBZ)
-//const int rwx_road_segment_assessment::WINTER_RADAR_MODERATE_PRECIP = 20; // <= 20 reflectivity (dBZ)
-// WINTER_RADAR_HEAVY_PRECIP is: > 20 reflectivity (dBZ)
-//const int rwx_road_segment_assessment::SUMMER_RADAR_LIGHT_PRECIP = 20; // <= 20 reflectivity (dBZ)
-//const int rwx_road_segment_assessment::SUMMER_RADAR_MODERATE_PRECIP = 40; // <= 40 reflectivity (dBZ)
-// SUMMER_RADAR_HEAVY_PRECIP is: > 40 reflectivity (dBZ)
+// Input RWIS Road-State definitions
+const int rwx_road_segment_assessment::RS_NO_REPORT = 0;
+const int rwx_road_segment_assessment::RS_DRY = 1;
+const int rwx_road_segment_assessment::RS_MOIST = 2;
+const int rwx_road_segment_assessment::RS_MOIST_CHEM_TMT = 3;
+const int rwx_road_segment_assessment::RS_WET = 4;
+const int rwx_road_segment_assessment::RS_WET_CHEM_TMT = 5;
+const int rwx_road_segment_assessment::RS_ICE = 6;
+const int rwx_road_segment_assessment::RS_FROST = 7;
+const int rwx_road_segment_assessment::RS_SNOW = 8;
+const int rwx_road_segment_assessment::RS_SNOW_ICE_WACH = 9;
+const int rwx_road_segment_assessment::RS_SNOW_ICE_WARN = 10;
+const int rwx_road_segment_assessment::RS_WET_ABOVE_FRZ = 11;
+const int rwx_road_segment_assessment::RS_WET_BELOW_FRZ = 12;
+const int rwx_road_segment_assessment::RS_ABSORPTION = 13;
+const int rwx_road_segment_assessment::RS_ABSORPTION_DEWPT = 14;
+const int rwx_road_segment_assessment::RS_DEW = 15;
+const int rwx_road_segment_assessment::RS_BLACK_ICE = 16;
+const int rwx_road_segment_assessment::RS_OTHER = 17;
+const int rwx_road_segment_assessment::RS_SLUSH = 18;
 
-// Wind-speed threshold for blowing snow (m/s)
+// Input Wind-speed threshold for blowing snow (m/s)
 const int rwx_road_segment_assessment::BLOWING_SNOW_WIND_SPEED = 10; // 10 m/s
 
 // Precip Type enumeration
@@ -37,6 +50,7 @@ const int rwx_road_segment_assessment::NO_PRECIP = 0;
 const int rwx_road_segment_assessment::RAIN = 1;
 const int rwx_road_segment_assessment::MIX = 2;
 const int rwx_road_segment_assessment::SNOW = 3;
+const int rwx_road_segment_assessment::HAIL = 4;
 
 // Precip Intensity enumeration
 //const int rwx_road_segment_assessment::NO_PRECIP = 0;  // defined above
@@ -72,6 +86,7 @@ const float rwx_road_segment_assessment::fcst_wgt = 1.0;
 const float rwx_road_segment_assessment::fcst_input_conf = 1.0;
 
 const float rwx_road_segment_assessment::air_temp_wgt = 0.50;
+const float rwx_road_segment_assessment::dual_pol_wgt = 0.50;
 
 const float rwx_road_segment_assessment::radar_ref_wgt = 0.50;
 const float rwx_road_segment_assessment::wipers_wgt = 0.30;
@@ -110,23 +125,71 @@ void rwx_road_segment_assessment::perform_assessment(vdt_probe_message_qc_statis
   visibility = visibility_assessment(seg_stat, precip_type, precip_type_confidence, precip_intensity, precip_intensity_confidence, visibility_confidence);
   
   pavement_condition = pavement_condition_assessment(seg_stat, precip_type, precip_type_confidence, precip_intensity, precip_intensity_confidence, pavement_condition_confidence);
-  
+
   // If the precip-intensity is missing that indicates we did not have enough mobile-data (or forecast data)
-  // to properly indicate a hazard. So we set the precip-type, pavement-condtion to missing (precip-intensity is already missing)
-  // Visibility could still have a non-missing hazard (for fog or haze) and Slickness could have non-missing hazard (do to some other mobile fields) so we leave those as is
+  // First, check if we have road_state value, if it's non-missing use it to set pavement-condtion
   //
+  // Second, if both precip-intensity and road-state are missing we set the precip-type, pavement-condtion to missing (precip-intensity is already missing)
+  // and this is the indication to the display that we don't have enough data to make an assessment.
+  // Note, visibility could still have a non-missing hazard (for fog or haze) and slickness could have non-missing hazard (do to some other mobile fields) so we leave those as is
+  //
+  // Third, if precip-intensity is non-missing (indicates valid pavement-condition), cross-check pavement-condition with road-state, adjust pavement-condition if necessary
+  //
+  
+  // Get the road-state, QC if necessary
+  int road_state = get_rwis_road_state(seg_stat);
+  
   if(precip_intensity == vdt_const::FILL_VALUE)
     {
-      //printf("  RWH LIB: found MISSING precip-intensity, setting precip-type and pavement-condition to MISSING.\n");
-      precip_type = vdt_const::FILL_VALUE;
-      pavement_condition = vdt_const::FILL_VALUE;
+      if(road_state != vdt_const::FILL_VALUE)
+	{
+	  printf("  RWH LIB: found MISSING precip-intensity, trying to use road_state: %d for pavement-condition\n", road_state);
+	  if(road_state == RS_DRY)
+	    pavement_condition = DRY_PAVEMENT;
+	  else if(road_state == RS_MOIST || road_state == RS_MOIST_CHEM_TMT || road_state == RS_WET || road_state == RS_WET_CHEM_TMT || road_state == RS_WET_ABOVE_FRZ || road_state == RS_DEW)
+	    pavement_condition = WET_PAVEMENT;
+	  else if(road_state == RS_ICE || road_state == RS_FROST || road_state == RS_WET_BELOW_FRZ)
+	    pavement_condition = ICE_COVERED;
+	  else if(road_state == RS_BLACK_ICE)
+	    pavement_condition = BLACK_ICE;
+	  else if(road_state == RS_SNOW || road_state == RS_SNOW_ICE_WACH || road_state == RS_SNOW_ICE_WARN || road_state == RS_SLUSH)
+	    pavement_condition = SNOW_COVERED;
+	  else
+	    {
+	      printf("  RWH LIB: unknown road_state: %d for setting pavement-condition, precip-intensity is MISSING so setting precip-type and pavement-condition to MISSING.\n", road_state);
+	      precip_type = vdt_const::FILL_VALUE;
+	      pavement_condition = vdt_const::FILL_VALUE;
+	    }
+	}
+      else
+	{
+	  printf("  RWH LIB: found MISSING precip-intensity and road_state is MISSING, setting precip-type and pavement-condition to MISSING.\n");
+	  precip_type = vdt_const::FILL_VALUE;
+	  pavement_condition = vdt_const::FILL_VALUE;
+	}
     }
+  else // precip-intensity non-missing (valid pavement-condition), cross-check road-state
+    {
+      if(road_state != vdt_const::FILL_VALUE)
+	{
+	  //printf("  RWH LIB: precip-intensity is non-missing, using road_state: %d to cross-check pavement-condition\n", road_state);
+	  //if(pavement_condition == WET_PAVEMENT) // We commented this out for now because of strange behaviour (likely due to using an RWIS that is not on the segment it's self)
+	  //  {
+	  //    if(road_state == 1)
+	  //	pavement_condition = DRY_PAVEMENT;
+	  //  }
+	  if(pavement_condition == SNOW_COVERED || pavement_condition == ICE_COVERED || pavement_condition == BLACK_ICE)
+	    {
+	      if(road_state == 1 || road_state == 2 || road_state == 3 || road_state == 4 || road_state == 5 || road_state == 11 || road_state == 15)
+		pavement_condition = WET_PAVEMENT;
+	    }
+	} // end if road_state is non-missing
+    } // end else
   
-  prev_pavement_condition = determine_prev_pavement_condition(seg_stat);
-  
-  // Change the current pavement-condition if there are no current pavement-condition hazards
+  // Change the current pavement-condition if there are no current pavement-condition hazards, road_state is missing
   // and we have a non-missing prev-pavement-condition indicated
-  if(pavement_condition != WET_PAVEMENT && pavement_condition != SNOW_COVERED && pavement_condition != ICE_COVERED &&
+  prev_pavement_condition = determine_prev_pavement_condition(seg_stat);
+  if(road_state == vdt_const::FILL_VALUE && pavement_condition != WET_PAVEMENT && pavement_condition != SNOW_COVERED && pavement_condition != ICE_COVERED &&
      pavement_condition != HYDROPLANE && pavement_condition != BLACK_ICE)
     {
       if(prev_pavement_condition != vdt_const::FILL_VALUE)
@@ -332,9 +395,9 @@ void rwx_road_segment_assessment::set_precip_thresholds(vdt_probe_message_qc_sta
 
   // Initialize radar thresholds with values for the 15 degF to the 50 degF range
   // just in case vdt air_temp is missing
-  RADAR_LIGHT_PRECIP = 5; // 5 dBZ 
-  RADAR_MODERATE_PRECIP = 25; // 25 dBZ
-  RADAR_HEAVY_PRECIP = 45; // 45 dBZ
+  RADAR_LIGHT_PRECIP = 15; //    15 dBZ 
+  RADAR_MODERATE_PRECIP = 30; // 30 dBZ
+  RADAR_HEAVY_PRECIP = 40; //    40 dBZ
   
   // Determine what VDT air temp we should use 
   float mobile_air_temp = get_air_temp(seg_stat);
@@ -346,26 +409,71 @@ void rwx_road_segment_assessment::set_precip_thresholds(vdt_probe_message_qc_sta
     {
       if(air_temp <= -10) // (below 15 degF)
 	{
-	  RADAR_LIGHT_PRECIP = 3; // 3 dBZ
-	  RADAR_MODERATE_PRECIP = 15; // 15 dBZ 
-	  RADAR_HEAVY_PRECIP = 25; // 25 dBZ
+	  RADAR_LIGHT_PRECIP = 12; //    12 dBZ
+	  RADAR_MODERATE_PRECIP = 20; // 20 dBZ 
+	  RADAR_HEAVY_PRECIP = 30; //    30 dBZ
 	}
       else if(air_temp > -10 && air_temp <= 10) // (between 15 degF and 50 degF)
 	{
-	  RADAR_LIGHT_PRECIP = 5; // 5 dBZ 
-	  RADAR_MODERATE_PRECIP = 25; // 25 dBZ
-	  RADAR_HEAVY_PRECIP = 45; // 40 dBZ
+	  RADAR_LIGHT_PRECIP = 15; //    15 dBZ 
+	  RADAR_MODERATE_PRECIP = 30; // 30 dBZ
+	  RADAR_HEAVY_PRECIP = 40; //    40 dBZ
 	}
       else // (above 50 degF)
 	{
-	  RADAR_LIGHT_PRECIP = 10; // 10 dBZ
-	  RADAR_MODERATE_PRECIP = 35; // 35 dBZ
-	  RADAR_HEAVY_PRECIP = 50; // 50 dBZ
+	  RADAR_LIGHT_PRECIP = 18; //    18 dBZ
+	  RADAR_MODERATE_PRECIP = 40; // 40 dBZ
+	  RADAR_HEAVY_PRECIP = 55; //    50 dBZ
 	}
     }
   
   //printf("vdt air_temp: %.3f, RADAR_LIGHT_PRECIP: %.3f, RADAR_MODERATE_PRECIP: %.3f, RADAR_HEAVY_PRECIP: %.3f\n", air_temp, RADAR_LIGHT_PRECIP, RADAR_MODERATE_PRECIP, RADAR_HEAVY_PRECIP);
   
+}
+
+
+int rwx_road_segment_assessment::get_rwis_road_state(vdt_probe_message_qc_statistics& seg_stat)
+{
+  int road_state = seg_stat.road_state;
+  
+  float mobile_air_temp = get_air_temp(seg_stat);
+  float env_air_temp = get_env_air_temp(seg_stat);
+  float air_temp = determine_temp(mobile_air_temp, env_air_temp);
+
+  //printf("  RWH LIB: initial road_state: %d, air_temp: %f\n", road_state, air_temp);
+  
+  if(road_state == -32767)
+    road_state = vdt_const::FILL_VALUE;
+
+  // Only set road-state to missing if it does not make sense relative to the air-temp
+  // If a frozen category is given only look for air-temps above 1 degC
+  // If a warm/wet category is given, only look for air-temp at or below 0 degC
+  // We don't change anyting if the air-temp is between 0-1 (including a value of 1)
+  // If air-temp is mssing we leave the road-state as is
+  //
+  if(air_temp != vdt_const::FILL_VALUE && road_state != vdt_const::FILL_VALUE)
+    {
+      if(road_state == RS_ICE || road_state == RS_FROST || road_state == RS_WET_BELOW_FRZ || road_state == RS_BLACK_ICE ||
+	 road_state == RS_SNOW || road_state == RS_SNOW_ICE_WACH || road_state == RS_SNOW_ICE_WARN || road_state == RS_SLUSH)
+	{
+	  if(air_temp > 1)
+	    {
+	      //printf("  RWH LIB: found cold road_state: %d with warm air_temp: %.2f, setting road_state to missing\n", road_state, air_temp);
+	      road_state = vdt_const::FILL_VALUE;
+	    }
+	}
+      else if(road_state == RS_MOIST || road_state == RS_MOIST_CHEM_TMT || road_state == RS_WET || road_state == RS_WET_CHEM_TMT ||
+	      road_state == RS_WET_ABOVE_FRZ || road_state == RS_DEW)
+	{
+	  if(air_temp <= 0)
+	    {
+	      //printf("  RWH LIB: found warm road_state: %d with cold air_temp: %.2f, setting road_state to missing\n", road_state, air_temp);
+	      road_state = vdt_const::FILL_VALUE;
+	    }
+	}	
+    } // end if air-temp and road-state non-missing 
+  
+  return road_state;
 }
 
 
@@ -422,20 +530,75 @@ int rwx_road_segment_assessment::precip_type_assessment(vdt_probe_message_qc_sta
   // Hardwire the input field confidence for now
   // eventually this will be coming from the seg-stats file
   float air_temp_input_conf = 1.0;
-  
-  // Do we want to use radar_precip_type first?
+  float dual_pol_input_conf = 1.0;
   
   // VDT case
-  if(air_temp != vdt_const::FILL_VALUE) // vdt case
+
+  // First, try to use dual-pol-hydro-class (HID) to get precip-type
+  // otherwise use air-T
+  //
+  int dual_pol_hid = (int)seg_stat.radar_dual_pol_hc;
+  //printf("  RWH LIB: dual_pol_hid: %d\n", dual_pol_hid);
+  
+  if(dual_pol_hid == -999)
+    dual_pol_hid = vdt_const::FILL_VALUE;
+
+  // If the dual-pol HID value is "unknown"
+  // then set it to missing and thus will not use
+  if(dual_pol_hid == HID_UNKNOWN)
+    dual_pol_hid = vdt_const::FILL_VALUE;
+  
+  if(dual_pol_hid != vdt_const::FILL_VALUE)
     {
-      if(air_temp > 2)
-	precip_type =  RAIN;
-      else if(air_temp < -2)
-	precip_type =  SNOW;
-      else
-	precip_type =  MIX;
+      if(dual_pol_hid == HID_BIO_SCATTER || dual_pol_hid == HID_GROUND_CLUTTER)
+	precip_type =  NO_PRECIP;
+      else if(dual_pol_hid == HID_ICE_CRYSTALS || dual_pol_hid == HID_DRY_SNOW || dual_pol_hid == HID_WET_SNOW)
+	{
+	  if(air_temp != vdt_const::FILL_VALUE)
+	    {
+	      if(air_temp > 1)
+		precip_type =  RAIN;
+	      else
+		precip_type =  SNOW;
+	    }
+	  else
+	    precip_type =  SNOW;
+	}
+      else if(dual_pol_hid == HID_LGT_MDT_RAIN || dual_pol_hid == HID_HVY_RAIN || dual_pol_hid == HID_BIG_DROPS || dual_pol_hid == HID_GRAUPEL)
+	{
+	  if(air_temp != vdt_const::FILL_VALUE)
+	    {
+	      if(air_temp > 0)
+		precip_type =  RAIN;
+	      else
+		precip_type =  MIX; 
+	    }
+	  else
+	    precip_type =  RAIN;
+	}
+      else if(dual_pol_hid == HID_HAIL)
+	{
+	  precip_type =  HAIL;
+	}
+
+      //printf("  RWH LIB: Using dual_pol_hid: %d to set precip_type to %.0f\n", dual_pol_hid, precip_type);
+      confidence = confidence + (dual_pol_input_conf * dual_pol_wgt);
       
-      confidence = confidence + (air_temp_input_conf * air_temp_wgt);
+    }
+  else // Case with just air-temp dual-pol-hid MISSING
+    {
+      if(air_temp != vdt_const::FILL_VALUE) // vdt case
+	{
+	  if(air_temp > 2)
+	    precip_type =  RAIN;
+	  else if(air_temp < -2)
+	    precip_type =  SNOW;
+	  else
+	    precip_type =  MIX;
+
+	  //printf("  RWH LIB: Using air_temp: %.2f only to set precip_type to %.0f\n", air_temp, precip_type);
+	  confidence = confidence + (air_temp_input_conf * air_temp_wgt);
+	}
     }
   
   // Cross-check the precip-type with METAR present-wx report (precip-type and intensity)
@@ -507,14 +670,21 @@ int rwx_road_segment_assessment::precip_intensity_assessment(vdt_probe_message_q
       else
 	precip_intensity =  HEAVY_PRECIP;
 
+      /*
+      // This was causing a problem during the summer, especially over Colorado
+      // Since T, dewpoint, and precip fields (pop and rate) evolve independently
+      // you can have cases during summer (thunderstorms forecasted) where meaningful
+      // precip-rate and pop is forecast but the dewpoint-depression is > 20 degC even sometime 30 degC
+      // so in order to keep the RWH hazards consitent with the forecast data, I'm commenting this out for now
+      //
       // Lower precip-intensity if dewpoint-depression is too high
       // Forcast data usually does not need to be corrected, but for cases when there is precip indicated and the dewpoint depression > 5
       // knock the forecast category down one (based on testing > 5 depression can only occcur for very light forecast precip)
       if(fcst_dew_depress != vdt_const::FILL_VALUE && fcst_dew_depress > 5)
 	{
-	  //if(precip_intensity > NO_PRECIP)
-	  //printf("RWX_ROAD_SEGMENT_ASSESSMENT.CC: Changing original fcst precip-intensity: %.0f based on >5 dewpoint-depression: %f.\n", precip_intensity, fcst_dew_depress);
-
+	  if(precip_intensity > NO_PRECIP)
+	    printf("RWX_ROAD_SEGMENT_ASSESSMENT.CC: Changing original fcst precip-intensity: %.0f based on >5 dewpoint-depression: %f.\n", precip_intensity, fcst_dew_depress);
+	  
 	  if(precip_intensity == HEAVY_PRECIP)
 	    precip_intensity =  MODERATE_PRECIP;
 	  else if(precip_intensity == MODERATE_PRECIP)
@@ -522,13 +692,51 @@ int rwx_road_segment_assessment::precip_intensity_assessment(vdt_probe_message_q
 	  else // previously LIGHT OR NO
 	    precip_intensity =  NO_PRECIP;
 	}
+      */
       
       confidence = confidence + (fcst_input_conf * fcst_wgt);
       return precip_intensity;
     }
   
-  // Get VDT fields 
-  float radar_ref = seg_stat.radar_ref;
+  // Get VDT fields
+  //
+
+  // Get Radar Reflectivity, look for the original (CONUS mosaic) reflectivity first
+  // if it's missing look for the dual-pol reflectivity (non mosaic)
+  //
+  float radar_ref =  vdt_const::FILL_VALUE;
+  float orig_radar_ref = seg_stat.radar_ref;
+  float dual_pol_radar_ref = seg_stat.radar_dual_pol_hr;
+  
+  // Set radar_ref values of -999 to missing
+  // Amanda indicated that a value of -999 means the location is beyond the radar coverage
+  
+  if(orig_radar_ref == -999)
+    orig_radar_ref = vdt_const::FILL_VALUE;
+
+  if(dual_pol_radar_ref == -999)
+    dual_pol_radar_ref = vdt_const::FILL_VALUE;
+  
+  if(orig_radar_ref != vdt_const::FILL_VALUE) 
+    radar_ref = orig_radar_ref;
+  else if(dual_pol_radar_ref != vdt_const::FILL_VALUE)
+    radar_ref = dual_pol_radar_ref;
+  else
+    radar_ref = vdt_const::FILL_VALUE;
+
+  // Get Radar (Dual-Pol) Hydro-class (HID)
+  int dual_pol_hid = (int)seg_stat.radar_dual_pol_hc;
+  
+  if(dual_pol_hid == -999)
+    dual_pol_hid = vdt_const::FILL_VALUE;
+
+  // If the dual-pol HID value is "unknown"
+  // then set it to missing and thus will not use
+  if(dual_pol_hid == HID_UNKNOWN)
+    dual_pol_hid = vdt_const::FILL_VALUE;
+
+  printf("  RWH LIB: orig_radar_ref: %.2f, dual_pol_radar_ref: %.2f, radar_ref: %.2f, dual_pol_hid: %d\n", orig_radar_ref, dual_pol_radar_ref, radar_ref, dual_pol_hid);
+  
   float speed_ratio = seg_stat.speed_ratio;
 
   float mobile_air_temp = get_air_temp(seg_stat);
@@ -536,9 +744,11 @@ int rwx_road_segment_assessment::precip_intensity_assessment(vdt_probe_message_q
   float air_temp = determine_temp(mobile_air_temp, env_air_temp);
   
   float mobile_dew_temp = seg_stat.dew_temp_mean;
-  float env_dew_temp = seg_stat.nss_dew_temp_mean;
+  float env_dew_temp = get_env_dew_temp(seg_stat);
   float dew_temp = determine_temp(mobile_dew_temp, env_dew_temp);
 
+  //printf("  RWH LIB: air_temp: %.2f, dew_temp: %.2f\n", air_temp, dew_temp);
+  
   // Calculate dewpoint-depression
   float dew_depress = vdt_const::FILL_VALUE;
   if(air_temp != vdt_const::FILL_VALUE && dew_temp != vdt_const::FILL_VALUE)
@@ -547,12 +757,11 @@ int rwx_road_segment_assessment::precip_intensity_assessment(vdt_probe_message_q
       if(dew_depress < 0)
 	dew_depress = 0;
     }
-  
+
+  // Determine if we have any head-light on/off data
   int num_msg_valid_lights = seg_stat.num_msg_valid_lights;
   int num_lights_off = seg_stat.num_lights_off;
   float percent_lights_off = calc_percentage((float)num_lights_off, (float)num_msg_valid_lights);
-  
-  //printf("RWX_ROAD_SEGMENT_ASSESSMENT.CC: num_msg_valid_lights: %d, num_lights_off: %d, percent_lights_off: %f\n",  num_msg_valid_lights, num_lights_off, percent_lights_off);
   
   // Determine if we have any wiper data
   int wipers_flag = 0;
@@ -561,6 +770,8 @@ int rwx_road_segment_assessment::precip_intensity_assessment(vdt_probe_message_q
      seg_stat.num_wipers_low != vdt_const::FILL_VALUE ||
      seg_stat.num_wipers_high != vdt_const::FILL_VALUE)
     wipers_flag = 1;
+
+  //printf("  RWH LIB: seg_stats: num_wipers_off: %d, num_wipers_intermittent: %d, num_wipers_low: %d, num_wipers_high: %d\n", seg_stat.num_wipers_off, seg_stat.num_wipers_intermittent, seg_stat.num_wipers_low, seg_stat.num_wipers_high);
   
   bool wipers_off_flag = wipers_off(seg_stat);
   bool wipers_on_flag = wipers_on(seg_stat);
@@ -575,14 +786,14 @@ int rwx_road_segment_assessment::precip_intensity_assessment(vdt_probe_message_q
   float speed_ratio_input_conf = 1.0;
   float lights_input_conf = 1.0;
   
-  //printf("RWX_ROAD_SEGMENT_ASSESSMENT.CC: wipers_flag: %d, wipers_off_flag: %d, wipers_on_flag: %d, wipers_interm_flag: %d, wipers_low_flag: %d, wipers_high_flag: %d\n", wipers_flag, wipers_off_flag, wipers_on_flag,  wipers_interm_flag, wipers_low_flag, wipers_high_flag);
+  //printf("  RWH LIB: wipers_flag: %d, wipers_off_flag: %d, wipers_on_flag: %d, wipers_interm_flag: %d, wipers_low_flag: %d, wipers_high_flag: %d\n", wipers_flag, wipers_off_flag, wipers_on_flag,  wipers_interm_flag, wipers_low_flag, wipers_high_flag);
 
-  // VDT case using just radar-composite-reflectivity
+  // VDT case using just radar-reflectivity
   // * Note, this now uses the dynamic radar-precip-thresholds passed into this function.
   //   The precip-threshold values are set in the set_precip_thresholds() function above.
   //
   // A note about the radar-ref value. -99 indicates non-missing but no-return (no precip falling)
-  // A value of -9999 does indicate missing (no radar value at location). FILL_VALUE = -9999
+  // FILL_VALUE = -9999 (Note above, we set values of -999 to FILL_VALUE, -999 indicates outside of any radar coverage)
   //
   if(radar_ref != vdt_const::FILL_VALUE)
     {
@@ -598,28 +809,37 @@ int rwx_road_segment_assessment::precip_intensity_assessment(vdt_probe_message_q
       confidence = confidence +  (radar_ref_input_conf * radar_ref_wgt);
     }
 
-  // VDT case: lower precip-intensity if dewpoint-depression is too high
+
+  //VDT case: adjust precip-intensity using radar-dual-pol-hid (hydro-class)
+  //
+  if(precip_intensity != vdt_const::FILL_VALUE && dual_pol_hid != vdt_const::FILL_VALUE)
+    {
+      printf("  RWH LIB: Adjusting vdt precip-intensity up or down based on dual_pol_hid: %d\n", dual_pol_hid);
+      
+      if(dual_pol_hid == HID_BIO_SCATTER || dual_pol_hid == HID_GROUND_CLUTTER)
+	precip_intensity = NO_PRECIP;
+      else if(dual_pol_hid == HID_LGT_MDT_RAIN || dual_pol_hid == HID_BIG_DROPS)
+	{
+	  if(precip_intensity == HEAVY_PRECIP)
+	    precip_intensity =  MODERATE_PRECIP;
+	}
+      else if(dual_pol_hid == HID_HVY_RAIN || dual_pol_hid == HID_GRAUPEL)
+	{
+	  if(precip_intensity == LIGHT_PRECIP)
+	    precip_intensity =  MODERATE_PRECIP;
+	}
+    }
+  
+  // VDT case: lower precip-intensity if radar-ref is lower than 35 dBZ and dewpoint-depression is too high (> 8 degC)
+  //
   int dew_adjust_flag = 0;
   if(precip_intensity != vdt_const::FILL_VALUE && dew_depress != vdt_const::FILL_VALUE)
     {
-      if(dew_depress > 10)
+      if(radar_ref < 35 && dew_depress > 8)
 	{
 	  if(precip_intensity > NO_PRECIP)
 	    {
-	      //printf("RWX_ROAD_SEGMENT_ASSESSMENT.CC: Changing original vdt precip-intensity: %.0f based on >10 dewpoint-depression: %f.\n", precip_intensity, dew_depress);
-	      dew_adjust_flag = 1;
-	    }
-	  
-	  if(precip_intensity == HEAVY_PRECIP)
-	    precip_intensity =  MODERATE_PRECIP;
-	  else // previously LIGHT, MODERATE or NO
-	    precip_intensity = NO_PRECIP;
-	}
-      else if(dew_depress > 4)
-	{
-	  if(precip_intensity > NO_PRECIP)
-	    {
-	      //printf("RWX_ROAD_SEGMENT_ASSESSMENT.CC: Changing original vdt precip-intensity: %.0f based on >4 dewpoint-depression: %f.\n", precip_intensity, dew_depress);
+	      printf("  RWH LIB: Adjusting vdt precip-intensity down one category based radar_ref: %.2f and dewpoint-depression: %.2f\n", radar_ref, dew_depress);
 	      dew_adjust_flag = 1;
 	    }
 	  
@@ -627,7 +847,7 @@ int rwx_road_segment_assessment::precip_intensity_assessment(vdt_probe_message_q
 	    precip_intensity =  MODERATE_PRECIP;
 	  else if(precip_intensity == MODERATE_PRECIP)
 	    precip_intensity =  LIGHT_PRECIP;
-	  else // previously LIGHT OR NO
+	  else // previously LIGHT
 	    precip_intensity = NO_PRECIP;
 	}
     }
@@ -638,16 +858,18 @@ int rwx_road_segment_assessment::precip_intensity_assessment(vdt_probe_message_q
   
   if(precip_intensity != vdt_const::FILL_VALUE && wx_precip_intensity != vdt_const::FILL_VALUE)
     {
+      printf("  RWH LIB: Adjusting precip-intensity using METAR present-wx report\n");
+      
       if(wx_precip_intensity == LIGHT_PRECIP)
 	{
 	  if(precip_intensity == NO_PRECIP)
 	    {
-	      //printf("Changing precip_intensity from %.0f to LIGHT_PRECIP: wx_precip_intensity: %.0f\n", precip_intensity, wx_precip_intensity);
+	      //printf("  Changing precip_intensity from %.0f to LIGHT_PRECIP: wx_precip_intensity: %.0f\n", precip_intensity, wx_precip_intensity);
 	      precip_intensity = LIGHT_PRECIP;
 	    }
 	  else if(precip_intensity == HEAVY_PRECIP)
 	    {
-	      //printf("Changing precip_intensity from %.0f to MODERATE_PRECIP: wx_precip_intensity: %.0f\n", precip_intensity, wx_precip_intensity);
+	      //printf("  Changing precip_intensity from %.0f to MODERATE_PRECIP: wx_precip_intensity: %.0f\n", precip_intensity, wx_precip_intensity);
 	      precip_intensity = MODERATE_PRECIP;
 	    }
 	}
@@ -655,7 +877,7 @@ int rwx_road_segment_assessment::precip_intensity_assessment(vdt_probe_message_q
 	{
 	  if(precip_intensity == NO_PRECIP)
 	    {
-	      //printf("Changing precip_intensity from %.0f to LIGHT_PRECIP: wx_precip_intensity: %.0f\n", precip_intensity, wx_precip_intensity);
+	      //printf("  Changing precip_intensity from %.0f to LIGHT_PRECIP: wx_precip_intensity: %.0f\n", precip_intensity, wx_precip_intensity);
 	      precip_intensity = LIGHT_PRECIP;
 	    }
 	}
@@ -663,7 +885,7 @@ int rwx_road_segment_assessment::precip_intensity_assessment(vdt_probe_message_q
 	{
 	  if(precip_intensity == NO_PRECIP || precip_intensity == LIGHT_PRECIP)
 	    {
-	      //printf("Changing precip_intensity from %.0f to MODERATE_PRECIP: wx_precip_intensity: %.0f\n", precip_intensity, wx_precip_intensity);
+	      //printf("  Changing precip_intensity from %.0f to MODERATE_PRECIP: wx_precip_intensity: %.0f\n", precip_intensity, wx_precip_intensity);
 	      precip_intensity = MODERATE_PRECIP; 
 	    }
 	}
@@ -672,13 +894,15 @@ int rwx_road_segment_assessment::precip_intensity_assessment(vdt_probe_message_q
   // VDT case: If precip_intensity is still missing (e.g. no radar data, ect) just use wx_precip_intensity
   if(precip_intensity == vdt_const::FILL_VALUE && wx_precip_intensity != vdt_const::FILL_VALUE)
     {
-      // printf("Precip_intensity is still missing, setting precip_intensity using wx_precip_intensity: %.0f\n", wx_precip_intensity);
+      printf("  RWH LIBs: Precip_intensity is still missing, setting precip_intensity using wx_precip_intensity: %.0f\n", wx_precip_intensity);
       precip_intensity = wx_precip_intensity;
     }
   
   // VDT case: modify intensity based on wipers or determine intensity if we just have wipers and no radar data
   if(wipers_flag == 1)
     {
+      printf("  RWH LIB: Adjusting vdt precip-intensity with wiper data\n");
+      
       if(precip_intensity == vdt_const::FILL_VALUE) // This for the case with no radar data
 	{
 	  if(wipers_off_flag)
@@ -723,6 +947,7 @@ int rwx_road_segment_assessment::precip_intensity_assessment(vdt_probe_message_q
   // VDT case: modify intensity based on speed-ratio
   if(speed_ratio != vdt_const::FILL_VALUE)
     {
+      //printf("  RWH LIB: Adjusting vdt precip-intensity with speed-ratio data\n");
       if(precip_intensity == HEAVY_PRECIP)
 	{
 	  if(speed_ratio >= 0.7)
@@ -734,6 +959,7 @@ int rwx_road_segment_assessment::precip_intensity_assessment(vdt_probe_message_q
   // VDT case: modify intensity based on headlights
   if(percent_lights_off != vdt_const::FILL_VALUE)
     {
+      //printf("  RWH LIB: Adjusting vdt precip-intensity with headlights data\n");
       if(precip_intensity == MODERATE_PRECIP)
 	{
 	  if(percent_lights_off > 0.50)
@@ -753,11 +979,6 @@ int rwx_road_segment_assessment::precip_intensity_assessment(vdt_probe_message_q
 
 int rwx_road_segment_assessment::pavement_condition_assessment(vdt_probe_message_qc_statistics& seg_stat, const int precip_type, const float precip_type_input_conf, const int precip_intensity, const float precip_intensity_input_conf, float &confidence)
 {
-
-  // MODIFY THIS. Biggest issue here is that as soon as it stops precipitating (snowing)
-  // RWH says the road-condition is dry.
-  // May need to bring in previoius RWH to show snow/ice still on the road if road-temp is below 1 degC
-  
   float pavement_condition = vdt_const::FILL_VALUE;
   confidence = 0;
 
@@ -775,10 +996,30 @@ int rwx_road_segment_assessment::pavement_condition_assessment(vdt_probe_message
     }
   
   // Get VDT fields
+  //
+  // Get road-T
   float mobile_road_temp = seg_stat.surface_temp_mean;
   float env_road_temp = seg_stat.nss_surface_temp_mean;
   float road_temp = determine_temp(mobile_road_temp, env_road_temp);
   //printf("road_temp: %f\n", road_temp);
+
+  // Get air-T
+  float mobile_air_temp = get_air_temp(seg_stat);
+  float env_air_temp = get_env_air_temp(seg_stat);
+  float air_temp = determine_temp(mobile_air_temp, env_air_temp);
+
+  // Look at difference between air-T and road-T
+  // If absolue difference is > 25 degC set road-T to missing
+
+  if(road_temp != vdt_const::FILL_VALUE && air_temp != vdt_const::FILL_VALUE)
+    {
+      float T_diff = fabs(road_temp - air_temp);
+      if(T_diff > 25)
+	{
+	  //printf("The road_temp: %.2f, differs by more than 25 degC from the air_temp: %.2f, setting road_temp to missing\n", road_temp, air_temp);
+	  road_temp = vdt_const::FILL_VALUE;
+	}
+    }
   
   bool black_ice_possible  = 0;
   bool hydroplane_possible = 0;
@@ -807,6 +1048,11 @@ int rwx_road_segment_assessment::pavement_condition_assessment(vdt_probe_message
       if(precip_intensity == NO_PRECIP)
 	pavement_condition = DRY_PAVEMENT;
       else if(precip_type == RAIN)
+	{
+	  pavement_condition = WET_PAVEMENT;
+	  hydroplane_possible = 1;
+	}
+      else if(precip_type == HAIL)
 	{
 	  pavement_condition = WET_PAVEMENT;
 	  hydroplane_possible = 1;
@@ -844,6 +1090,11 @@ int rwx_road_segment_assessment::pavement_condition_assessment(vdt_probe_message
       //printf("pavement condition assessment: with precip-type\n");
       //printf("precip_type_input_conf: %f, precip_type_wgt: %f\n", precip_type_input_conf, precip_type_wgt);
       if(precip_type == RAIN)
+	{
+	  pavement_condition = DRY_WET_PAVEMENT;
+	  hydroplane_possible = 1;
+	}
+      else if(precip_type == HAIL)
 	{
 	  pavement_condition = DRY_WET_PAVEMENT;
 	  hydroplane_possible = 1;
@@ -928,7 +1179,7 @@ int rwx_road_segment_assessment::visibility_assessment(vdt_probe_message_qc_stat
   float dew_temp = determine_temp(mobile_dew_temp, env_dew_temp);
   
   float rh = calc_rh(air_temp, dew_temp);  
-  //printf("air_temp: %f, dew_temp: %f, rh: %f\n", air_temp, dew_temp, rh);
+  printf("  RWH LIB, visibility-assessment: air_temp: %f, dew_temp: %f, rh: %f\n", air_temp, dew_temp, rh);
   
   // Get addtional VDT variables
   float wind_speed = seg_stat.nss_wind_speed_mean;
@@ -953,20 +1204,19 @@ int rwx_road_segment_assessment::visibility_assessment(vdt_probe_message_qc_stat
   else
     percent_lights_on = vdt_const::FILL_VALUE;
 
-  
-  //printf("RWX_ROAD_SEGMENT_ASSESSMENT.CC visibility_assessment(): rh: %f, speed_ratio: %f, env_vis: %f, wx_visibility: %.0f, percent_lights_off: %f, percent_lights_on: %f, percent_lights_fog: %f, percent_lights_high_beam: %f\n", rh, speed_ratio, env_vis, percent_lights_off, percent_lights_on, percent_lights_fog, percent_lights_high_beam);
+  //printf("  RWH LIB: rh: %f, speed_ratio: %f, env_vis: %f, wx_visibility: %.0f, percent_lights_off: %f, percent_lights_on: %f, percent_lights_fog: %f, percent_lights_high_beam: %f\n", rh, speed_ratio, env_vis, percent_lights_off, percent_lights_on, percent_lights_fog, percent_lights_high_beam);
   
   // Calculate fog interest 
   float fog_interest = calc_fog_interest(rh, speed_ratio, env_vis, wx_visibility, percent_lights_fog, percent_lights_high_beam);
-  //printf("RWX_ROAD_SEGMENT_ASSESSMENT.CC visibility_assessment(): fog_interest: %f\n", fog_interest);
-
+  printf("  RWH LIB, visibility-assessment: fog_interest: %f\n", fog_interest);
+  
   // Calculate haze interest 
   float haze_interest = calc_haze_interest(rh, speed_ratio, env_vis, wx_visibility, percent_lights_fog, percent_lights_high_beam);
-  //printf("RWX_ROAD_SEGMENT_ASSESSMENT.CC visibility_assessment(): haze_interest: %f\n", haze_interest);
+  printf("  RWH LIB, visibility-assessment: haze_interest: %f\n", haze_interest);
 
   // Calculate normal vis interest 
-  float normal_interest = calc_normal_interest(rh, speed_ratio, env_vis, percent_lights_fog, percent_lights_high_beam);
-  //printf("RWX_ROAD_SEGMENT_ASSESSMENT.CC visibility_assessment(): normal_interest: %f\n", normal_interest);
+  float normal_interest = calc_normal_interest(rh, speed_ratio, env_vis, wx_visibility, percent_lights_fog, percent_lights_high_beam);
+  printf("  RWH LIB, visibility-assessment: normal_interest: %f\n", normal_interest);
   
   // Hardwire the "input" confidence for now
   // Do we want to calculate this in the calc_fog, calc_haze and calc_normal interest functions?
@@ -993,6 +1243,8 @@ int rwx_road_segment_assessment::visibility_assessment(vdt_probe_message_qc_stat
 	    visibility = VIS_NORMAL; // For LIGHT AND ROAD_SPLASH intensity for type SNOW
 	}
       else if(precip_type == MIX && (precip_intensity == HEAVY_PRECIP || precip_intensity == MODERATE_PRECIP))
+	visibility = VIS_LOW;
+      else if(precip_type == HAIL && (precip_intensity == HEAVY_PRECIP || precip_intensity == MODERATE_PRECIP))
 	visibility = VIS_LOW;
       else
 	visibility = VIS_NORMAL;
@@ -1060,6 +1312,10 @@ bool rwx_road_segment_assessment::pavement_slickness_assessment(vdt_probe_messag
 	    precip_intrst = -0.5;
 	  else // precip_intensity == HEAVY_PRECIP
 	    precip_intrst = 0;
+	}
+      else if(precip_type == HAIL)
+	{
+	  precip_intrst = 0.5;
 	}
       else if(precip_type == MIX)
 	{
@@ -1256,6 +1512,13 @@ float rwx_road_segment_assessment::get_pavement_condition_basic(float precip_typ
 	  else
 	    pavement_condition = WET_PAVEMENT;
 	}
+      else if(precip_type == HAIL)
+	{
+	  if(road_temp <= 0 && precip_intensity != ROAD_SPLASH)
+	    pavement_condition = ICE_COVERED;
+	  else
+	    pavement_condition = WET_PAVEMENT;
+	}
       else if(precip_type == MIX)
 	{
 	  if(road_temp <= 0 && precip_intensity != ROAD_SPLASH)
@@ -1343,6 +1606,25 @@ float rwx_road_segment_assessment::get_env_air_temp(vdt_probe_message_qc_statist
     env_air_temp = seg_stat.model_air_temp;
   
   return env_air_temp;
+}
+
+
+float rwx_road_segment_assessment::get_env_dew_temp(vdt_probe_message_qc_statistics& seg_stat)
+{
+  if (seg_stat.nss_dew_temp_mean == vdt_const::FILL_VALUE &&
+      seg_stat.model_dewpoint == vdt_const::FILL_VALUE)
+    {
+      return vdt_const::FILL_VALUE;
+    }
+  
+  // Use nss_dew_temp_mean if it is there, if not fall back on model_dewpoint
+  float env_dew_temp;
+  if(seg_stat.nss_dew_temp_mean != vdt_const::FILL_VALUE)
+    env_dew_temp = seg_stat.nss_dew_temp_mean;
+  else
+    env_dew_temp = seg_stat.model_dewpoint;
+  
+  return env_dew_temp;
 }
 
 
@@ -1920,7 +2202,7 @@ float rwx_road_segment_assessment::calc_haze_interest(float rh, float speed_rati
 }
 
 
-float rwx_road_segment_assessment::calc_normal_interest(float rh, float speed_ratio, float station_vis, float percent_fog_lights, float percent_high_beams)
+float rwx_road_segment_assessment::calc_normal_interest(float rh, float speed_ratio, float station_vis, float wx_visibility, float percent_fog_lights, float percent_high_beams)
 {
   // Determine interest components for normal visibility (no haze or fog)
   // If input to each interest component is missing
@@ -1958,10 +2240,29 @@ float rwx_road_segment_assessment::calc_normal_interest(float rh, float speed_ra
   else
     vis_intrst = 0;
   
-  // Determine observed wx interest from station-report
-  // This is a place-holder for now, since station-report has not yet been added to VDT
-  float obs_wx_intrst = 0;
-
+  // Determine observed wx interest from METAR present-wx visibility report
+  float obs_wx_intrst;
+  if(wx_visibility != vdt_const::FILL_VALUE)
+    {
+      if(wx_visibility == VIS_HAZE || wx_visibility == VIS_FOG)
+	{
+	  //printf("In calc_normal_interest(): Wx_visibility indicates VIS_HAZE or VIS_FOG, changing obs_wx_intrst to -1\n");
+	  obs_wx_intrst = -1;
+	}
+      else if(wx_visibility == VIS_NORMAL)
+	{
+	  //printf("In calc_normal_interest(): Wx_visibility is VIS_NORMAL, changing obs_wx_intrst to 1\n");
+	  obs_wx_intrst = 1;
+	}
+      else
+	{
+	  //printf("In calc_normal_interest(): Wx_visibility indicates NOT HAZE and NOT FOG changing obs_wx_intrst to 1\n");
+	  obs_wx_intrst = 1;
+	}
+    }
+  else
+    obs_wx_intrst = 0;
+  
   // Determine fog lights interest
   float fog_lights_intrst;
   if(percent_fog_lights != vdt_const::FILL_VALUE)

@@ -508,6 +508,24 @@ public:
   }
 
   /**
+   * @brief  gets road state 1 value
+   * @return road state value
+   */
+  inline int get_road_state_1() const
+  {
+    return road_state_1; 
+  }
+
+  /**
+   * @brief  sets road state 1 
+   * @param[in] value  road state 1 value
+   */
+  inline void set_road_state_1(int value)
+  {
+    road_state_1 = value;
+  }
+
+  /**
    * @brief  sets integer fill value
    * @param[in] v  integer value
    * @param[in] fill  fill value
@@ -568,6 +586,9 @@ protected:
 
   /** @brief weather pheonmena (origin Metar)*/
   std::string wx;
+
+  /** @brief Road State - sensor 1 data (origin MADIS)*/
+  int road_state_1;
 };
 
 

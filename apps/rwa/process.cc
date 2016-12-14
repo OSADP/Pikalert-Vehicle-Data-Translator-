@@ -69,6 +69,7 @@ int process::run()
 
   Logg->write_time_info("creating map mapping road segment numbers to road segment info %s\n", cfg_reader.road_segment_file.c_str());
   std::unordered_map<int, road_segment_info> road_segment_map;
+
   int ret = create_road_segment_map(cfg_reader.road_segment_na, road_segment_collection, road_segment_map, error);
 
   Logg->write_time_info("reading rwh input file %s\n", args.rwh_input_file.c_str());

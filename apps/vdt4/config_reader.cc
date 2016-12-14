@@ -379,6 +379,19 @@ config_reader::config_reader(const string &input_file_path_arg) : input_file_pat
       rtma_lo1 = cfg.lookup("VDT.rtma_lo1");      
 
       rtma_proj = new p4w::Proj4Wrap(rtma_proj4_projection_string, p4w::Proj4Wrap::LON_LAT_TYPE, rtma_lo1, rtma_la1, rtma_dx, rtma_dy);
+
+      // Alaska rtma projection information
+      ak_rtma_proj_info.latin = cfg.lookup("VDT.ak_rtma_latin");
+      ak_rtma_proj_info.lov = cfg.lookup("VDT.ak_rtma_lov");
+      ak_rtma_proj_info.lo1 = cfg.lookup("VDT.ak_rtma_lo1");
+      ak_rtma_proj_info.la1 = cfg.lookup("VDT.ak_rtma_la1");
+      ak_rtma_proj_info.lo2 = cfg.lookup("VDT.ak_rtma_lo2");
+      ak_rtma_proj_info.la2 = cfg.lookup("VDT.ak_rtma_la2");
+      ak_rtma_proj_info.nx = cfg.lookup("VDT.ak_rtma_nx");
+      ak_rtma_proj_info.ny = cfg.lookup("VDT.ak_rtma_ny");
+      ak_rtma_proj_info.dx = cfg.lookup("VDT.ak_rtma_dx");
+      ak_rtma_proj_info.dy = cfg.lookup("VDT.ak_rtma_dy");
+      ak_rtma_proj_info.lad = cfg.lookup("VDT.ak_rtma_lad");
     }
   catch (ParseException ce)
     {

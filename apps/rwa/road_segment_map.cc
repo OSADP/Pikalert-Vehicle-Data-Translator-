@@ -41,6 +41,7 @@ int create_road_segment_map(int road_segment_na, const rwx_vector_collection_nc 
   const vector<int> *seg_id_ptr;
   const vector<int> *point_type_ptr;
   const vector<char> *aux_id_ptr;
+  const vector<char> *seg_name_ptr;
 
   int ret = road_segment_collection.get_vector("mid_point_latitude", &mid_point_latitude_ptr);
   if (ret != 0)
@@ -71,6 +72,14 @@ int create_road_segment_map(int road_segment_na, const rwx_vector_collection_nc 
       return ret;
     }
 
+  ret = road_segment_collection.get_vector("seg_name", &seg_name_ptr);
+  if (ret != 0)
+    {
+      error = string("failed getting var: ") + "seg_name";
+      return ret;
+    }
+
+
   ret = road_segment_collection.get_vector("point_type", &point_type_ptr);
   if (ret != 0)
     {
@@ -78,10 +87,12 @@ int create_road_segment_map(int road_segment_na, const rwx_vector_collection_nc 
       return ret;
     }
 
+
   const vector<double> &mid_point_latitude = *mid_point_latitude_ptr;
   const vector<double> &mid_point_longitude = *mid_point_longitude_ptr;
   const vector<int> &seg_id = *seg_id_ptr;
   const vector<char> &aux_id = *aux_id_ptr;
+  const vector<char> &seg_name = *seg_name_ptr;
   const vector<int> &point_type = *point_type_ptr;
 
   const std::unordered_map<string, size_t> & dim_map = road_segment_collection.get_dim_map();
@@ -95,6 +106,18 @@ int create_road_segment_map(int road_segment_na, const rwx_vector_collection_nc 
     }
 
   size_t aux_id_len = itr->second;
+
+  auto seg_itr = dim_map.find("seg_name_len");
+
+  if (seg_itr == dim_map.end())
+    {
+      error = string("failed finding var seg_name_len in road_segment_collection dimension map");
+      return -1;
+    }
+
+
+  size_t seg_name_len = seg_itr->second;
+  
   for (size_t i=0; i<seg_id.size(); i++)
     {
       if (seg_id[i] == road_segment_na)
@@ -119,6 +142,16 @@ int create_road_segment_map(int road_segment_na, const rwx_vector_collection_nc 
 	    }
 
 	  segment_info.aux_id = aux_id_string;
+
+	  // trim seg name string
+	  string seg_name_string = string(&seg_name[seg_name_len * i], seg_name_len);
+	  size_t seg_name_end = seg_name_string.find('\0');
+	  if (seg_name_end != string::npos)
+	    {
+	      seg_name_string = seg_name_string.substr(0, seg_name_end);
+	    }
+
+	  segment_info.seg_name = seg_name_string;
 	  road_segment_map[seg_id[i]] = segment_info;
 	}
     }

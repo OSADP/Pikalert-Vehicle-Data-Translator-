@@ -1,3 +1,4 @@
+
 //==============================================================================
 //
 //   (c) Copyright, 2015 University Corporation for Atmospheric Research (UCAR).
@@ -22,7 +23,7 @@
 #include <math.h>
 #include "vdt4/vdt_nearest_nbr.hh"
 
-int Road_segment = {
+int Road_segment[] = {
   1,   // seg_id(0)
   1,   // seg_id(1)
   1,   // seg_id(2)

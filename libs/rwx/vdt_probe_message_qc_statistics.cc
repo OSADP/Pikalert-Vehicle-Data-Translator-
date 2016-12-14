@@ -35,8 +35,11 @@ void vdt_probe_message_qc_statistics::init()
   radar_cref = vdt_const::FILL_VALUE;
   radar_precip_flag = vdt_const::FILL_VALUE;
   radar_precip_type = vdt_const::FILL_VALUE;
+  radar_dual_pol_hc = vdt_const::FILL_VALUE;
+  radar_dual_pol_hr = vdt_const::FILL_VALUE;
+  road_state = vdt_const::FILL_VALUE;
   cloud_mask = vdt_const::SHORT_FILL_VALUE;
-
+  
   nss_air_temp_mean = vdt_const::FILL_VALUE;
   nss_surface_temp_mean = vdt_const::FILL_VALUE;
   nss_bar_press_mean = vdt_const::FILL_VALUE;

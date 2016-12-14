@@ -20,6 +20,7 @@ import StringIO
 import base64
 import string
 import sites
+import log_msg
 
 font_file = "/usr/share/fonts/truetype/freefont/FreeSerif.ttf"
 
@@ -42,6 +43,29 @@ WARN_CODE = "warning"
 ALERT_CODE = "alert"
 CLEAR_CODE = "clear"
 MISSING_CODE = "missing"
+
+road_state_1_map = {
+    0: "No report",
+    1: "Dry",
+    2: "Moist",
+    3: "Moist and chemically treated",
+    4: "Wet",
+    5: "Wet and chemically treated",
+    6: "Ice",
+    7: "Frost",
+    8: "Snow",
+    9: "Snow/Ice Watch",
+    10: "Snow/Ice Warning",
+    11: "Wet Above Freezing",
+    12: "Wet Below Freezing",
+    13: "Absorption",
+    14: "Absorption at Dewpoint",
+    15: "Dew",
+    16: "Black Ice Warning",
+    17: "Other",
+    18: "Slush",
+    MISSING_VALUE : MISSING_CODE
+    }
 
 def max_code(code1, code2):
     """Find the maximum of the two alert codes"""
@@ -95,7 +119,7 @@ def get_fpath(ptime, in_dir, basename, suffix):
 
 class Alerts:
 
-    def __init__(self, fpath, cf, ptime):
+    def __init__(self, fpath, cf, ptime, logg):
         self.nc = None
         self.nc_sites = []
         self.num_days = 0
@@ -113,8 +137,8 @@ class Alerts:
 
         self.obs_sites = sites.get_wx_obs_sites(cf)
         self.rwis_sites = sites.get_rwis_sites(cf)
-        self.obs_alerts = ObsAlerts(cf, ptime)
-        self.rwis_alerts = RwisAlerts(cf, ptime)
+        self.obs_alerts = ObsAlerts(cf, ptime, logg)
+        self.rwis_alerts = RwisAlerts(cf, ptime, logg)
 
     def get_alert(self, i, d, h):
         return MISSING
@@ -266,7 +290,7 @@ class TmtAlerts(Alerts):
     
 class ObsAlerts(Alerts):
 
-    def __init__(self, cf, ptime):
+    def __init__(self, cf, ptime, logg):
         self.cf = cf
         self.nc_var_names = self.get_nc_var_names()
         self.nc_files = []
@@ -289,6 +313,8 @@ class ObsAlerts(Alerts):
                 fnames.append(fname)
             btime -= 60
         for fname in fnames:
+            #print "obs fname: %s" % fname
+            logg.write_time("Reading obs file: %s\n" % fname)            
             nc = Dataset(fname, "r")
             dimension = nc.dimensions.get("recNum", None)
             if dimension != None:
@@ -376,9 +402,9 @@ class ObsAlerts(Alerts):
 
 class RwisAlerts(ObsAlerts):
 
-    def __init__(self, cf, ptime):
+    def __init__(self, cf, ptime, logg):
         """Initialize rwis alerts"""
-        ObsAlerts.__init__(self, cf, ptime)
+        ObsAlerts.__init__(self, cf, ptime, logg)
         self.cf = cf
         self.site_idxs = {}
         for nc in self.nc_files:
@@ -405,9 +431,9 @@ class RwisAlerts(ObsAlerts):
         self.site_vars = {}
         all_vars = set()
         for l in f.readlines():
-            (site_num, site_id, sub_surface_2, sub_surface_1, road_temp_2, road_temp_1, wind_dir, wind_spd, rel_hum, temp) = l.strip().split(';')
+            (site_num, site_id, road_state_1, sub_surface_2, sub_surface_1, road_temp_2, road_temp_1, wind_dir, wind_spd, rel_hum, temp, temp_qcr) = l.strip().split(';')
             site_num = int(site_num)
-            self.site_vars[site_num] = (site_num, site_id, sub_surface_2, sub_surface_1, road_temp_2, road_temp_1, wind_dir, wind_spd, rel_hum, temp)
+            self.site_vars[site_num] = (site_num, site_id, road_state_1, sub_surface_2, sub_surface_1, road_temp_2, road_temp_1, wind_dir, wind_spd, rel_hum, temp, temp_qcr)
             all_vars.add(sub_surface_1)
             all_vars.add(sub_surface_2)
             all_vars.add(road_temp_2)
@@ -416,6 +442,8 @@ class RwisAlerts(ObsAlerts):
             all_vars.add(wind_spd)
             all_vars.add(rel_hum)
             all_vars.add(temp)
+            all_vars.add(road_state_1)
+            all_vars.add(temp_qcr)
         f.close()
         all_vars = list(all_vars)
         all_vars.append("observationTime")
@@ -427,7 +455,7 @@ class RwisAlerts(ObsAlerts):
         if not site in self.site_vars:
             return {}
         
-        (site_num,site_id,sub_surface_2_var_name,sub_surface_1_var_name,road_temp_2_var_name,road_temp_1_var_name,wind_dir_var_name,wind_spd_var_name,rel_hum_var_name,temp_var_name) = self.site_vars[site]
+        (site_num,site_id,road_state_1_var_name, sub_surface_2_var_name,sub_surface_1_var_name,road_temp_2_var_name,road_temp_1_var_name,wind_dir_var_name,wind_spd_var_name,rel_hum_var_name,temp_var_name,temp_qcr_var_name) = self.site_vars[site]
         for nc in self.nc_files:
             nc_data = self.nc_data[nc]
             obs_times = nc_data["observationTime"]
@@ -437,6 +465,8 @@ class RwisAlerts(ObsAlerts):
             stn_i = (numpy.array(stn_i),)
             if len(stn_i[0]) == 0:
                 continue
+
+            road_state_1_var = nc.variables[road_state_1_var_name]
             sub_surface_2_var = nc.variables[sub_surface_2_var_name]
             sub_surface_1_var = nc.variables[sub_surface_1_var_name]
             road_temp_2_var = nc.variables[road_temp_2_var_name]
@@ -445,7 +475,9 @@ class RwisAlerts(ObsAlerts):
             wind_spd_var = nc.variables[wind_spd_var_name]
             rel_hum_var = nc.variables[rel_hum_var_name]
             temp_var = nc.variables[temp_var_name]
+            temp_qcr_var = nc.variables[temp_qcr_var_name]
             obs_times = obs_times[stn_i]
+            road_state_1_data = nc_data[road_state_1_var_name][stn_i]
             sub_surface_2_data = nc_data[sub_surface_2_var_name][stn_i]
             sub_surface_1_data = nc_data[sub_surface_1_var_name][stn_i]
             road_temp_2_data = nc_data[road_temp_2_var_name][stn_i]
@@ -454,10 +486,12 @@ class RwisAlerts(ObsAlerts):
             wind_spd_data = nc_data[wind_spd_var_name][stn_i]
             rel_hum_data = nc_data[rel_hum_var_name][stn_i]
             temp_data = nc_data[temp_var_name][stn_i]
+            temp_qcr_data = nc_data[temp_qcr_var_name][stn_i]            
             time_i = min(range(len(obs_times)), key=lambda i: abs(obs_times[i] - self.ptime))
             local_obs_datetime = datetime.datetime.fromtimestamp(obs_times[time_i], tz=self.cf.timezone) # only plot 3 days
             local_obs_time_string = local_obs_datetime.strftime("%Y-%m-%d %H:%M:%S")
             obs_time = time.strftime("%Y-%m-%d %H:%M:%S", time.gmtime(obs_times[time_i]))
+            road_state_1 = road_state_1_data[time_i]
             sub_surface_2 = sub_surface_2_data[time_i]
             sub_surface_1 = sub_surface_1_data[time_i]
             road_temp_2 = road_temp_2_data[time_i]
@@ -466,6 +500,7 @@ class RwisAlerts(ObsAlerts):
             wind_spd = wind_spd_data[time_i]
             rel_hum = rel_hum_data[time_i]
             temp = temp_data[time_i]
+            temp_qcr = temp_qcr_data[time_i]
 
             # convert to English units
             temp_units=temp_var.units
@@ -493,7 +528,31 @@ class RwisAlerts(ObsAlerts):
                wind_spd=2.23694*wind_spd
                wind_spd_units='mph'
 
+            # ADDING qc for the road temperatures
+            # If we have air temp and it passed the qcr test, take it as truth and compare the road temps to it
+            if temp_qcr == 0 and temp != MISSING_VALUE:
+                # if the road temp is more than 20 belore or 50 above the air temp, set it to missing
+                if (road_temp_1 < temp) and ((temp - road_temp_1) > 20):
+                    road_temp_1 = MISSING_VALUE
+                elif (road_temp_1 > temp) and ((road_temp_1 - temp) > 50):
+                    road_temp_1 = MISSING_VALUE
+                if (road_temp_2 < temp) and ((temp - road_temp_2) > 20):
+                    road_temp_2 = MISSING_VALUE
+                elif (road_temp_2 > temp) and ((road_temp_2 - temp) > 50):
+                    road_temp_2 = MISSING_VALUE
+            # If temp failed a qc check or it is missing
+            else:
+                temp = MISSING_VALUE
+                # Do a global min/max bound check on road temp
+                if (road_temp_1 > 140) or (road_temp_1 < -60):
+                    road_temp_1 = MISSING_VALUE
+                if (road_temp_2 > 140) or (road_temp_2 < -60):
+                    road_temp_2 = MISSING_VALUE
+                
+            
+
             return {
+                "road_state_1": road_state_1_map[road_state_1],
                 "road_temp_val":road_temp_1,
                 "temp_val":temp,
                 "sub_surface_2":"missing" if MISSING_VALUE == sub_surface_2 else "%.2f %s" % (sub_surface_2, sub_surface_2_units),
@@ -504,6 +563,7 @@ class RwisAlerts(ObsAlerts):
                 "wind_spd":"missing" if MISSING_VALUE == wind_spd else "%.2f %s" % (wind_spd, wind_spd_units),
                 "rel_hum":"missing" if MISSING_VALUE == rel_hum else "%.2f %s" % (rel_hum, rel_hum_var.units),
                 "temp":"missing" if MISSING_VALUE == temp else "%.2f %s" % (temp, temp_units),
+                "temp_qcr":temp_qcr,
                 "obstime":local_obs_time_string
                 }
         return {}
@@ -529,10 +589,13 @@ class RwisAlerts(ObsAlerts):
         return MISSING
 
 if "__main__" == __name__:
-    ptime = 1354160700
+    ptime = 1467734400
     time_tup = time.gmtime(ptime)
     print time.strftime("%Y%m%d.%H%M", time_tup)
-    import backend_sys_path
-    cf = backend_sys_path.State_dictionary["minnesota"]
-    r = RwisAlerts(cf, ptime)
+    import backend_sys_path_20160705 as backend_sys_path
+    cf = backend_sys_path.State_dictionary["alaska"]
+    logg = log_msg.LogMessage("")
+
+    r = RwisAlerts(cf, ptime, logg)
+    print r.get_obs(70275013)
     print get_fpath(time.time() - 7200, cf.tmt_dir, cf.tmt_base_name, "nc")

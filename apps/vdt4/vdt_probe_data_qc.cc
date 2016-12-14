@@ -35,6 +35,8 @@ using boost::str;
 extern Log *Logg;
 extern int Debug_level;
 
+const std::string EXCLUDE_PREFIX = "exclude";
+
 vdt_probe_data_qc::vdt_probe_data_qc(const config_reader &cfg_reader_arg, const vdt_climatology_file_reader *climatology_data_ptr, vdt_probe_message_datasets *probe_message_datasets) : cfg_reader(cfg_reader_arg), climate_data(climatology_data_ptr), datasets(probe_message_datasets)
 {
 }
@@ -177,7 +179,49 @@ void vdt_probe_data_qc::build_range_tests(const std::string& test_key, vector<QC
 	}
 	else if(test_key == var_test::SENSOR_RANGE_TEST_KEY)
 	{
-	  tests.push_back(boost::apply_visitor(range_check_visitor(test.first), min, max));
+	  std::vector<PIKA_TYPE> exclude_vals;
+	  for(const auto& kv : paramap)
+	  {
+	    const std::string& key = kv.first;
+	    if(key.substr(0,EXCLUDE_PREFIX.size()) == EXCLUDE_PREFIX)
+	    {
+	      const PIKA_TYPE& exclude = kv.second;
+	      exclude_vals.push_back(exclude);
+	    }
+ 	  }
+
+	  if(!exclude_vals.empty())
+	  {
+	    switch(test.second.type)
+	    {
+	      case INT_TYPE:
+	      {
+		std::vector<int> exclude_vals_int;
+		for(const PIKA_TYPE& exc: exclude_vals)
+		{
+		  exclude_vals_int.push_back(boost::get<int>(exc));
+		}
+		tests.push_back(QC_CHECK_PTR(new qc_range_exclude_check<int>(test.first, boost::get<int>(min), boost::get<int>(max), exclude_vals_int, 0)));
+		break;
+	      }
+	      case DOUBLE_TYPE:
+	      {
+	        std::vector<double> exclude_vals_double;
+		for(const PIKA_TYPE& exc: exclude_vals)
+		{
+		   exclude_vals_double.push_back(boost::get<double>(exc));
+		}
+		tests.push_back(QC_CHECK_PTR(new qc_range_exclude_check<double>(test.first, boost::get<double>(min), boost::get<double>(max), exclude_vals_double, 0.001)));
+		break;
+	      }
+	      default:
+		throw VDT_EXCEPTION(test.second.name + " must be an int or float to run exclude range tests on it.");
+	    }
+	  }
+	  else
+	  {
+	    tests.push_back(boost::apply_visitor(range_check_visitor(test.first), min, max));
+	  }
 	}
 	else
 	{

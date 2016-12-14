@@ -152,6 +152,7 @@ public:
     return static_cast<float>(getattr<double>("radar_cref"));
   }
 
+  
   /**
    * @brief get precip flag from radar grid value
    * @return precip flag from radar grid value
@@ -170,6 +171,26 @@ public:
     return static_cast<short>(getattr<int>("radar_precip_type"));
   }
 
+  /**
+   * @brief get dual_pol hydrometeor classification from radar grid value
+   * @return reflectivity from radar grid value
+   */
+  inline float get_radar_dual_pol_hc() const
+  {
+    return static_cast<float>(getattr<double>("radar_dual_pol_hc"));
+  }
+
+
+  /**
+   * @brief get dual_pol reflectivity from radar grid value
+   * @return reflectivity from radar grid value
+   */
+  inline float get_radar_dual_pol_hr() const
+  {
+    return static_cast<float>(getattr<double>("radar_dual_pol_hr"));
+  }
+  
+  
   /**
    * @brief get cloud mask from satellite grid value
    * @return cloud mask from satellite grid value
@@ -1025,6 +1046,25 @@ public:
   {
     setattr("radar_precip_type", static_cast<int>(value));
   }
+
+  /**
+   * @brief set dual pol hydrometeor classification from radar gridvalue
+   * @param[in] value reflectivity from radar grid value
+   */
+  inline void set_radar_dual_pol_hc(float value)
+  {
+    setattr("radar_dual_pol_hc", static_cast<double>(value));
+  }
+
+  /**
+   * @brief set dual pol reflectivity from radar gridvalue
+   * @param[in] value reflectivity from radar grid value
+   */
+  inline void set_radar_dual_pol_hr(float value)
+  {
+    setattr("radar_dual_pol_hr", static_cast<double>(value));
+  }
+  
 
   /**
    * @brief set cloud mask from satellite grid value

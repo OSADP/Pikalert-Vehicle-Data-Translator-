@@ -1,0 +1,283 @@
+// The following two lines import the default Sencha Touch theme. If you are building
+// a new theme, remove them and the add your own CSS on top of the base CSS (which
+// is already included in your app.json file).
+@import "compass/css3/shared";
+@import "compass/css3/box";
+$experimental-support-for-pie: false;
+@import 'sencha-touch/default';
+@import 'sencha-touch/default/all';
+
+// Custom code goes here..
+.site_list_time {
+  float: left;
+  font-size: 1.2em;
+  // padding-bottom: 25px;
+  // clear: both;
+}
+
+.site_list_alert_img {
+  float: right;
+  position: absolute;
+  left: 250px;
+}
+
+.site_list_alert_explanation {
+  float: right;
+  font-size: 0.7em;
+  position: absolute;
+  left: 300px;
+}
+
+.district_name {
+  // background-color: #00e;
+  // border: 1px solid #aaaaaa;
+  float: left;
+  font-size: 1.6em;
+  margin-left: 0px;
+  margin-right: 15px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.district_zoom {
+  padding-top: 5px;
+}
+
+.district_summary {
+  padding-bottom: 25px;
+  clear: both;
+}
+
+.data_time {
+  font-size: 0.7em;
+  text-align: right;
+}
+
+.map_times {
+  font-size: 0.9em;
+  text-align: right;
+}
+
+.site_node {
+  clear: both;
+}
+
+.site_description {
+  font-size: 1.0em;
+  margin-left: 25px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.site_alert {
+  font-size: 0.8em;
+  margin-left: 25px;
+  margin-top: 0px;
+  margin-bottom: 15px;
+}
+
+.vehicle_node {
+  clear: both;
+}
+
+.vehicle_description {
+  font-size: 1.0em;
+  margin-left: 25px;
+  margin-top: 0px;
+  margin-bottom: 15px;
+}
+
+.vehicle_report {
+  font-size: 0.8em;
+  margin-left: 50px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.traveltime_column_header {
+  // background-color: #50b7ff;
+  height:100px;
+  width:100px;
+  float:left;
+  transform: rotate(270deg) translateX(-140px);
+  transform-origin: left top 0;
+  white-space: nowrap;
+  // margin-bottom:1px;
+}
+
+.traveltime_row_header {
+  // background-color: #50b7ff;
+  width:200px; 
+  height:30px;
+  float:left;
+  padding-left: 5px;
+  padding-top: 5px;
+  // margin-bottom:1px;
+}
+
+.traveltime_first_cell {
+  width:100px;
+  height:30px;
+  float:left;
+  border-left: 1px solid #dedede;
+  border-right: 1px solid #dedede;
+  text-align: center;
+  padding-top: 5px;
+  // margin-bottom:1px;
+}
+
+.traveltime_cell {
+  width:100px;
+  height:30px;
+  float:left;
+  border-right: 1px solid #dedede;
+  text-align: center;
+  padding-top: 5px;
+  // margin-bottom:1px;
+}
+
+.traveltime_separator {
+  padding-left: 5px;
+  padding-right: 5px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+  border:0;
+  border-bottom: 1px solid #dedede;
+}
+
+
+img.alert_missing {
+  width: 14px;
+  height: 14px;
+  background: url(../icons/Alert_Images.png) 0 0;
+}
+
+img.alert_treatment_alert_code {
+  width: 14px;
+  height: 14px;
+  background: url(../icons/Alert_Images.png) 0 0;
+}
+
+img.alert_clear {
+  width: 14px;
+  height: 14px;
+  background: url(../icons/Alert_Images.png) -14px 0;
+}
+
+img.alert_warning {
+  width: 14px;
+  height: 14px;
+  background: url(../icons/Alert_Images.png) -28px 0;
+}
+
+img.alert_alert {
+  width: 14px;
+  height: 14px;
+  background: url(../icons/Alert_Images.png) -42px 0;
+}
+
+.my-openlayers-button {
+    background: rgba(0, 60, 136, 0.5);
+    // These are to match the other blue buttons in the display - not wanted here.
+    // background-color: rgba(0, 60, 136, 0.5);
+    // background-image: -webkit-linear-gradient(top, #0398ff,#007ad0 3%,#005c9d);
+    // border: 1px solid #002f50;
+    // border-top-color: #003e6a;
+}
+
+// Radar time label
+.radar-time-label {
+    font-weight: bold;
+    color: rgba(23, 120, 190, 1.0);
+    // margin-left: auto;
+    // margin-right: auto;
+    font-family: "Helvetica Neue",HelveticaNeue,"Helvetica-Neue",Helvetica,"BBAlpha Sans",sans-serif;
+    font-size: .9em;
+}
+.animation-play-icon{
+    background-image:url('../images/PlayIcon.png')!important;
+    width:21!important; 
+    height:21!important; 
+    background-repeat:no-repeat; 
+    background-position:center center;}
+
+.animation-play-icon-disabled{
+    background-image:url('../images/PlayIconDisabled.png')!important;
+    width:21!important; 
+    height:21!important; 
+    background-repeat:no-repeat; 
+    background-position:center center;}
+
+.animation-stop-icon{
+    background-image:url('../images/StopIcon.png')!important;
+    width:21!important; 
+    height:21!important; 
+    background-repeat:no-repeat; 
+    background-position:center center;}
+
+.animation-stop-icon-disabled{
+    background-image:url('../images/StopIconDisabled.png')!important;
+    width:21!important; 
+    height:21!important; 
+    background-repeat:no-repeat; 
+    background-position:center center;}
+
+.animation-pause-icon{
+    background-image:url('../images/PauseIcon.png')!important;
+    width:21!important; 
+    height:21!important; 
+    background-repeat:no-repeat; 
+    background-position:center center;}
+
+.animation-pause-icon-disabled{
+    background-image:url('../images/PauseIconDisabled.png')!important;
+    width:21!important; 
+    height:21!important; 
+    background-repeat:no-repeat; 
+    background-position:center center;}
+
+.animation-step-forward-icon-disabled{
+    background-image:url('../images/StepForwardIconDisabled.png')!important;
+    width:21!important; 
+    height:21!important; 
+    background-repeat:no-repeat; 
+    background-position:center center;}
+
+.animation-step-forward-icon{
+    background-image:url('../images/StepForwardIcon.png')!important;
+    width:21!important; 
+    height:21!important; 
+    background-repeat:no-repeat; 
+    background-position:center center;}
+
+.animation-step-backward-icon-disabled{
+    background-image:url('../images/StepBackwardIconDisabled.png')!important;
+    width:21!important; 
+    height:21!important; 
+    background-repeat:no-repeat; 
+    background-position:center center;}
+
+.animation-step-backward-icon{
+    background-image:url('../images/StepBackwardIcon.png')!important;
+    width:21!important; 
+    height:21!important; 
+    background-repeat:no-repeat; 
+    background-position:center center;}
+
+.animation-loading-icon{
+    background-image:url('../images/LoadingIcon.png')!important;
+    width:60!important; 
+    height:30!important; 
+    background-repeat:no-repeat; 
+    background-position:center center;}
+
+.animation-loading-label {
+    font-weight: normal;
+    color: rgba(113, 149, 196, 1.0);
+    // margin-left: auto;
+    // margin-right: auto;
+    font-family: "Helvetica Neue",HelveticaNeue,"Helvetica-Neue",Helvetica,"BBAlpha Sans",sans-serif;
+    font-size: .7em;}
+
+// Examples of using the icon mixin:
+// @include icon('user');

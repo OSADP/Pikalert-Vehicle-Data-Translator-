@@ -54,6 +54,9 @@ public:
   /** @brief vehicle id name */
   string vehicle_id_name;
 
+  /** @brief vehicle id ignore prefix */
+  string vehicle_id_ignore_prefix;
+  
   /** @brief time field name */
   string time_field_name;
 

@@ -80,6 +80,10 @@ config_reader::config_reader(const string &input_file_path_arg) : input_file_pat
       const char *vehicle_id_char_string = cfg.lookup("RWX.input.vehicle_id_name");
       vehicle_id_name = vehicle_id_char_string;
 
+      // get vehicle id ignore prefix 
+      const char *vehicle_id_ignore_prefix_char_string = cfg.lookup("RWX.input.vehicle_id_ignore_prefix");
+      vehicle_id_ignore_prefix = vehicle_id_ignore_prefix_char_string;
+
       // get input output field name map
       Setting &input_output_field_setting = cfg.lookup("RWX.input.input_output_field_tuples");
       for (int i=0; i<input_output_field_setting.getLength(); i++)

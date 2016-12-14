@@ -34,7 +34,7 @@ class rwx_road_segment_assessment
 
 public:
 
-  // Threshold fields
+  // Input Forecast precip-type definitions
 
   /** @brief forecast precipitation type - no precip */
   static const int FCST_NONE;
@@ -47,122 +47,200 @@ public:
   
   /** @brief forecast precipitation type - ice */
   static const int FCST_ICE;
+
   
-  /** @brief forecast light precipitation intensity threshold for winter */
-  //static const int FCST_LIGHT_PRECIP_WINTER;
+  // Input Dual-Pol Radar Hydrometeor-Class definitions
   
-  /** @brief forecast moderate precipitation intensity threshold for winter */
-  //static const int FCST_MODERATE_PRECIP_WINTER;
+  /** @brief dual-pol hid biological scatter */
+  static const int HID_BIO_SCATTER;
+
+  /** @brief dual-pol hid ground clutter */
+  static const int HID_GROUND_CLUTTER;
+
+  /** @brief dual-pol hid ice crystals */
+  static const int HID_ICE_CRYSTALS;
+
+  /** @brief dual-pol hid dry snow */
+  static const int HID_DRY_SNOW;
+
+  /** @brief dual-pol hid wet snow */
+  static const int HID_WET_SNOW;
+
+  /** @brief dual-pol hid light/moderate rain */
+  static const int HID_LGT_MDT_RAIN;
+
+  /** @brief dual-pol hid heavy rain */
+  static const int HID_HVY_RAIN;
+
+  /** @brief dual-pol hid big rain drops */
+  static const int HID_BIG_DROPS;
   
-  /** @brief forecast light precipitation intensity threshold for summer */
-  //static const int FCST_LIGHT_PRECIP_SUMMER;
+  /** @brief dual-pol hid graupel */
+  static const int HID_GRAUPEL;
+
+  /** @brief dual-pol hid hail */
+  static const int HID_HAIL;
+
+  /** @brief dual-pol hid unknown */
+  static const int HID_UNKNOWN;
+
   
-  /** @brief forecast moderate precipitation intensity threshold for summer */
-  //static const int FCST_MODERATE_PRECIP_SUMMER;
+  // Input RWIS Road-State definitions
   
-  /** @brief radar reflectivity light precipitation threshold for unknown precip-type */
-  //static const int DEF_RADAR_LIGHT_PRECIP;
+  /** @brief rwis road-state no report */
+  static const int RS_NO_REPORT;
+
+  /** @brief rwis road-state dry */
+  static const int RS_DRY;
+
+  /** @brief rwis road-state moist */
+  static const int RS_MOIST;
+
+  /** @brief rwis road-state moist chemically treated */
+  static const int RS_MOIST_CHEM_TMT;
+
+  /** @brief rwis road-state wet */
+  static const int RS_WET;
+
+  /** @brief rwis road-state wet chemically treated */
+  static const int RS_WET_CHEM_TMT;
+
+  /** @brief rwis road-state ice */
+  static const int RS_ICE;
+
+  /** @brief rwis road-state frost */
+  static const int RS_FROST;
+
+  /** @brief rwis road-state snow */
+  static const int RS_SNOW;
+
+  /** @brief rwis road-state snow ice watch */
+  static const int RS_SNOW_ICE_WACH;
+
+  /** @brief rwis road-state snow ice warning */
+  static const int RS_SNOW_ICE_WARN;
+
+  /** @brief rwis wet above freezing */
+  static const int RS_WET_ABOVE_FRZ;
+
+  /** @brief rwis road-state wet below freezing */
+  static const int RS_WET_BELOW_FRZ;
+
+  /** @brief rwis road-state absorption */
+  static const int RS_ABSORPTION;
+
+  /** @brief rwis road-state absorption at dewpoint */
+  static const int RS_ABSORPTION_DEWPT;
+
+  /** @brief rwis road-state dew */
+  static const int RS_DEW;
+
+  /** @brief rwis road-state black ice */
+  static const int RS_BLACK_ICE;
+
+  /** @brief rwis road-state other */
+  static const int RS_OTHER;
+
+  /** @brief rwis road-state slush */
+  static const int RS_SLUSH;
+
   
-  /** @brief radar reflectivity moderate precipitation threshold for unknown precip-type */
-  //static const int DEF_RADAR_MODERATE_PRECIP;
-  
-  /** @brief radar reflectivity light precipitation threshold for winter precip-types */
-  //static const int WINTER_RADAR_LIGHT_PRECIP;
-  
-  /** @brief radar reflectivity moderate precipitation threshold for winter precip-types */
-  //static const int WINTER_RADAR_MODERATE_PRECIP;
-  
-  /** @brief radar reflectivity light precipitation threshold for summer precip-types */
-  //static const int SUMMER_RADAR_LIGHT_PRECIP;
-  
-  /** @brief radar reflectivity moderate precipitation threshold for summer precip-types */
-  //static const int SUMMER_RADAR_MODERATE_PRECIP;
-  
-  /** @brief wind-speed threshold for determing blowing snow */
+  // Input Wind-speed threshold for blowing snow
   static const int BLOWING_SNOW_WIND_SPEED;
-  
-  // Precip-Intensity fields
-  
-  /** @brief non precipitation value */
+
+
+  // Precip Type enumeration
+
+  /** @brief precip type: no-precip */
   static const int NO_PRECIP;
   
-  /** @brief light precipitation value */
-  static const int LIGHT_PRECIP;
-  
-  /** @brief moderate precipitation value */
-  static const int MODERATE_PRECIP;
-  
-  /** @brief heavy precipitation value */
-  static const int HEAVY_PRECIP;
- 
-  /** @brief road splash pavement condition value */
-  static const int ROAD_SPLASH;
- 
-  // Precip-Type fields (includes NO_PRECIP above)
-
-  /** @brief rain precipitation value */
+  /** @brief precip type: rain */
   static const int RAIN;
   
-  /** @brief rain precipitation value */
+  /** @brief precip type: mix */
   static const int MIX;
   
-  /** @brief rain precipitation value */
+  /** @brief precip type: snow */
   static const int SNOW;
+
+  /** @brief precip type: hail */
+  static const int HAIL;
   
-  // Pavement-condition fields
   
-  /** @brief dry pavement condition value */
+  // Precip Intensity enumeration
+  
+  /** @brief precip intensity: no-precip */
+  //static const int NO_PRECIP; // defined above
+  
+  /** @brief precip intensity: light-precip */
+  static const int LIGHT_PRECIP;
+  
+  /** @brief precip intensity: moderate-precip */
+  static const int MODERATE_PRECIP;
+  
+  /** @brief precip intensity: heavy-precip */
+  static const int HEAVY_PRECIP;
+ 
+  /** @brief precip intensity: road-splash */
+  static const int ROAD_SPLASH;
+
+  
+  // Pavement Condition enumeration
+  
+  /** @brief pavement condition: dry-pavement */
   static const int DRY_PAVEMENT;
 
-  /** @brief wet pavement condition value */
+  /** @brief pavement condition: wet-pavement */
   static const int WET_PAVEMENT;
 
-  /** @brief snow covered pavement condition value */
+  /** @brief pavement condition: snow-covered */
   static const int SNOW_COVERED;
 
-  /** @brief slick pavement condition value */
+  /** @brief pavement condition: ice-covered */
   static const int ICE_COVERED;
   
-  /** @brief hydro-plane pavement condition value */
+  /** @brief pavement condition: hydroplane */
   static const int HYDROPLANE;
   
-  /** @brief black-ice pavement condition value */
+  /** @brief pavement condition: black-ice */
   static const int BLACK_ICE;
   
-  /** @brief dry pavement with possible wet precip condition value */
+  /** @brief pavement condition: dry-wet-pavement */
   static const int DRY_WET_PAVEMENT;
   
-  /** @brief dry pavement with possible frozen precip condition value */
+  /** @brief pavement condition: dry-frozen-pavement */
   static const int DRY_FROZEN_PAVEMENT;
-  
-  // Visibility fields
 
-  /** @brief normal visibility value */
+  
+  // Visibility enumeration
+  
+  /** @brief visibility: normal */
   static const int VIS_NORMAL;
 
-  /** @brief normal visibility value */
+  /** @brief visibility: low */
   static const int VIS_LOW;
   
-  /** @brief heavy rain visibility value */
+  /** @brief visibility: heavy-rain */
   static const int VIS_HEAVY_RAIN;
 
-  /** @brief heavy snow visibility value */
+  /** @brief visibility: heavy-snow */
   static const int VIS_HEAVY_SNOW;
 
-  /** @brief blowing snow visibility value */
+  /** @brief visibility: blowing-snow */
   static const int VIS_BLOWING_SNOW;
 
-  /** @brief visibility fog value */
+  /** @brief visibility: fog */
   static const int VIS_FOG;
   
-  /** @brief visibility haze value */
+  /** @brief visibility: haze */
   static const int VIS_HAZE;
   
-  /** @brief visibility dust value */
+  /** @brief visibility: dust */
   static const int VIS_DUST;
   
-  /** @brief visibility smoke value */
+  /** @brief visibility: smoke */
   static const int VIS_SMOKE;
+
 
   // Confidence field weights
 
@@ -174,6 +252,9 @@ public:
   
   /** @brief vdt air-temp weight for assessment confidence calculation */
   static const float air_temp_wgt;
+  
+  /** @brief vdt dual-pol-hid weight for assessment confidence calculation */
+  static const float dual_pol_wgt;
   
   /** @brief vdt radar_ref weight for assessment confidence calculation */
   static const float radar_ref_wgt;
@@ -204,6 +285,7 @@ public:
 
   /** @brief normal vis weight for assessment confidence calculation */
   static const float normal_wgt;
+
   
   /** @brief constructor */
   rwx_road_segment_assessment();
@@ -214,10 +296,16 @@ public:
   void perform_assessment(vdt_probe_message_qc_statistics& seg_stat);
 
   /** @brief, uses previous rwh data to determine if there is a pavement-condtion hazard on the road, even if precip is not currently falling
-    * @param[in] seg_stat  vdt road segment statistic value
+    * @param[in] seg_stat vdt road segment statistic value
     * @return pavement condition  or fill value 
    */
   int determine_prev_pavement_condition(vdt_probe_message_qc_statistics& seg_stat);
+
+  /** @brief, returns the rwis road-state integer value. It QC's the road-state value by cross-checking with air-T
+    * @param[in] seg_stat vdt road segment statistic value
+    * @return rwis road state or fill value 
+   */
+  int get_rwis_road_state(vdt_probe_message_qc_statistics& seg_stat);
   
   /** @brief sets precipitation thresholds for determning precip-intensity based on air temperature 
    * @param[in] seg_stat vdt road segment statistic value
@@ -531,6 +619,12 @@ private:
    * @return environmental air temperature value
    */
   float get_env_air_temp(vdt_probe_message_qc_statistics& seg_stat);
+
+  /** @brief get the environment (ancillary) dewpoint temperature
+   * @param[in] seg_stat  vdt road segment statistic value
+   * @return environmental dew temperature value
+   */
+  float get_env_dew_temp(vdt_probe_message_qc_statistics& seg_stat);
   
   /** @brief determine what temperature value to use
    * @params[i] mobile-temperature (or dewpoint) and environmental temperature (or dewpoint)
@@ -551,10 +645,10 @@ private:
   float calc_haze_interest(float rh, float speed_ratio, float station_vis, float wx_visibility, float percent_fog_lights, float percent_high_beams);
 
   /** @brief calculates normal visibility interest (fuzzy logic)
-   * @params[in] relative-humidity, speed-ratio, station-visibility, percentage of fog-lights on, high-beams on
+   * @params[in] relative-humidity, speed-ratio, station-visibility, metar-wx-visibility, percentage of fog-lights on, high-beams on
    * @return fog interest (0-1)
    */
-  float calc_normal_interest(float rh, float speed_ratio, float station_vis, float percent_fog_lights, float percent_high_beams);
+  float calc_normal_interest(float rh, float speed_ratio, float station_vis, float wx_visibility, float percent_fog_lights, float percent_high_beams);
   
   /** @brief calculates relative-humidity from air-temp and dewpoint using vapor pressure calculation
    * @params[in] temp and dewpt in Celsius

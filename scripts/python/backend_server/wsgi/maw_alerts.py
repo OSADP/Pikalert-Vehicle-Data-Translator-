@@ -15,8 +15,8 @@ import numpy
 import os
 import road_wx_numpy
 import backend_sys_path
+import math
 
-Degree_radius = backend_sys_path.degree_radius
 
 Precip_alerts = {
     
@@ -65,7 +65,20 @@ Indicated_action = {
     2 : "drive slowly and use caution",
     3 : "delay travel, seek alternate route, or drive slowly and use extreme caution"
     }
-                
+
+    
+def get_degree_radius(lat, radius_m):
+    """
+    Calculates a degree radius equivalent to 2*radius_m
+    that accounts for the latitude.
+    """
+    #WGS84 equatorial radius in m
+    R = 6378137.0
+    m_per_deg_eq = R*math.pi/180.0
+    m_per_deg_lat = m_per_deg_eq * math.cos(lat*math.pi/180.0)
+    return (2*radius_m)/m_per_deg_lat
+
+            
 def find_worst_weather(segment_indices, maw_dict):
 
     precip_priority_list = []
@@ -138,7 +151,7 @@ def find_worst_weather(segment_indices, maw_dict):
 def get_maw_alerts(cf, latitude, longitude, radius_meters, maw_json, bearing=None, sector_half_theta=None):
 
     # Create road weather locator for state
-    state_wx_locator = road_wx_numpy.RoadWeatherLocator(cf.maw_nearest_neighbor_files[0], cf.maw_nearest_neighbor_files[1], cf.maw_nearest_neighbor_files[2], Degree_radius)
+    state_wx_locator = road_wx_numpy.RoadWeatherLocator(cf.maw_nearest_neighbor_files[1], cf.maw_nearest_neighbor_files[2], get_degree_radius(latitude, radius_meters))
 
     # Find nearest road segments in state
     (nnidx, nndistances) = state_wx_locator.radius(latitude, longitude, radius_meters, bearing, sector_half_theta)

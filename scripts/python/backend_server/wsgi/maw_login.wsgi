@@ -34,8 +34,9 @@ def application(environ, start_response):
 
     global Session_dict
     
-    phone_login_log = os.path.join(sys_path.log_dir, sys_path.phone_login_log)
-    logg = log_msg.LogMessage(phone_login_log, "pyl")
+    print "starting maw phone app"
+    phone_login_log_path = os.path.join(sys_path.log_dir, sys_path.phone_login_log)
+    logg = log_msg.LogMessage(phone_login_log_path, "pyl")
     logg.write_starting(sys_path.phone_login_log)
 
     # Open global data file

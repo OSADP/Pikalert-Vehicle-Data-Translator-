@@ -40,6 +40,19 @@ const std::string obs_stats_record::model_bar_press_string = "model_bar_pressure
 const std::string obs_stats_record::nss_air_temp_mean_string = "nss_air_temp_mean";
 const std::string obs_stats_record::nss_bar_press_mean_string = "nss_bar_pressure_mean";
 const std::string obs_stats_record::radar_ref_string = "radar_ref";
+const std::string obs_stats_record::radar_hc_string = "radar_dual_pol_hc";
+const std::string obs_stats_record::radar_hr_string = "radar_dual_pol_hr";
+const std::string obs_stats_record::model_dew_temp_string = "model_dew_temp";
+const std::string obs_stats_record::speed_mean_string = "speed_mean";
+const std::string obs_stats_record::num_wipers_off_string = "num_wipers_off";
+const std::string obs_stats_record::num_wipers_intermittent_string = "num_wipers_intermittent";
+const std::string obs_stats_record::num_wipers_low_string = "num_wipers_low";
+const std::string obs_stats_record::num_wipers_high_string = "num_wipers_high";
+const std::string obs_stats_record::num_msg_valid_speed_string = "num_msg_valid_speed";
+const std::string obs_stats_record::veh_air_temp_mean_string = "air_temp_mean";
+const std::string obs_stats_record::veh_bar_pressure_mean_string = "bar_pressure_mean";
+const std::string obs_stats_record::veh_surface_temp_mean_string = "surface_temp_mean";
+
 
 #ifdef NOTNOW
 int obs_stats_info::get_value(obs_stats_info_value_types value_type, double *value) const
@@ -124,6 +137,14 @@ inline float celsius_to_fahrenheit(float celsius)
   return fahrenheit;
 }
 
+// Converts meters per second to miles per hour
+inline float mps_to_mph(float mps)
+{
+  float mph = mps * 2.23694;
+  return mph;
+}
+
+
 // Create map mapping site numbers to their obs stats records
 // Note that the times in obs_stats_record for a particular site id
 // will be in increasing order
@@ -137,7 +158,19 @@ int create_obs_stats_record_map(int site_num_na, const rwx_vector_collection_nc 
   const vector<float> *nss_air_temp_mean;
   const vector<float> *nss_bar_press_mean;
   const vector<float> *radar_ref;
-
+  const vector<float> *radar_hc;
+  const vector<float> *radar_hr;
+  const vector<float> *model_dew_temp;
+  const vector<float> *speed_mean;
+  const vector<int> *num_wipers_off;
+  const vector<int> *num_wipers_intermittent;
+  const vector<int> *num_wipers_low;
+  const vector<int> *num_wipers_high;
+  const vector<int> *num_msg_valid_speed;
+  const vector<float> *veh_air_temp_mean;
+  const vector<float> *veh_bar_pressure_mean;
+  const vector<float> *veh_surface_temp_mean;
+ 
 
   int ret = 0;
 
@@ -211,8 +244,137 @@ int create_obs_stats_record_map(int site_num_na, const rwx_vector_collection_nc 
       return ret;
     }
 
+  ret = obs_stats_collection->get_vector(obs_stats_record::radar_hc_string, &radar_hc);
+  if (ret != 0)
+    {
+      error = string("failed getting var: ") + obs_stats_record::radar_hc_string;
+      return ret;
+    }
+
+  ret = obs_stats_collection->get_vector(obs_stats_record::radar_hr_string, &radar_hr);
+  if (ret != 0)
+    {
+      error = string("failed getting var: ") + obs_stats_record::radar_hr_string;
+      return ret;
+    }
+
+  // Get model dew temp info
+  ret = obs_stats_collection->get_vector(obs_stats_record::model_dew_temp_string, &model_dew_temp);
+  if (ret != 0)
+    {
+      error = string("failed getting var: ") + obs_stats_record::model_dew_temp_string;
+      return ret;
+    }
+
+  rwx::value_t model_dew_temp_missing_value;
+  missing_ret = obs_stats_collection->get_missing(obs_stats_record::model_dew_temp_string, model_dew_temp_missing_value);
+  if (missing_ret != 0)
+    {
+      error = string("failed getting missing value for variable: ") + obs_stats_record::model_dew_temp_string;
+      return ret;
+    }
+
+  float model_dew_temp_missing = model_dew_temp_missing_value.v_float;
+
+  // Get speed_mean
+  ret = obs_stats_collection->get_vector(obs_stats_record::speed_mean_string, &speed_mean);
+  if (ret != 0)
+    {
+      error = string("failed getting var: ") + obs_stats_record::speed_mean_string;
+      return ret;
+    }
+
+  rwx::value_t speed_mean_missing_value;
+  missing_ret = obs_stats_collection->get_missing(obs_stats_record::speed_mean_string, speed_mean_missing_value);
+  if (missing_ret != 0)
+    {
+      error = string("failed getting missing value for variable: ") + obs_stats_record::speed_mean_string;
+      return ret;
+    }
+
+  float speed_mean_missing = speed_mean_missing_value.v_float;
+
+  // Get num_wipers_off
+  ret = obs_stats_collection->get_vector(obs_stats_record::num_wipers_off_string, &num_wipers_off);
+  if (ret != 0)
+    {
+      error = string("failed getting var: ") + obs_stats_record::num_wipers_off_string;
+      return ret;
+    }
+
+  // Get num_wipers_intermittent
+  ret = obs_stats_collection->get_vector(obs_stats_record::num_wipers_intermittent_string, &num_wipers_intermittent);
+  if (ret != 0)
+    {
+      error = string("failed getting var: ") + obs_stats_record::num_wipers_intermittent_string;
+      return ret;
+    }
+
+  // Get num_wipers_low
+  ret = obs_stats_collection->get_vector(obs_stats_record::num_wipers_low_string, &num_wipers_low);
+  if (ret != 0)
+    {
+      error = string("failed getting var: ") + obs_stats_record::num_wipers_low_string;
+      return ret;
+    }
+
+  // Get num_wipers_high
+  ret = obs_stats_collection->get_vector(obs_stats_record::num_wipers_high_string, &num_wipers_high);
+  if (ret != 0)
+    {
+      error = string("failed getting var: ") + obs_stats_record::num_wipers_high_string;
+      return ret;
+    }
+
+  // Get num_msg_valid_speed
+  ret = obs_stats_collection->get_vector(obs_stats_record::num_msg_valid_speed_string, &num_msg_valid_speed);
+  if (ret != 0)
+    {
+      error = string("failed getting var: ") + obs_stats_record::num_msg_valid_speed_string;
+      return ret;
+    }
+
+  // Get veh_air_temp_mean
+  ret = obs_stats_collection->get_vector(obs_stats_record::veh_air_temp_mean_string, &veh_air_temp_mean);
+  if (ret != 0)
+    {
+      error = string("failed getting var: ") + obs_stats_record::veh_air_temp_mean_string;
+      return ret;
+    }
+  rwx::value_t veh_air_temp_mean_missing_value;
+  missing_ret = obs_stats_collection->get_missing(obs_stats_record::veh_air_temp_mean_string, veh_air_temp_mean_missing_value);
+  if (missing_ret != 0)
+    {
+      error = string("failed getting missing value for variable: ") + obs_stats_record::veh_air_temp_mean_string;
+      return ret;
+    }
+  float veh_air_temp_mean_missing = veh_air_temp_mean_missing_value.v_float;
+
+  // Get veh_bar_pressure_mean
+  ret = obs_stats_collection->get_vector(obs_stats_record::veh_bar_pressure_mean_string, &veh_bar_pressure_mean);
+  if (ret != 0)
+    {
+      error = string("failed getting var: ") + obs_stats_record::veh_bar_pressure_mean_string;
+      return ret;
+    }
+
+  // Get veh_surface_temp_mean
+  ret = obs_stats_collection->get_vector(obs_stats_record::veh_surface_temp_mean_string, &veh_surface_temp_mean);
+  if (ret != 0)
+    {
+      error = string("failed getting var: ") + obs_stats_record::veh_surface_temp_mean_string;
+      return ret;
+    }
+  rwx::value_t veh_surface_temp_mean_missing_value;
+  missing_ret = obs_stats_collection->get_missing(obs_stats_record::veh_surface_temp_mean_string, veh_surface_temp_mean_missing_value);
+  if (missing_ret != 0)
+    {
+      error = string("failed getting missing value for variable: ") + obs_stats_record::veh_surface_temp_mean_string;
+      return ret;
+    }
+  float veh_surface_temp_mean_missing = veh_surface_temp_mean_missing_value.v_float;
+
   const std::unordered_map<string, size_t> &obs_stats_dim_map = obs_stats_collection->get_dim_map();
-  
 
   rwx::value_t missing_site_num_value;
 
@@ -247,7 +409,44 @@ int create_obs_stats_record_map(int site_num_na, const rwx_vector_collection_nc 
 
       info.nss_bar_press_mean = (*nss_bar_press_mean)[i];
       info.radar_ref = (*radar_ref)[i];
+      info.radar_hc = (*radar_hc)[i];
+      info.radar_hr = (*radar_hr)[i];      
 
+      info.model_dew_temp = (*model_dew_temp)[i];
+      if (info.model_dew_temp != model_dew_temp_missing)
+	{
+	  info.model_dew_temp = celsius_to_fahrenheit(info.model_dew_temp);
+	}
+
+      info.speed_mean = (*speed_mean)[i];
+      if (info.speed_mean != speed_mean_missing)
+	{
+	  info.speed_mean = mps_to_mph(info.speed_mean);
+	}
+
+      info.num_wipers_off = (*num_wipers_off)[i];
+      info.num_wipers_intermittent = (*num_wipers_intermittent)[i];
+      info.num_wipers_low = (*num_wipers_low)[i];
+      info.num_wipers_high = (*num_wipers_high)[i]; 
+      info.num_msg_valid_speed = (*num_msg_valid_speed)[i];
+
+      info.veh_air_temp_mean = (*veh_air_temp_mean)[i];
+      if (info.veh_air_temp_mean != veh_air_temp_mean_missing)
+	{
+	  info.veh_air_temp_mean = celsius_to_fahrenheit(info.veh_air_temp_mean);
+	}
+
+      info.veh_bar_pressure_mean = (*veh_bar_pressure_mean)[i];
+
+      info.veh_surface_temp_mean = (*veh_surface_temp_mean)[i];
+      if (info.veh_surface_temp_mean != veh_surface_temp_mean_missing)
+	{
+	  info.veh_surface_temp_mean = celsius_to_fahrenheit(info.veh_surface_temp_mean);
+	}
+      
+
+      
+      
       // Check to see if the site number is in the obs stats record map
       auto itr = obs_stats_record_map.find(num);
       if (itr == obs_stats_record_map.end())

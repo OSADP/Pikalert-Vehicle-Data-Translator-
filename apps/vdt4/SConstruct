@@ -1,17 +1,16 @@
 
 import os
 
-env = Environment(
-        CPPPATH=[".", os.environ["NETCDF_INC_DIR"], os.environ["HDF_INC_DIR"], os.environ["LOCAL_INC_DIR"], os.environ["RAL_INC_DIR"]], 
-        #CCFLAGS=os.environ["RAL_CCFLAGS"]+" -pg", 
-        CCFLAGS=os.environ["RAL_CCFLAGS"], 
-        LIBPATH=[os.environ["NETCDF_LIB_DIR"], os.environ["HDF_LIB_DIR"], os.environ["LOCAL_LIB_DIR"], os.environ["RAL_LIB_DIR"], "/usr/lib"],
-	#LINKFLAGS=["-pg"]
-	)
+env = Environment(CPPPATH=[os.environ["NETCDF_INC_DIR"], os.environ["HDF_INC_DIR"], os.environ["LOCAL_INC_DIR"]], CCFLAGS=os.environ["RAL_CCFLAGS"], LIBPATH=[os.environ["NETCDF_LIB_DIR"], os.environ["HDF_LIB_DIR"], os.environ["ZLIB_LIB_DIR"], os.environ["SZIP_LIB_DIR"], os.environ["LOCAL_LIB_DIR"]])
+
+env["INSTALLPATH"] = os.environ["LOCAL_BIN_DIR"]
+
+env.Append(LINKFLAGS = Split('-z origin'))
+env.Append( RPATH = env.Literal(os.path.join('\\$$ORIGIN', os.pardir, 'lib')))
 
 vdt_inc_dir = "%s/vdt4" % os.environ["LOCAL_INC_DIR"]
 
-probe_message_dataset_manager = env.Program(
+vdt45 = env.Program(
     "vdt45", [
     "arguments.cc",
     "config_reader.cc",
@@ -37,9 +36,9 @@ probe_message_dataset_manager = env.Program(
                                            "z",
                                            "Proj4Wrap",
                                            "proj",
+                                           "dmapf",
+                                           "pthread",
                                            "m"])
 
 env.Install(os.environ["LOCAL_BIN_DIR"], "vdt45")
 env.Alias("install", [os.environ["LOCAL_BIN_DIR"]])
-
-

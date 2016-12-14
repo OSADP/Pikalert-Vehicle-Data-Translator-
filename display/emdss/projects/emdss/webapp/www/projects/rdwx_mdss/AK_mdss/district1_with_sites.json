@@ -1,0 +1,27 @@
+{
+	"state": "Alaska",
+	"districts": [
+		{
+			"min_lat": 61.25,
+			"min_lon": -149.8,
+			"max_lat": 63.25,
+			"max_lon": -147.8,
+			"district_name": "district1",
+			"sites": [
+				{
+					"lat": 61.25,
+					"lon": -149.8,
+					"site_id": "PAED",
+					"desc": "ANCHORAGE / ELMENDORF AIR FORCE BASE",
+					"site_num": 70272000
+				}, {
+					"lat": 61.22,
+					"lon": -149.85,
+					"site_id": "PAMR",
+					"desc": "MERRILL FIELD",
+					"site_num": 70272004
+				}
+			]
+		}
+	]
+}

@@ -60,7 +60,9 @@ def get_subdir_files(base_dir, subdir_list):
 
     dir_lists = {}
     for direct in subdir_list:
-        dir_lists[direct] = os.listdir(os.path.join(base_dir, direct))
+        leaf_directory = os.path.join(base_dir, direct)
+        if os.path.exists(leaf_directory):
+            dir_lists[direct] = os.listdir(leaf_directory)
 
     return dir_lists
 

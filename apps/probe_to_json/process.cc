@@ -33,11 +33,21 @@ process::~process()
 }
 
 // For each id, find pair containing containing latest time and corresponding index
-void get_id_latest_probe_indices(unordered_map<string, vector<std::pair<double, size_t> > > &id_time_index_map, vector<double> &time_vec, vector<size_t> &index_vec)
+// Skip ids having the give prefix
+int get_id_latest_probe_indices(const string &ignore_prefix, unordered_map<string, vector<std::pair<double, size_t> > > &id_time_index_map, vector<double> &time_vec, vector<size_t> &index_vec)
 {
+  
+  int ignore_count = 0;
   
   for (auto itr=id_time_index_map.begin(); itr!=id_time_index_map.end(); ++itr)
     {
+      string vehicle_id = itr->first;
+      if (ignore_prefix == vehicle_id.substr(0, ignore_prefix.size()))
+	{
+	  ignore_count += 1;
+	  continue;
+	}
+	
       vector<std::pair<double, size_t>  > current_time_index = itr->second;
 
       double max_time = current_time_index[0].first;
@@ -54,6 +64,8 @@ void get_id_latest_probe_indices(unordered_map<string, vector<std::pair<double, 
       time_vec.push_back(max_time);
       index_vec.push_back(current_index);
     }
+
+  return ignore_count;
 }
 
 // 
@@ -136,8 +148,8 @@ int process::run()
   vector<double> time_vec;
   vector<size_t> index_vec;
 
-  get_id_latest_probe_indices(id_time_index_map, time_vec, index_vec);
-  Logg->write_time("Info: index vector has size %ld\n", index_vec.size());
+  int ignore_count = get_id_latest_probe_indices(cfg_reader.vehicle_id_ignore_prefix, id_time_index_map, time_vec, index_vec);
+  Logg->write_time("Info: index vector has size %ld, ignored %d messages\n", index_vec.size(), ignore_count);
 
 
   vector<vector<char> > latest_char_field_vector;

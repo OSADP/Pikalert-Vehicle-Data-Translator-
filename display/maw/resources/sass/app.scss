@@ -1,0 +1,71 @@
+// The following two lines import the default Sencha Touch theme. If you are building
+// a new theme, remove them and the add your own CSS on top of the base CSS (which
+// is already included in your app.json file).
+@import 'sencha-touch/default';
+@import 'sencha-touch/default/all';
+
+// Custom code goes here..
+.site_list_time {
+  float: left;
+  font-size: 1.2em;
+  // padding-bottom: 25px;
+  // clear: both;
+}
+
+.site_list_alert_img {
+  position: absolute;
+  left: 250px;
+}
+
+.site_list_alert_explanation {
+  font-size: 0.7em;
+  position: absolute;
+  left: 300px;
+}
+
+.site_description {
+  // background-color: #666;
+  font-size: 1.0em;
+  margin-left: 25px;
+  margin-top: 0px;
+  margin-bottom: 0px;
+}
+
+.site_node {
+  clear: both;
+}
+
+.site_alert {
+  // background-color: #fff;
+  font-size: 0.8em;
+  margin-left: 25px;
+  margin-top: 0px;
+  margin-bottom: 15px;
+}
+
+img.alert_missing {
+  width: 14px;
+  height: 14px;
+  background: url(../icons/Alert_Images.png) 0 0;
+}
+
+img.alert_clear {
+  width: 14px;
+  height: 14px;
+  background: url(../icons/Alert_Images.png) -14px 0;
+}
+
+img.alert_warning {
+  width: 14px;
+  height: 14px;
+  background: url(../icons/Alert_Images.png) -28px 0;
+}
+
+img.alert_alert {
+  width: 14px;
+  height: 14px;
+  background: url(../icons/Alert_Images.png) -42px 0;
+}
+
+// Examples of using the icon mixin:
+// @include icon('user');

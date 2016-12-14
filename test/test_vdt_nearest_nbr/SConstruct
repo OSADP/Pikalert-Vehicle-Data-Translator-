@@ -13,7 +13,7 @@ test_vdt_nearest_nbr = env.Program(
     "main.cc",
                                    ],LIBS=[
                                            "vdt4",
-                                           "ANN",
+                                           "ann",
                                            "m"])
 
 env.Install(os.environ["LOCAL_BIN_DIR"], "test_nearest_nbr")

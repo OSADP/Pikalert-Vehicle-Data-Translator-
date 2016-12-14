@@ -18,6 +18,7 @@
 #include <libconfig.h++>
 #include <stdio.h>
 #include <stdlib.h>
+#include <math.h>
 #include <boost/format.hpp>
 #include <boost/filesystem.hpp>
 
@@ -225,11 +226,12 @@ int process::run()
 
   // Determine latest, meaningful precip-type, intensity and time from the previous rwh files
   vector<rwh_existing_hazards *> rwh_eh;
+  unordered_map<int, int> eh_seg_index_map;
   rwh_eh.clear();
   if(prev_rwh_data.size() > 0)
     {
       Logg->write_time(1, "Info. determining existing hazards from previous rwh files\n");
-      ret = determine_prev_rwh_hazard(d_begin_time, seg_ids, prev_rwh_data, rwh_eh);
+      ret = determine_prev_rwh_hazard(d_begin_time, seg_ids, prev_rwh_data, rwh_eh, eh_seg_index_map);
       if(ret != 0)
 	{
 	  Logg->write_time("Error: in determine_prev_rwh_hazards\n");
@@ -323,7 +325,7 @@ int process::run()
       
       // Augment vdt_probe_message_qc_statistic object with seg-stats data (collection)
       Logg->write_time("Info. augmenting probe-message-qc-stats with vdt segment collection data\n");
-      ret = augment_statistics_with_collection(collection, rwh_eh, seg_stats);
+      ret = augment_statistics_with_collection(collection, rwh_eh, eh_seg_index_map, seg_stats);
       if(ret != 0)
 	{
 	  Logg->write_time("Error: in augment_statistics_with_collection\n");
@@ -501,7 +503,7 @@ int process::run()
 	  vector<vdt_probe_message_qc_statistics> fcst_seg_stats;
 	  fcst_seg_stats.clear();
 	  Logg->write_time(1, "Info. augmenting probe-message-qc-stats with forecast data for valid_time: %d.\n", (int)valid_time);
-	  ret = augment_statistics_with_fcst(valid_time, site_fcst, seg_ids, seg_site_map, rwh_eh, fcst_seg_stats);
+	  ret = augment_statistics_with_fcst(valid_time, site_fcst, seg_ids, seg_site_map, rwh_eh, eh_seg_index_map, fcst_seg_stats);
 	  if(ret != 0)
 	    {
 	      Logg->write_time("Error: in augment_statistics_with_fcst\n");
@@ -574,7 +576,7 @@ int process::run()
 }
 
 
-int process::determine_prev_rwh_hazard(double begin_time, const vector<int> &seg_ids, const vector<prev_rwh *> &prev_rwh_data, vector<rwh_existing_hazards *> &rwh_eh)
+int process::determine_prev_rwh_hazard(double begin_time, const vector<int> &seg_ids, const vector<prev_rwh *> &prev_rwh_data, vector<rwh_existing_hazards *> &rwh_eh, unordered_map<int, int> &eh_seg_index_map)
 {
   int f; // have to use a signed integer for looping backwards over the files
   size_t s, t;
@@ -635,6 +637,9 @@ int process::determine_prev_rwh_hazard(double begin_time, const vector<int> &seg
       
       // Push to vector
       rwh_eh.push_back(this_rwh_eh);
+
+      // Save rwh_eh index in the eh_seg_index_map (for quick look up later)
+      eh_seg_index_map[seg_ids[s]] = s;
       
     } // end loop over sites (seg-ids)
     
@@ -925,7 +930,7 @@ int process::get_hazard_data(double begin_time, double valid_time, vector<vdt_pr
 }
 
 
-int process::augment_statistics_with_fcst(double valid_time, site_vars_fcst_data &site_data, const vector<int> &seg_ids, unordered_map<int, int> &seg_site_map, const vector<rwh_existing_hazards *> &rwh_eh, vector<vdt_probe_message_qc_statistics> &seg_stats)
+int process::augment_statistics_with_fcst(double valid_time, site_vars_fcst_data &site_data, const vector<int> &seg_ids, unordered_map<int, int> &seg_site_map, const vector<rwh_existing_hazards *> &rwh_eh, unordered_map<int, int> eh_seg_index_map, vector<vdt_probe_message_qc_statistics> &seg_stats)
 {
   size_t i;
   string input_field;
@@ -1009,28 +1014,30 @@ int process::augment_statistics_with_fcst(double valid_time, site_vars_fcst_data
       //
       if(rwh_eh.size() > 0)
 	{
-	  if(this_seg.id == rwh_eh[i]->id)
+	  if(eh_seg_index_map.find(this_seg.id) != eh_seg_index_map.end())
 	    {
+	      int eh_ind = eh_seg_index_map[this_seg.id]; 
+	      
 	      double prev_precip_time_diff;
-	      if(rwh_eh[i]->prev_precip_time != MISSING)
-		prev_precip_time_diff = valid_time - rwh_eh[i]->prev_precip_time;
+	      if(rwh_eh[eh_ind]->prev_precip_time != MISSING)
+		prev_precip_time_diff = valid_time - rwh_eh[eh_ind]->prev_precip_time;
 	      else
 		prev_precip_time_diff = MISSING;
 
 	      if(prev_precip_time_diff < 0)
 		prev_precip_time_diff = MISSING;
 	      
-	      this_seg.prev_precip_type = rwh_eh[i]->prev_precip_type;
-	      this_seg.prev_precip_intensity = rwh_eh[i]->prev_precip_intensity;
+	      this_seg.prev_precip_type = rwh_eh[eh_ind]->prev_precip_type;
+	      this_seg.prev_precip_intensity = rwh_eh[eh_ind]->prev_precip_intensity;
 	      this_seg.prev_precip_time_gap = prev_precip_time_diff;
-	      Logg->write_time(3, "  this_seg.prev_precip_type: %d, this_seg.prev_precip_intensity: %d, this_seg.prev_precip_time_gap: %d\n", this_seg.prev_precip_type, this_seg.prev_precip_intensity, (int)this_seg.prev_precip_time_gap);
+	      Logg->write_time(3, "  eh_ind: %d, this_seg.prev_precip_type: %d, this_seg.prev_precip_intensity: %d, this_seg.prev_precip_time_gap: %d\n", eh_ind, this_seg.prev_precip_type, this_seg.prev_precip_intensity, (int)this_seg.prev_precip_time_gap);
 	    }
 	  else
 	    {
 	      this_seg.prev_precip_type = 0;
 	      this_seg.prev_precip_intensity = 0;
 	      this_seg.prev_precip_time_gap = MISSING;
-	      Logg->write_time(3, "  Warning: in augment-stats-with-fcst: this_seg.id: %d DOES NOT MATCH rwh_eh[i]->id: %d setting previous rwh fields to missing.\n", this_seg.id, rwh_eh[i]->id);
+	      Logg->write_time(3, "  Warning: in augment-stats-with-fcst: no eh_seg_index_map entry found for this_seg.id: %d, setting previous rwh fields to missing.\n", this_seg.id);
 	      Logg->write_time(3, "  this_seg.prev_precip_type: %d, this_seg.prev_precip_intensity: %d, this_seg.prev_precip_time_gap: %d\n", this_seg.prev_precip_type, this_seg.prev_precip_intensity, (int)this_seg.prev_precip_time_gap);
 	    }
 	}
@@ -1052,7 +1059,7 @@ int process::augment_statistics_with_fcst(double valid_time, site_vars_fcst_data
 }
 
 
-int process::augment_statistics_with_collection(const rwx_vector_collection &vector_collection, const vector<rwh_existing_hazards *> &rwh_eh, vector<vdt_probe_message_qc_statistics> &seg_stats)
+int process::augment_statistics_with_collection(const rwx_vector_collection &vector_collection, const vector<rwh_existing_hazards *> &rwh_eh, unordered_map<int, int> eh_seg_index_map, vector<vdt_probe_message_qc_statistics> &seg_stats)
 {
   size_t i;
   string input_field;
@@ -1085,7 +1092,7 @@ int process::augment_statistics_with_collection(const rwx_vector_collection &vec
       Logg->write_time(3, "  input_field: %s, value: %s\n", input_field.c_str(), value.c_str());
       this_seg.num_msg = atoi(value.c_str());
       
-      // Fields for precip_type_hazard
+      // Fields for precip-type and precip-intensity assessment
 
       input_field = "air_temp_mean";
       value = get_collection_value(vector_collection, input_field, i);
@@ -1106,8 +1113,23 @@ int process::augment_statistics_with_collection(const rwx_vector_collection &vec
       value = get_collection_value(vector_collection, input_field, i);
       Logg->write_time(3, "  input_field: %s, value: %s\n", input_field.c_str(), value.c_str());
       this_seg.model_air_temp = atof(value.c_str());
+
+      input_field = "dew_temp_mean";
+      value = get_collection_value(vector_collection, input_field, i);
+      Logg->write_time(3, "  input_field: %s, value: %s\n", input_field.c_str(), value.c_str());
+      this_seg.dew_temp_mean = atof(value.c_str());
       
-      // Fields for precip_intensity_hazard
+      input_field = "nss_dew_temp_mean";
+      value = get_collection_value(vector_collection, input_field, i);
+      Logg->write_time(3, "  input_field: %s, value: %s\n", input_field.c_str(), value.c_str());
+      this_seg.nss_dew_temp_mean = atof(value.c_str());
+      
+      input_field = "model_dew_temp";
+      value = get_collection_value(vector_collection, input_field, i);
+      Logg->write_time(3, "  input_field: %s, value: %s\n", input_field.c_str(), value.c_str());
+      this_seg.model_dewpoint = atof(value.c_str());
+      
+      // Fields for precip-intensity and precip-type assessment
       
       input_field = "radar_ref";
       value = get_collection_value(vector_collection, input_field, i);
@@ -1118,6 +1140,17 @@ int process::augment_statistics_with_collection(const rwx_vector_collection &vec
       value = get_collection_value(vector_collection, input_field, i);
       Logg->write_time(3, "  input_field: %s, value: %s\n", input_field.c_str(), value.c_str());
       this_seg.radar_cref = atof(value.c_str());
+
+      input_field = "radar_dual_pol_hc";
+      value = get_collection_value(vector_collection, input_field, i);
+      Logg->write_time(3, "  input_field: %s, value: %s\n", input_field.c_str(), value.c_str());
+      this_seg.radar_dual_pol_hc = roundf(atof(value.c_str()));
+      //printf(" rounded radar_dual_pol_hc: %.2f\n", this_seg.radar_dual_pol_hc);
+      
+      input_field = "radar_dual_pol_hr";
+      value = get_collection_value(vector_collection, input_field, i);
+      Logg->write_time(3, "  input_field: %s, value: %s\n", input_field.c_str(), value.c_str());
+      this_seg.radar_dual_pol_hr = atof(value.c_str());
       
       input_field = "num_wipers_off";
       value = get_collection_value(vector_collection, input_field, i);
@@ -1144,7 +1177,7 @@ int process::augment_statistics_with_collection(const rwx_vector_collection &vec
       Logg->write_time(3, "  input_field: %s, value: %s\n", input_field.c_str(), value.c_str());
       this_seg.speed_ratio = atof(value.c_str());
       
-      // Fields for pavement_condition_hazard and slickness
+      // Fields for pavement-condition and slickness assessment
       
       input_field = "surface_temp_mean";
       value = get_collection_value(vector_collection, input_field, i);
@@ -1256,6 +1289,11 @@ int process::augment_statistics_with_collection(const rwx_vector_collection &vec
       Logg->write_time(3, "  input_field: %s, value: %s\n", input_field.c_str(), value.c_str());
       this_seg.yaw_iqr75 = atof(value.c_str());
 
+      input_field = "road_state_1";
+      value = get_collection_value(vector_collection, input_field, i);
+      Logg->write_time(3, "  input_field: %s, value: %s\n", input_field.c_str(), value.c_str());
+      this_seg.road_state = (short)(atoi(value.c_str()));
+      
       // Wx indication from RWIS or other non-metar stations
       input_field = "pres_wx";
       value = get_collection_value(vector_collection, input_field, i);
@@ -1312,17 +1350,7 @@ int process::augment_statistics_with_collection(const rwx_vector_collection &vec
 	  this_seg.wx_visibility = pres_wx_visibility;
 	}
       
-      // Additional fields for visibility
-      
-      input_field = "dew_temp_mean";
-      value = get_collection_value(vector_collection, input_field, i);
-      Logg->write_time(3, "  input_field: %s, value: %s\n", input_field.c_str(), value.c_str());
-      this_seg.dew_temp_mean = atof(value.c_str());
-      
-      input_field = "nss_dew_temp_mean";
-      value = get_collection_value(vector_collection, input_field, i);
-      Logg->write_time(3, "  input_field: %s, value: %s\n", input_field.c_str(), value.c_str());
-      this_seg.nss_dew_temp_mean = atof(value.c_str());
+      // Additional fields for visibility assessment
       
       input_field = "nss_wind_speed_mean";
       value = get_collection_value(vector_collection, input_field, i);
@@ -1371,28 +1399,30 @@ int process::augment_statistics_with_collection(const rwx_vector_collection &vec
       //printf("in augment-stats-with-coll: rwh_eh.size(): %ld\n", rwh_eh.size());
       if(rwh_eh.size() > 0)
 	{
-	  if(this_seg.id == rwh_eh[i]->id)
+	  if(eh_seg_index_map.find(this_seg.id) != eh_seg_index_map.end())
 	    {
+	      int eh_ind = eh_seg_index_map[this_seg.id]; 
+	      
 	      double prev_precip_time_diff;
-	      if(rwh_eh[i]->prev_precip_time != MISSING)
-		prev_precip_time_diff = (double)this_seg.end_time - rwh_eh[i]->prev_precip_time;
+	      if(rwh_eh[eh_ind]->prev_precip_time != MISSING)
+		prev_precip_time_diff = (double)this_seg.end_time - rwh_eh[eh_ind]->prev_precip_time;
 	      else
 		prev_precip_time_diff = MISSING;
 	      
 	      if(prev_precip_time_diff < 0)
 		prev_precip_time_diff = MISSING;
 	      
-	      this_seg.prev_precip_type = rwh_eh[i]->prev_precip_type;
-	      this_seg.prev_precip_intensity = rwh_eh[i]->prev_precip_intensity;
+	      this_seg.prev_precip_type = rwh_eh[eh_ind]->prev_precip_type;
+	      this_seg.prev_precip_intensity = rwh_eh[eh_ind]->prev_precip_intensity;
 	      this_seg.prev_precip_time_gap = prev_precip_time_diff;
-	      Logg->write_time(3, "  this_seg.prev_precip_type: %d, this_seg.prev_precip_intensity: %d, this_seg.prev_precip_time_gap: %d\n", this_seg.prev_precip_type, this_seg.prev_precip_intensity, (int)this_seg.prev_precip_time_gap);
+	      Logg->write_time(3, "  eh_ind: %d, this_seg.prev_precip_type: %d, this_seg.prev_precip_intensity: %d, this_seg.prev_precip_time_gap: %d\n", eh_ind, this_seg.prev_precip_type, this_seg.prev_precip_intensity, (int)this_seg.prev_precip_time_gap);
 	    }
 	  else
 	    {
 	      this_seg.prev_precip_type = 0;
 	      this_seg.prev_precip_intensity = 0;
 	      this_seg.prev_precip_time_gap = MISSING;
-	      Logg->write_time(3, "  Warning: in augment-stats-with-coll: this_seg.id: %d DOES NOT MATCH rwh_eh[i]->id: %d, setting previous rwh fields to missing.\n", this_seg.id, rwh_eh[i]->id);
+	      Logg->write_time(3, "  Warning: in augment-stats-with-coll: no eh_seg_index_map entry found for this_seg.id: %d, setting previous rwh fields to missing.\n", this_seg.id);
 	      Logg->write_time(3, "  this_seg.prev_precip_type: %d, this_seg.prev_precip_intensity: %d, this_seg.prev_precip_time_gap: %d\n", this_seg.prev_precip_type, this_seg.prev_precip_intensity, (int)this_seg.prev_precip_time_gap);
 	    }
 	}
@@ -1517,9 +1547,9 @@ int process::decode_station_wx(string wx_str, int &wx_precip_type, int &wx_preci
   
   if(wx_str == "")
     {
-      wx_precip_type = MISSING;
-      wx_precip_intensity = MISSING;
-      wx_visibility = MISSING;
+      wx_precip_type = rwx_road_segment_assessment::NO_PRECIP;
+      wx_precip_intensity = rwx_road_segment_assessment::NO_PRECIP;
+      wx_visibility = rwx_road_segment_assessment::VIS_NORMAL;
     }
   else
     {

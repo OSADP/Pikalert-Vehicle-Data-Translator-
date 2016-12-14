@@ -390,7 +390,7 @@ int plots_json_writer(const string &date_time_string, const string &file_name, c
 int create_obs_stats_json(const string &date_time_string, const unordered_map<int, obs_stats_record> &obs_stats_record_map, const unordered_map<int, road_segment_info> &road_segment_map, json_spirit::mObject &obs_stats_json, const site_info *site_info_ptr, string &error)
 {
   json_spirit::mObject segment_obs_dict;
-  const int MAX_STRING = 16;
+  const int MAX_STRING = 32;
   char buf[MAX_STRING];
 
   // iterate through all obs stats records
@@ -402,23 +402,183 @@ int create_obs_stats_json(const string &date_time_string, const unordered_map<in
 	{
 	  const obs_stats_info &latest_info = itr->second.info_vec[info_vec_size-1];
 	  segment_obs_dict["time"] = latest_info.time;
-	  snprintf(buf, MAX_STRING, "%.2f deg F", latest_info.model_air_temp);
-	  segment_obs_dict["model_air_temp"] = buf;
-	  snprintf(buf, MAX_STRING, "%.2f mb", latest_info.model_bar_press);
-	  segment_obs_dict["model_bar_press"] = buf;
-	  snprintf(buf, MAX_STRING, "%.2f deg F", latest_info.nss_air_temp_mean);
-	  segment_obs_dict["nss_air_temp_mean"] = buf;
-	  snprintf(buf, MAX_STRING, "%.2f mb", latest_info.nss_bar_press_mean);
-	  segment_obs_dict["nss_bar_press_mean"] = buf;
-	  snprintf(buf, MAX_STRING, "%.2f dBZ", latest_info.radar_ref);
-	  segment_obs_dict["radar_cref"] = buf;
+	  if (latest_info.model_air_temp <= MISSING + 1)
+	    {
+	      segment_obs_dict["model_air_temp"] = "missing";
+	    }
+	  else
+	    {
+	      snprintf(buf, MAX_STRING, "%.0f deg F", latest_info.model_air_temp);
+	      segment_obs_dict["model_air_temp"] = buf;
+	    }
 
+	  if (latest_info.model_bar_press <= MISSING + 1)
+	    {
+	      segment_obs_dict["model_bar_press"] = "missing";
+	    }
+	  else
+	    {
+	      snprintf(buf, MAX_STRING, "%.0f mb (%.2f inch Hg)", latest_info.model_bar_press, latest_info.model_bar_press * 0.02953);
+	      segment_obs_dict["model_bar_press"] = buf;
+	    }
+
+	  if (latest_info.nss_air_temp_mean <= MISSING + 1)
+	    {
+	      segment_obs_dict["nss_air_temp_mean"] = "missing";
+	    }
+	  else
+	    {
+	      snprintf(buf, MAX_STRING, "%.0f deg F", latest_info.nss_air_temp_mean);
+	      segment_obs_dict["nss_air_temp_mean"] = buf;
+	    }
+
+	  if (latest_info.nss_bar_press_mean <= MISSING + 1)
+	    {
+	      segment_obs_dict["nss_bar_press_mean"] = "missing";
+	    }
+	  else
+	    {
+	      snprintf(buf, MAX_STRING, "%.0f mb (%.2f inch Hg)", latest_info.nss_bar_press_mean, latest_info.nss_bar_press_mean * 0.02953);
+	      segment_obs_dict["nss_bar_press_mean"] = buf;
+	    }
+
+	  if (latest_info.radar_ref <= MISSING + 1)
+	    {
+	      segment_obs_dict["radar_cref"] = "missing";
+	    }
+	  else
+	    {
+	      snprintf(buf, MAX_STRING, "%.2f dBZ", latest_info.radar_ref);
+	      segment_obs_dict["radar_cref"] = buf;
+	    }
+
+	  if (latest_info.radar_hc <= MISSING + 1)
+	    {
+	      segment_obs_dict["radar_hydrometeor_classification"] = "missing";
+	    }
+	  else
+	    {
+	      snprintf(buf, MAX_STRING, "%.2f", latest_info.radar_hc);
+	      segment_obs_dict["radar_hydrometeor_classification"] = buf;
+	    }
+
+
+	  if (latest_info.radar_hr <= MISSING + 1)
+	    {
+	      segment_obs_dict["radar_hybrid_reflectivity"] = "missing";
+	    }
+	  else
+	    {
+	      snprintf(buf, MAX_STRING, "%.2f dBZ", latest_info.radar_hr);
+	      segment_obs_dict["radar_hybrid_reflectivity"] = buf;
+	    }
+
+	  if (latest_info.model_dew_temp <= MISSING + 1)
+	    {
+	      segment_obs_dict["model_dew_temp"] = "missing";
+	    }
+	  else
+	    {
+	      snprintf(buf, MAX_STRING, "%.0f deg F", latest_info.model_dew_temp);
+	      segment_obs_dict["model_dew_temp"] = buf;
+	    }
+
+	  if (latest_info.speed_mean <= MISSING + 1)
+	    {
+	      segment_obs_dict["vehicle_speed_mean"] = "missing";
+	    }
+	  else
+	    {
+	      snprintf(buf, MAX_STRING, "%.0f MpH", latest_info.speed_mean);
+	      segment_obs_dict["vehicle_speed_mean"] = buf;
+	    }
+	  if (latest_info.num_wipers_off <= MISSING + 1)
+	    {
+	      segment_obs_dict["num_wipers_off"] = "missing";
+	    }
+	  else
+	    {
+	      snprintf(buf, MAX_STRING, "%d", latest_info.num_wipers_off);
+	      segment_obs_dict["num_wipers_off"] = buf;
+	    }
+	  // Sum up all intermittent, low, and high wiper counts
+	  int num_wipers_on = 0;
+	  if ((latest_info.num_wipers_intermittent <= MISSING + 1) && (latest_info.num_wipers_low <= MISSING + 1) && (latest_info.num_wipers_high <= MISSING + 1))
+	    {
+	      segment_obs_dict["num_wipers_on"] = "missing";
+	    }
+	  else{
+	    if (latest_info.num_wipers_intermittent >= 0)
+	      {
+		num_wipers_on = num_wipers_on + latest_info.num_wipers_intermittent;
+	      }
+	    if (latest_info.num_wipers_low >= 0)
+	      {
+		num_wipers_on = num_wipers_on + latest_info.num_wipers_low;
+	      }
+	    if (latest_info.num_wipers_high >= 0)
+	      {
+		num_wipers_on = num_wipers_on + latest_info.num_wipers_high;
+	      }
+	    snprintf(buf, MAX_STRING, "%d", num_wipers_on);	    
+	    segment_obs_dict["num_wipers_on"] = buf;
+	  }
+	  
+	  if (latest_info.num_msg_valid_speed < 0)
+	    {
+	      segment_obs_dict["num_msg_valid_speed"] = "missing";
+	    }
+	  else
+	    {
+	      snprintf(buf, MAX_STRING, "%d", latest_info.num_msg_valid_speed);
+	      segment_obs_dict["num_msg_valid_speed"] = buf;
+	    }
+
+	  if (latest_info.veh_air_temp_mean <= MISSING + 1)
+	    {
+	      segment_obs_dict["vehicle_air_temp_mean"] = "missing";
+	    }
+	  else
+	    {
+	      snprintf(buf, MAX_STRING, "%.0f deg F", latest_info.veh_air_temp_mean);
+	      segment_obs_dict["vehicle_air_temp_mean"] = buf;
+	    }
+	  if (latest_info.veh_bar_pressure_mean <= MISSING + 1)
+	    {
+	      segment_obs_dict["vehicle_bar_pressure_mean"] = "missing";
+	    }
+	  else
+	    {
+	      snprintf(buf, MAX_STRING, "%.0f mb (%.2f inch Hg)", latest_info.veh_bar_pressure_mean, latest_info.veh_bar_pressure_mean * 0.02953);
+	      segment_obs_dict["vehicle_bar_pressure_mean"] = buf;
+	    }
+	  if (latest_info.veh_surface_temp_mean <= MISSING + 1)
+	    {
+	      segment_obs_dict["vehicle_surface_temp_mean"] = "missing";
+	    }
+	  else
+	    {
+	      snprintf(buf, MAX_STRING, "%.0f deg F", latest_info.veh_surface_temp_mean);
+	      segment_obs_dict["vehicle_surface_temp_mean"] = buf;
+	    }
+	  
+	  
 #ifdef NOTNOW	  
 	  segment_obs_dict["model_air_temp"] = latest_info.model_air_temp;
 	  segment_obs_dict["model_bar_press"] = latest_info.model_bar_press;
 	  segment_obs_dict["nss_air_temp_mean"] = latest_info.nss_air_temp_mean;
 	  segment_obs_dict["nss_bar_press_mean"] = latest_info.nss_bar_press_mean;
 	  segment_obs_dict["radar_ref"] = latest_info.radar_ref;
+	  segment_obs_dict["radar_hydrometeor_classification"] = latest_info.radar_hc;
+	  segment_obs_dict["radar_hybrid_reflectivity"] = latest_info.radar_hr;
+	  segment_obs_dict["model_dew_temp"] = latest_info.model_dew_temp;
+	  segment_obs_dict["vehicle_speed_mean"] = latest_info.speed_mean;
+	  segment_obs_dict["num_wipers_off"] = latest_info.num_wipers_off;
+	  segment_obs_dict["num_wipers_on"] = num_wipers_on;
+	  segment_obs_dict["num_msg_valid_speed"] = latest_info.num_msg_valid_speed;
+	  segment_obs_dict["vehicle_air_temp_mean"] = latest_info.veh_air_temp_mean;
+	  segment_obs_dict["vehicle_bar_pressure_mean"] = latest_info.veh_bar_pressure_mean;	  	  	  
+	  segment_obs_dict["vehicle_surface_temp_mean"] = latest_info.veh_surface_temp_mean;	  
 #endif
 	}
 
@@ -434,6 +594,7 @@ int create_obs_stats_json(const string &date_time_string, const unordered_map<in
 	      return -1;
 	    }
 
+	  //printf("ids id, wmo_id %d %d\n", generic_id_itr->second.id, generic_id_itr->second.wmo_id);
 	  obs_stats_json[lexical_cast<string>(generic_id_itr->second.id)] = segment_obs_dict;
 
 	}

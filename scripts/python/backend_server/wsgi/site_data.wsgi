@@ -24,10 +24,10 @@ import data_time_index
 import district_alerts
 import log_msg
 import get_site_time_series
-import get_latest_alaska_files
+#import get_latest_alaska_files
 import merge_image_data
 import tempfile
-import get_latest_minnesota_image_file
+import get_latest_image_file
 
 time.strptime("20121129","%Y%m%d") #(http://bugs.python.org/issue7980) bug in python makes strptime not thread safe, causing random complaints about strptime import failing, calling it here from the main thread should fix it, hopefully it will be fixed in future versions.
 
@@ -107,10 +107,12 @@ def application(environ, start_response):
     
     # Get rwis observations
     rwis_site_dict = sites.get_rwis_site_dict(all_sites_dict)
+    logg.write_info("rwis_site_dict has len %d" % len(rwis_site_dict))
+    
     if rwis_site_dict.has_key(site):
-        logg.write_info("site is rwis site")
+        logg.write_info("site %d is rwis site" % site)
         rwis_site = rwis_site_dict[site]
-        rwis_alerts = alerts.RwisAlerts(cf, ptime)
+        rwis_alerts = alerts.RwisAlerts(cf, ptime, logg)
         rwis = rwis_alerts.get_obs(site)
         for k in rwis.keys():
             rwis[k] = str(rwis[k])
@@ -119,11 +121,13 @@ def application(environ, start_response):
         logg.write_info("site is NOT rwis site")
 
     # Get road segment observations
+    logg.write_info("getting road segment observations")
     road_segment_site_dict = sites.get_road_segment_site_dict(all_sites_dict)
     if road_segment_site_dict.has_key(site):
         logg.write_info("site is road segment site")
         road_segment_site = road_segment_site_dict[site]
         in_segment_dict = plots.get_obs_stats(cf, site)
+	logg.write_info("obs stats dictionary for site: %d = %d" % (site, len(in_segment_dict)))
         out_segment_dict = {}
         for key,value in in_segment_dict.items():
             out_segment_dict[key.encode('ascii', 'ignore')] = value
@@ -137,18 +141,24 @@ def application(environ, start_response):
 
     output["image"] = ""
     if state == "alaska_vdt":
-        logg.write_info("getting latest image files for site: %d\n" % site)
-        alaska_image_dict = get_latest_alaska_files.get_latest_alaska_files(4200, site, sys_path.alaska_image_dir)
+        """
+        logg.write_info("getting latest image files for site: %d in image directory %s\n" % (site, sys_path.alaska_image_dir))
+        alaska_image_dict = get_latest_alaska_files.get_latest_alaska_files(34200, site, sys_path.alaska_image_dir)
 
         # Produce image file for site id
         out_file_object = tempfile.NamedTemporaryFile(delete=False)
         out_file_name = out_file_object.name
         out_file_object.close()
-        ret = merge_image_data.merge_image_data(alaska_image_dict, out_file_name, logg)
+        (ret, file_list) = merge_image_data.merge_image_data(alaska_image_dict, out_file_name, logg)
         if ret == 0:
             logg.write_info("successfully merged alaska image data to %s" % out_file_name)
             output["image"] = encode_image.encode_image(out_file_name)
 
+	    sorted_file_list = sorted(file_list)
+	    # Vid-000351000-00-00-2016-06-14-18-40.jpg
+	    latest_file_date = sorted_file_list[-1][-20:-4]
+	    output["image_display_text"] = "%s-%s-%sT%s:%s:00Z" % (latest_file_date[0:4], latest_file_date[5:7], latest_file_date[8:10], latest_file_date[11:13], latest_file_date[14:16])
+	    logg.write_info("latest alaska image file: %s, date: %s" % (sorted_file_list[-1], output["image_display_text"]))
             logg.write_info("removing %s" % out_file_name)
             os.remove(out_file_name)
         else:
@@ -156,9 +166,12 @@ def application(environ, start_response):
 
         # Base64 encode image file and store
         #output["image"] = encode_image.encode_image("/home/dicast/mdss_view/test.jpg")
+        """
     elif state == "minnesota_vdt":
         logg.write_info("getting latest image file for site: %d" % site)
-        (latest_file, latest_file_date) = get_latest_minnesota_image_file.get_latest_minnesota_image_file(4500, site, sys_path.minnesota_image_dir)
+        latest_image_file = get_latest_image_file.LatestImageFile(get_latest_image_file.Minnesota_site_dict)
+
+        (latest_file, latest_file_date) = latest_image_file.get_latest_image_file(1800, site, sys_path.minnesota_image_dir)
 	if latest_file != "":
 	    logg.write_info("encoding image file: %s" % latest_file)
 	    output["image"] = encode_image.encode_image(latest_file)
@@ -172,10 +185,28 @@ def application(environ, start_response):
         else:
             logg.write_info("did not get image data for %d" % site)
 
+        # Base64 encode image file and store
+        #output["image"] = encode_image.encode_image("/home/dicast/mdss_view/test.jpg")
+    elif state == "nevada_vdt":
+        logg.write_info("getting latest image file for site: %d" % site)
+        latest_image_file = get_latest_image_file.LatestImageFile(get_latest_image_file.Nevada_site_dict)
+
+        (latest_file, latest_file_date) = latest_image_file.get_latest_image_file(1800, site, sys_path.nevada_image_dir)
+	if latest_file != "":
+	    logg.write_info("encoding image file: %s" % latest_file)
+	    output["image"] = encode_image.encode_image(latest_file)
+
+	    # ISO 8601 2016-01-19T16:07:37Z
+	    # YYYY-MM-DDTHH:MM:SS
+	    if len(latest_file_date) >= 12:
+	        output["image_display_text"] = "%s-%s-%sT%s:%s:00Z" % (latest_file_date[0:4], latest_file_date[4:6], latest_file_date[6:8], latest_file_date[8:10], latest_file_date[10:12])
+            else:
+	        output["image_display_text"] = "date/time unknown"
+        else:
+            logg.write_info("did not get image data for %d" % site)
 
         # Base64 encode image file and store
         #output["image"] = encode_image.encode_image("/home/dicast/mdss_view/test.jpg")
-    
     # Create json output
     logg.write_info("dumping json final output")
 

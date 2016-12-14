@@ -32,6 +32,8 @@ void vdt_probe_message_qc_statistics::init()
   setattr("model_bar_pressure",static_cast<double>(vdt_const::FILL_VALUE));
   setattr("radar_ref",static_cast<double>(vdt_const::FILL_VALUE));
   setattr("radar_cref",static_cast<double>(vdt_const::FILL_VALUE));
+  setattr("radar_dual_pol_hc",static_cast<double>(vdt_const::FILL_VALUE));
+  setattr("radar_dual_pol_hr",static_cast<double>(vdt_const::FILL_VALUE));    
   setattr("radar_precip_flag",static_cast<int>(vdt_const::SHORT_FILL_VALUE));
   setattr("radar_precip_type",static_cast<int>(vdt_const::SHORT_FILL_VALUE));
   setattr("cloud_mask",static_cast<int>(vdt_const::SHORT_FILL_VALUE));
@@ -135,6 +137,7 @@ void vdt_probe_message_qc_statistics::init()
   setattr("num_trac_engaged",static_cast<int>(vdt_const::SHORT_FILL_VALUE));
   setattr("pres_wx","");
   setattr("wx","");
+  setattr("road_state_1", static_cast<int>(vdt_const::SHORT_FILL_VALUE));
 
   //These appear to be used from the RWX but not the VDT
   //TODO: refactor these to a subclass for the RWX
@@ -600,6 +603,8 @@ void vdt_probe_message_qc_statistics::augment_statistics_with_dataset(const vdt_
   get_model_bar_press() = ds.model_bar_press;
   get_radar_ref() = ds.radar_ref;
   get_radar_cref() = ds.radar_cref;
+  get_radar_dual_pol_hc() = ds.radar_dual_pol_hc;
+  get_radar_dual_pol_hr() = ds.radar_dual_pol_hr;    
   get_radar_precip_flag() = ds.radar_precip_flag;
   get_radar_precip_type() = ds.radar_precip_type;
   get_cloud_mask() = ds.cloud_mask;
@@ -613,6 +618,7 @@ void vdt_probe_message_qc_statistics::augment_statistics_with_dataset(const vdt_
   get_nss_prevail_vis_mean() = ds.nss_prevail_vis_mean;
   get_pres_wx() = ds.pres_wx;
   get_wx() = ds.wx;
+  get_road_state_1() = ds.road_state_1;
 }
 
 void vdt_probe_message_qc_statistics::get_probe_message_qc_statistics(time_t begin_time, time_t end_time, const unordered_map<int, vdt_index_distance> &nn_index_map, const vector<vdt_probe_message_qc> &qc_msgs, const unordered_map<int, int> &seg_id_map, const std::vector<std::string>& stats_fields, vector<vdt_probe_message_qc_statistics> &stats_vec, unordered_map<int, int> &seg_index_offset_map)

@@ -14,7 +14,7 @@
 
 
 #/d2/vii/data/raw/nevada
-url = "http://134.197.27.248:8001/NCAR/Transmitted/"
+url = "https://134.197.27.248:8001/NCAR/Transmitted/"
 
 import log_msg
 import os
@@ -58,7 +58,7 @@ def main():
 
     # Make dated output directory, if necessary
     out_day_dir = os.path.join(cf.paths.NEVADA_RAW_DIR, date)
-    print out_day_dir
+
     if not (os.path.exists(out_day_dir)):
         cmd  = "mkdir -p %s" % out_day_dir
         logg.write_info(cmd)
@@ -75,7 +75,7 @@ def main():
     tmp_out_file_path = out_day_dir + tmp_out_filename
     out_file_path = out_day_dir + out_filename
 
-    cmd = "curl %s > %s" % (file_path, tmp_out_file_path)
+    cmd = "curl -k %s > %s" % (file_path, tmp_out_file_path)
     logg.write_info(cmd)
     ret = os.system(cmd)
     if ret != 0:

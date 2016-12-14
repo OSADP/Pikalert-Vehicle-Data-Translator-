@@ -36,8 +36,8 @@ def get_date(file_name):
     # Vid-000351067-00-06-2014-10-29-13-20.jpg
     # Vid-000330038-00-02-2016-01-14-19-22.jpg
     date = None
-    if len(file_name) > 36:
-        date_string = file_name[20:36]
+    if len(file_name) > 21:
+        date_string = file_name[-20:-4]
         date = "%s%s%s%s%s" % (date_string[0:4], date_string[5:7], date_string[8:10], date_string[11:13], date_string[14:16])
 
     return date
@@ -103,9 +103,10 @@ def get_recent_files(delta_seconds, file_list):
         # Vid-000351067-00-06-2014-10-29-13-20.jpg
         file_time = tim.datetogmt(date)
         delta_time = abs(file_time - current_time)
-
+        print "delta_time: ", delta_time, delta_seconds
         if delta_time < delta_seconds:
             reduced_list.append(fname)
+            print "appending: ", fname
 
     return reduced_list
 

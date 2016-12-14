@@ -40,8 +40,11 @@ def merge_image_data(dir_dict, output_image_file, logg):
 
     Returns
     -------
+    (err_code, file_list)
+    
     err_code : int
         Non-zero value indicates error code, or zero on success.
+    file_list : list of files merged
     """
 
     file_list = []
@@ -50,12 +53,13 @@ def merge_image_data(dir_dict, output_image_file, logg):
         if file_name != "":
             file_list.append(os.path.join(direct, file_name))
 
-    ret = 0
+
     if len(file_list) > 0:
         command_list = ["montage"] + file_list + ["-mode"] + ["Concatenate"] + [output_image_file]
         ret = run_cmd(command_list, logg)
-        return ret
-    return -1
+        return (ret, file_list)
+    else:
+        return (-1, file_list)
 
 def main():
 

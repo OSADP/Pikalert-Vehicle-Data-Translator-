@@ -70,6 +70,9 @@ public:
   /** @brief perform debugging at specified debug level */
   int debug;		   	               
 
+  /** @brief use alaska projection if true  */
+  bool alaska;
+
   /** @brief test application if true  */
   bool test;				       
 
@@ -87,6 +90,12 @@ public:
 
   /** @brief input file pattern for files with bref radar data */
   string radar_file_pattern;
+
+  /** @brief input file pattern for files with dual pol classification radar data */
+  string radar_file_pattern_dual_pol_hc;
+
+  /** @brief input file pattern for files with dual pol reflectivity data */
+  string radar_file_pattern_dual_pol_hr;  
 
   /** @brief if set to true use the old MRMS reflectivity format for playback purposes  */
   bool old_radar;
@@ -119,7 +128,10 @@ public:
   string probe_message_qc_statistics_out_file; 
 
   /** @brief valid time of data in unix time format */
-  double validtime;                          
+  double validtime;
+
+  /** @brief radius to use to get radar values surrounding obs point */
+  float radar_rad;
 
   /** @brief usage 
    * provides usage information

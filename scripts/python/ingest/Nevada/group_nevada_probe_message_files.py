@@ -22,7 +22,7 @@ import time
 import name_schema
 import shutil
 from netCDF4 import Dataset
-
+import processed_file
 
 # group_nevada_probe_message_files.py -d 2 vii_paths.py /d2/vii/data/static/cdl/probe_message.cdl $VII_DATA/tmp $VII_DATA/processed/nv_csv2nc $VII_DATA/processed/nv_probe_message
 
@@ -167,17 +167,18 @@ def order_files(fname, time_interval, cdl_file, work_dir, out_dir, out_name_sche
 
     in_nc = Dataset(fname, "r")
     
+    
     var_table = in_nc.variables
-    
-    # In particular, get obs_time variable
-    obs_time = in_nc.variables["obs_time"][:]
-    
+
     # Check that the input file is not empty before proceeding
     rec_num = in_nc.variables["obs_time"].shape[0]
     if rec_num == 0:
         logg.write_info("The file %s is empty")
         in_nc.close()
-        return 
+        return
+    
+    # In particular, get obs_time variable
+    obs_time = in_nc.variables["obs_time"][:]
 
     # Open appropriate work files and store their file pointers and
     # number of records in dictionary
@@ -250,7 +251,7 @@ def order_files(fname, time_interval, cdl_file, work_dir, out_dir, out_name_sche
         out_file_list.append(out_file)
         os.rename(work_file, os.path.join(dated_out_dir, out_file))
                   
-    return out_file_list
+    return sorted(out_file_list)
 
 def group_nevada_probe_message_files(fname, time_interval, cdl_file, work_dir, out_dir, out_name_schema, logg):
 

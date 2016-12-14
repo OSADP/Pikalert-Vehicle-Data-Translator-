@@ -45,6 +45,8 @@ using boost::format;
 extern Log *Logg;
 extern int Debug_level;
 
+const double EPS = 10E-6;
+
 process::~process()
 {
 }
@@ -166,8 +168,9 @@ int process::run()
 	  probe_rdr.get_probe_messages(name_id_pairs, raw_msgs);
 	}
 
-      Logg->write_time_info("filtering out messages with missing or bad latitude/longitude or obs time that is not relevant to the specified begin_time, end_time interval\n");
+      Logg->write_time_info("filtering out messages with missing or bad latitude/longitude or obs time that is not relevant to the specified begin_time, end_time interval: %s, %s (%ld, %ld)\n", begin_time_string.c_str(), end_time_string.c_str(), begin_time, end_time);
       size_t bad_msg_count = 0;
+      size_t stationery_vehicle_count = 0;
       for (size_t i=0; i<raw_msgs.size(); i++)
 	{
 	  double raw_lat = raw_msgs[i].get_latitude();
@@ -175,23 +178,32 @@ int process::run()
 	  time_t obs_time = raw_msgs[i].get_obs_time();
 	  if (vdt_point::check_lat_lon(raw_lat, raw_lon) && obs_time != vdt_const::FILL_VALUE)
 	    {
-	      time_t begin_time_delta = begin_time - obs_time;
-	      time_t end_time_delta = obs_time - end_time;
-	      if (begin_time_delta < 0 && (-begin_time_delta < cfg_reader.max_begin_time_delta))
+	      double speed = raw_msgs[i].getattr<double>("speed");
+	      if (speed > EPS)
 		{
-		  msgs.push_back(raw_msgs[i]);
-		}
-	      else if (obs_time < end_time)
-		{
-		  msgs.push_back(raw_msgs[i]);
-		}
-	      else if (end_time_delta < cfg_reader.max_end_time_delta)
-		{
-		  msgs.push_back(raw_msgs[i]);
+		  time_t begin_time_delta = begin_time - obs_time;
+		  time_t end_time_delta = obs_time - end_time;
+		  if (begin_time_delta < 0 && (-begin_time_delta < cfg_reader.max_begin_time_delta))
+		    {
+		      msgs.push_back(raw_msgs[i]);
+		    }
+		  else if (obs_time < end_time)
+		    {
+		      msgs.push_back(raw_msgs[i]);
+		    }
+		  else if (end_time_delta < cfg_reader.max_end_time_delta)
+		    {
+		      msgs.push_back(raw_msgs[i]);
+		    }
+		  else
+		    {
+		      bad_msg_count += 1;
+		    }
 		}
 	      else
 		{
 		  bad_msg_count += 1;
+		  stationery_vehicle_count += 1;
 		}
 	    }
 	  else
@@ -200,7 +212,7 @@ int process::run()
 	    }
 	}
 
-      Logg->write_time_info("removed %ld out of %ld messages\n", bad_msg_count, raw_msgs.size());
+      Logg->write_time_info("removed %ld out of %ld messages. Number stationery vehicles %ld\n", bad_msg_count, raw_msgs.size(), stationery_vehicle_count);
 
       // Log optional input files
       if (args.radar_file_pattern != "")
@@ -232,15 +244,24 @@ int process::run()
 	  Logg->write_time_info("using %s for cloud class file\n", args.cloud_class_file.c_str());
 	}
 
+      if (args.old_radar)
+	{
+	  Logg->write_time_info("using old radar data format\n");
+	}
+
       // Read in optional input files
       Logg->write_time_info("constructing vdt_probe_message_datasets from optional input files\n");
       ds = new vdt_probe_message_datasets(&cfg_reader,
 					  args.radar_file_pattern,
 					  args.radar_file_pattern_cref,
+					  args.radar_file_pattern_dual_pol_hc,
+					  args.radar_file_pattern_dual_pol_hr,
+					  args.radar_rad,
 					  args.metar_file,
 					  args.rwis_file,
 					  args.rtma_file,
 					  args.cloud_class_file,
+					  args.alaska,
 					  args.old_radar,
 					  Logg);
 

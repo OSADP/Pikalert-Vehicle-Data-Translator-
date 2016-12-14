@@ -23,7 +23,9 @@
 #include <libconfig.h++>
 #include "config_reader.hh"
 #include "vdt4/vdt_nssl_dataset.hh"
+#include "vdt4/vdt_dual_pol_dataset.hh"
 #include "rwx/rwx_rtma_dataset.hh"
+#include "rwx/rwx_ak_rtma_dataset.hh"
 #include "vdt4/vdt_cloud_mask_dataset.hh"
 #include "vdt4/vdt_probe_message.hh"
 #include "vdt4/vdt_probe_message_qc.hh"
@@ -58,19 +60,27 @@ public:
    * @param[in] cfg config reader object holding configuration information
    * @param[in] radar_file_pattern  input file pattern for files with radar data
    * @param[in] radar_file_pattern_cref  input file pattern for files with composite radar data
+   * @param[in] radar_file_pattern_dual_pol_hc  input file pattern for files with level 3 classification radar data
+   * @param[in] radar_file_pattern_dual_pol_hr  input file pattern for files with level 3 reflectivity radar data
    * @param[in] metar_file  input file with metar data
    * @param[in] rwis_file  input file with rwis data
    * @param[in] rtma_file  input file wiith rtma data
+   * @param[in] is_alaska true if state is alaska
+   * @param[in] old_radar true if radar is old format
    * @param[in] cloud_class_file  input file with cloud classification data
    * @param[in] logg  file handle for log output
    */
   vdt_probe_message_datasets(const config_reader *cfg,
 			     string radar_file_pattern,
 			     string radar_file_pattern_cref,
+			     string radar_file_pattern_dual_pol_hc,
+			     string radar_file_pattern_dual_pol_hr,
+			     float radar_rad,
                              string metar_file,
                              string rwis_file,
                              string rtma_file,
                              string cloud_class_file,
+			     bool is_alaska,
 			     bool old_radar,
                              Log* logg = NULL);
   /**
@@ -126,6 +136,9 @@ public:
 
 protected:
 
+  /** @brief state is alaska? */
+  bool alaska;
+
   /** @brief cfg_reader configuration reader object */
   const config_reader *cfg_reader;
 
@@ -144,8 +157,17 @@ protected:
   /** @brief radar  pointer to a cref vdt_nssl_radar_dataset object */
   vdt_radar_dataset  *radar_cref;
 
-  /** @brief rtma  pointer to a vdt_rtma_dataset object */
+  /** @brief radar  pointer to a level 3 classification vdt_dual_pol_radar_dataset object */
+  vdt_dual_pol_tiled_radar_dataset  *radar_dual_pol_hc;
+
+  /** @brief radar  pointer to a level 3 classification vdt_dual_pol_radar_dataset object */
+  vdt_dual_pol_tiled_radar_dataset  *radar_dual_pol_hr;  
+
+  /** @brief rtma  pointer to an rwx_rtma_dataset object */
   rwx_rtma_dataset *rtma;
+
+  /** @brief rtma  pointer to an rwx_ak_rtma_dataset object */
+  rwx_ak_rtma_dataset *ak_rtma;
 
   /** @brief cloud_class  pointer to a vdt_cloud_mask_dataset object */
   vdt_cloud_mask_dataset *cloud_class;

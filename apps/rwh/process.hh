@@ -103,15 +103,15 @@ public:
    */
   int run();
   
-  int determine_prev_rwh_hazard(double begin_time, const vector<int> &seg_ids, const vector<prev_rwh *> &prev_rwh_data, vector<rwh_existing_hazards *> &rwh_eh);
+  int determine_prev_rwh_hazard(double begin_time, const vector<int> &seg_ids, const vector<prev_rwh *> &prev_rwh_data, vector<rwh_existing_hazards *> &rwh_eh, unordered_map<int, int> &eh_seg_index_map);
   
   int write_hazard_file(const vector<int> &seg_ids, unordered_map<int, int> &seg_coll_ind_map, unordered_map<int, int> &seg_site_map, const vector<hazard_out *> &vdt_hazard_data, const vector<hazard_out *> &fcst_hazard_data, string cdl_file, string output_file);
   
   int get_hazard_data(double begin_time, double valid_time, vector<vdt_probe_message_qc_statistics> &seg_stats, hazard_out *hazard_data);
   
-  int augment_statistics_with_fcst(double valid_time, site_vars_fcst_data &site_data, const vector<int> &seg_ids, unordered_map<int, int> &seg_site_map, const vector<rwh_existing_hazards *> &rwh_eh, vector<vdt_probe_message_qc_statistics> &seg_stats);
+  int augment_statistics_with_fcst(double valid_time, site_vars_fcst_data &site_data, const vector<int> &seg_ids, unordered_map<int, int> &seg_site_map, const vector<rwh_existing_hazards *> &rwh_eh, unordered_map<int, int> eh_seg_index_map, vector<vdt_probe_message_qc_statistics> &seg_stats);
   
-  int augment_statistics_with_collection(const rwx_vector_collection &vector_collection, const vector<rwh_existing_hazards *> &rwh_eh, vector<vdt_probe_message_qc_statistics> &seg_stats);
+  int augment_statistics_with_collection(const rwx_vector_collection &vector_collection, const vector<rwh_existing_hazards *> &rwh_eh, unordered_map<int, int> eh_seg_index_map, vector<vdt_probe_message_qc_statistics> &seg_stats);
   
   int get_fcst_site_indicies(ncfc_io *data, const vector<site *> &sites);
   

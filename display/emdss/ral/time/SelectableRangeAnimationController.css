@@ -1,0 +1,57 @@
+.AnimationController
+{
+    border       : 1px solid black;
+    border-radius: 5px;
+    margin-top   : 5px;
+    padding      : 10px;
+    width        : 230px;
+}
+
+
+.AnimationController_button
+{
+    float : left;
+    margin: 1px;
+    width: 25px;
+    height: 25px;
+    padding: 0px;
+    margin-bottom:30px;
+}
+
+
+.AnimationController_slider
+{
+    margin-top: 35px;
+    margin-bottom: 20px;
+    height:5px;
+}
+
+.AnimationController_select
+{
+  align: top;
+  float:right;
+  margin-top: -60px;
+}
+
+.ui-slider .ui-slider-handle
+{
+  height: 15px;
+  width: 10px;
+}
+
+.AnimationController_label
+{
+    position   : absolute;
+    text-align : center;
+    font-family: Avenir, Arial, Helvetica, sans-serif;
+    font-size  : 8pt;
+}
+
+.AnimationController_current
+{
+  color: red;
+  padding:0px;
+  margin-top: 0px;
+  font-weight: bold;
+}
+

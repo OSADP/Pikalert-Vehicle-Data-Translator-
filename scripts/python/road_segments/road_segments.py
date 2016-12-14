@@ -368,8 +368,8 @@ def main():
                 aux_ids.append(aux_id)
             mid_lat_lon_index += 1
 
-
-    print aux_ids
+    #print aux_ids
+    #print pt_names
     # Now have a list of different information for the line in
     # lats, lons, pt_names, ids
 

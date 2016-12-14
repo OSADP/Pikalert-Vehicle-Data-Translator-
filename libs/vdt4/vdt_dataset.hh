@@ -47,6 +47,8 @@ public:
     radar_y = vdt_const::SHORT_FILL_VALUE;
     radar_ref = vdt_const::FILL_VALUE;
     radar_cref = vdt_const::FILL_VALUE;
+    radar_dual_pol_hc = vdt_const::FILL_VALUE;
+    radar_dual_pol_hr = vdt_const::FILL_VALUE;        
     radar_precip_flag = vdt_const::SHORT_FILL_VALUE;
     radar_precip_type = vdt_const::SHORT_FILL_VALUE;
     cloud_x = vdt_const::SHORT_FILL_VALUE;
@@ -62,6 +64,7 @@ public:
     nss_prevail_vis_mean = vdt_const::FILL_VALUE;
     pres_wx = "";
     wx = "";
+    road_state_1 = vdt_const::SHORT_FILL_VALUE;
   };
 
   /** @brief lat latitude */
@@ -106,6 +109,12 @@ public:
   /** @brief  composite reflectivity from the radar grid */
   float radar_cref;
 
+  /** @brief level 3 classification from the radar grid */
+  float radar_dual_pol_hc;
+  
+  /** @brief level 3 reflectivity from the radar grid */
+  float radar_dual_pol_hr;    
+
   /** @brief  precip from the radar grid */
   short radar_precip_flag;
 
@@ -127,6 +136,9 @@ public:
   /** @brief weather phenomena from metar */
   std::string wx;
 
+  /** @brief road state 1 from madis */
+  int road_state_1;
+  
   /** @brief  mean air temperature for the nearest surface stations */
   float nss_air_temp_mean;
 

@@ -30,6 +30,8 @@ const char* vdt_rwis_file_reader::WIND_GUST_DD = "windGustDD";
 const char* vdt_rwis_file_reader::MAX_WEATHER_LEN = "maxWeatherLen";
 const char* vdt_rwis_file_reader::PRES_WX = "presWx";
 
+const char* vdt_rwis_file_reader::ROAD_STATE_1 = "roadState1";
+
 const char* vdt_rwis_file_reader::FILL_ATTR = "_FillValue";
 
 //#define QC_DEBUG 1
@@ -87,6 +89,7 @@ int vdt_rwis_file_reader::get_rwis(vector<vdt_surface_observation>& obs)
   float gust_fill = gust_var->get_att(FILL_ATTR)->values()->as_float(0);
   int weatherlen = nc->get_dim(MAX_WEATHER_LEN)->size();
   NcVar* pres_wx_var = nc->get_var(PRES_WX);
+  NcVar* road_state_1_var = nc->get_var(ROAD_STATE_1);
 
   char* stn_name = new char[stnlen];
   char* pres_wx = new char[weatherlen];
@@ -115,6 +118,7 @@ int vdt_rwis_file_reader::get_rwis(vector<vdt_surface_observation>& obs)
       gust_var->set_cur(i);
       gust_qc_var->set_cur(i);
       pres_wx_var->set_cur(i);
+      road_state_1_var->set_cur(i);
 
       double obstime;
       float lat,lon,elev;
@@ -122,6 +126,7 @@ int vdt_rwis_file_reader::get_rwis(vector<vdt_surface_observation>& obs)
       float precip_hr;
       float vis;
       float spd,dir,gust;
+      short road_state_1;
 
       stn_name_var->get(stn_name,1,stnlen);
       lat_var->get(&lat,1);
@@ -138,7 +143,8 @@ int vdt_rwis_file_reader::get_rwis(vector<vdt_surface_observation>& obs)
       spd_var->get(&spd,1);
       gust_var->get(&gust,1);
       pres_wx_var->get(pres_wx,1,weatherlen);
-
+      road_state_1_var->get(&road_state_1, 1);
+      
       char qc_tmp;
       if(temp_qc_var->get(&qc_tmp,1) && !passedQC(qc_tmp))
       {
@@ -253,7 +259,8 @@ int vdt_rwis_file_reader::get_rwis(vector<vdt_surface_observation>& obs)
       o.set_wind_dir(dir);
       o.set_wind_gust(gust);
       o.set_pres_wx(pres_wx);
-
+      o.set_road_state_1(road_state_1);
+			 
       obs.push_back(o);
     }
   delete [] stn_name;

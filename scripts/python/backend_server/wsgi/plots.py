@@ -9,6 +9,7 @@
 #                                                                                #
 # ============================================================================== #
 
+import log_msg
 import math
 import backend_sys_path
 import sys
@@ -118,6 +119,8 @@ def get_site_index(nc_file, site_num):
     """
     
     sites = nc_file.variables["site_list"][:]
+    # print "site_num: ", site_num
+    # print "sites: ", sites
     site_index = numpy.where(sites == site_num)
     
     if len(site_index[0]) == 0:
@@ -180,7 +183,7 @@ class RdwxNetcdfFileData(object):
 
         if not os.path.exists(rdwx_fpath):
             self.rdwx_error = True
-            #print "rdwx_fpath does not exist"
+            print "rdwx_fpath does not exist"
 
         if self.rdwx_error:
             self.rdwx_file = rdwx_fpath
@@ -206,11 +209,12 @@ class RdwxNetcdfFileData(object):
         else:
             self.rdwx_file = rdwx_fpath
             self.site_num = site_num
-            #print "trying to open dataset: ", self.rdwx_file
+            # print "trying to open dataset: ", self.rdwx_file
 
             self.rdwx_nc = Dataset(self.rdwx_file, "r")
             #print "rdwx_nc: ", self.rdwx_nc
             self.rdwx_site_index = get_site_index(self.rdwx_nc, site_num)
+            # print "rdwx_site_index: ", self.rdwx_site_index
             self.dates = get_time_info(self.rdwx_nc, current_utc_hour, tz_info)
             self.prob_snow = None
             self.prob_rain = None
@@ -238,11 +242,15 @@ class RdwxNetcdfFileData(object):
 
         nan = float('nan')
         if self.prob_rain == None and self.prob_snow == None and self.prob_ice == None and self.precip_accum_snow == None and self.precip_accum_rain == None and self.precip_accum_ice == None:
-            if self.rdwx_site_index != ():
-                #print "getting prob_precip"
+            # print "in extract_precip_info: "
+            if self.rdwx_site_index != ([],):
+                #print "getting prob_precip",
+                #print "rdwx_site_index, len:  ", self.rdwx_site_index, len(self.rdwx_nc.variables["prob_precip01"])
+                #print "self.rdwx_nc.variables['prob_precip01']: ", self.rdwx_nc.variables["prob_precip01"]
                 prob_precip = ma.filled(self.rdwx_nc.variables["prob_precip01"][self.rdwx_site_index], 0).flatten()
                 #print "got precip"
                 prob_rain = ma.filled(self.rdwx_nc.variables["cprob_rain"][self.rdwx_site_index], 0).flatten()
+                #print "initial prob_rain: ", prob_rain
                 #print "got rain"
                 prob_snow = ma.filled(self.rdwx_nc.variables["cprob_snow"][self.rdwx_site_index], 0).flatten()
                 #print "got snow"
@@ -316,7 +324,7 @@ class RdwxNetcdfFileData(object):
         
         nan = float('nan')
         if self.snow_accum == None:
-            if self.rdwx_site_index != ():
+            if self.rdwx_site_index != ([],):
                 snow_accum_var = self.rdwx_nc.variables["snow_accum_total_inches"]
                 snow_accum = ma.filled(snow_accum_var[self.rdwx_site_index], 0).flatten()
                 snow_accum[snow_accum==9.9692099683868690e+36] = 0
@@ -337,7 +345,7 @@ class RdwxNetcdfFileData(object):
 
         nan = float('nan')
         if self.temps == None and self.dewps == None and self.temp_units == None and self.dewp_units == None:
-            if self.rdwx_site_index != ():
+            if self.rdwx_site_index != ([],):
                 temp_var = self.rdwx_nc.variables[backend_sys_path.Met_vars.rdwx_temp_var]
                 #print "temp_var"
                 dewp_var = self.rdwx_nc.variables[backend_sys_path.Met_vars.rdwx_dewp_var]
@@ -401,7 +409,7 @@ class RdwxNetcdfFileData(object):
 
         nan = float('nan')
         if self.wind_spd == None and self.wind_u_dir == None and self.wind_v_dir == None and self.wind_spd_units == None:
-            if self.rdwx_site_index != ():
+            if self.rdwx_site_index != ([],):
                 wind_spd_var = self.rdwx_nc.variables[backend_sys_path.Met_vars.rdwx_wind_spd_var]
                 wind_spd_units = wind_spd_var.units
                 wind_spd = ma.filled(wind_spd_var[self.rdwx_site_index], nan).flatten()
@@ -517,7 +525,7 @@ class TmtNetcdfFileData(object):
 
         return self.snow_accum
 
-def get_summary_plot(cf, rdwx_fpath, tmt_fpath, site_num, current_utc_hour, state_timezone, outfile=""):
+def get_summary_plot(logg, cf, rdwx_fpath, tmt_fpath, site_num, current_utc_hour, state_timezone, outfile=""):
     """ Makes a plot summary of road conditions.
 
     Parameters
@@ -538,37 +546,40 @@ def get_summary_plot(cf, rdwx_fpath, tmt_fpath, site_num, current_utc_hour, stat
         Optional argument for user to save plots to an outfile, left empty returns a base 64 encoded plot
     """
 
-    print "in get_summary_plot"
+    logg.write_info("get_summary_plot: calling get_rdwx_sites")
     all_sites = sitedict.get_rdwx_sites(cf)
-    print all_sites
+
     try:
         site_num_test = all_sites[site_num]
     except:
         return
     
     # Retrieve data from netcdf files
-    print "getting rdwx data"
+    logg.write_info("get_summary_plot: calling RdwxNetcdfFileData using rdwx_fpath %s and site_num %d" % (rdwx_fpath, site_num))
     rdwx_nc_object = RdwxNetcdfFileData(rdwx_fpath, site_num, current_utc_hour, state_timezone)
 
-    print "getting tmt data"
+    logg.write_info("get_summary_plot: calling TmtNetcdfFileData using tmt_fpath %s and site_num %d" % (tmt_fpath, site_num))
     tmt_nc_object = TmtNetcdfFileData(tmt_fpath, site_num, current_utc_hour, state_timezone)
 
-    print "extracting data precip"
+    logg.write_info("get_summary_plot: calling extract_precip_info()")
     rdwx_nc_object.extract_precip_info()
-    print "extracting temp dewp"
+
+    logg.write_info("get_summary_plot: calling extract_temp_dewp()")
     rdwx_nc_object.extract_temp_dewp()
 
-    print "extracting wind info"
+    logg.write_info("get_summary_plot: calling extract_wind_info()")
     rdwx_nc_object.extract_wind_info()
-    print "extracting snow accum"
+
+    logg.write_info("get_summary_plot: calling extract_snow_accum()")
     rdwx_nc_object.extract_snow_accum()
-    print "extracting road temps"
+
+    logg.write_info("get_summary_plot: calling extract_road_temps()")
     tmt_nc_object.extract_road_temps()
-    print "finished extracting data"
+
 
     # Retrieve time alerts and recommended treatments
+    logg.write_info("get_summary_plot: calling get_time_alerts_tmts()")
     time_alerts, time_tmts = get_time_alerts_tmts(cf, site_num)
-    print "getting alerts"
     
     fig=plt.figure(figsize=(FIG_WIDTH,FIG_HEIGHT), dpi=150)
 
@@ -581,7 +592,7 @@ def get_summary_plot(cf, rdwx_fpath, tmt_fpath, site_num, current_utc_hour, stat
     axs = make_wind_graph(axs, rdwx_nc_object, snow_accum_plot_bool)
     if len(time_alerts) > 0:
         axs = make_rec_treatments_bar(axs, time_tmts, time_alerts, tmt_nc_object, snow_accum_plot_bool)
-    print "made plots"
+    logg.write_info("get_summary_plot: finished making plots")
     
     # fix missing major tick issue caused by autofmt_axdate
     fig.autofmt_xdate(rotation=0, ha='left') # horizontal rotation and left alignment of date
@@ -753,6 +764,9 @@ def make_precip_graph(ax_list, rdwx_nc_object, snow_accum_plot_bool):
     prob_rain = rdwx_nc_object.prob_rain
     prob_ice = rdwx_nc_object.prob_ice
     prob_snow = rdwx_nc_object.prob_snow
+    # print "dates: ", rdwx_nc_object.dates, len(rdwx_nc_object.dates)
+    # print "prob_rain no dates: ", prob_rain
+    # print "prob_rain: ", prob_rain[0:len(rdwx_nc_object.dates)] 
     precip_ax.bar(rdwx_nc_object.dates, prob_rain[0:len(rdwx_nc_object.dates)], width=0.04, label='Rain', color='g') 
     precip_ax.bar(rdwx_nc_object.dates, prob_snow[0:len(rdwx_nc_object.dates)], width=0.04, label='Snow', color='b',bottom=prob_rain[0:len(rdwx_nc_object.dates)]) 
     precip_ax.bar(rdwx_nc_object.dates, prob_ice[0:len(rdwx_nc_object.dates)], width=0.04, label='Ice', color='r',bottom=prob_rain[0:len(rdwx_nc_object.dates)]+prob_snow[0:len(rdwx_nc_object.dates)])
@@ -1004,7 +1018,8 @@ def get_rwis(cf, site, ptime):
 def main():
 
      cf = backend_sys_path.State_dictionary["alaska"]
-     get_summary_plot(cf, "/home/dicast/mdss_view/rdwx_fcst.20140507.1315.nc", "/home/dicast/mdss_view/merge_rec_tmt.20140507.1315.nc", 70261000, 13, pytz.timezone("US/Alaska"), "/scratch/new.testme.png")
+     logg = log_msg.LogMessage("")
+     get_summary_plot(logg, cf, "/home/dicast/mdss_view/rdwx_fcst.20140507.1315.nc", "/home/dicast/mdss_view/merge_rec_tmt.20140507.1315.nc", 70261000, 13, pytz.timezone("US/Alaska"), "/scratch/new.testme.png")
     
 if "__main__" == __name__:
 #    get_summary_plot("/d1/dicast/rctm/rdwx_fcst/20121128/rdwx_fcst.20121128.1115.nc",70133008)

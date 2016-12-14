@@ -182,22 +182,21 @@ class DataTimeIndex(object):
         
 def main():
 
-    print get_latest_file("/d2/vii/data/processed/co_noaa_watch_warning_json")
+    print get_latest_file("/d2/vii/data/processed/minnesota/latest_vehicles")
     """
     print get_latest_file_using_time(3600, "201311200025", "/d2/dicast/rctm/logicast/rdwx_fcst")
     print get_latest_file_using_time(3600, "2013112100", "/d2/dicast/rctm/logicast/rdwx_fcst")
     print get_latest_file_using_time(3600, "201311230001", "/d2/dicast/rctm/logicast/rdwx_fcst")
-
+    """
     import backend_sys_path
-    product_dictionary = backend_sys_path.State_dictionary['minnesota'].product_dictionary
+    product_dictionary = backend_sys_path.State_dictionary['minnesota_vdt'].product_dictionary
     print product_dictionary
     data_time_index = DataTimeIndex(product_dictionary)
     #print data_time_index.get_dict()
-    print data_time_index.get_latest_data_time("district_alerts")
+    #print data_time_index.get_latest_data_time("district_alerts")
     #print data_time_index.get_latest_data_time("rec_treatment")
     #print data_time_index.get_latest_data_time_dict()
     print data_time_index.get_latest_data_time_list()
-    """
     
 if __name__ == "__main__":
     main()

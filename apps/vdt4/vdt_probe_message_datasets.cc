@@ -42,22 +42,32 @@ inline double return_time(vdt_surface_observation o, size_t k )
 vdt_probe_message_datasets::vdt_probe_message_datasets(const config_reader *cfg,
 						       string radar_file_pattern,
 						       string radar_file_pattern_cref,
+						       string radar_file_pattern_dual_pol_hc,
+						       string radar_file_pattern_dual_pol_hr,
+						       float radar_rad,
 						       string metar_file,
 						       string rwis_file,
 						       string rtma_file,
 						       string cloud_class_file,
+						       bool is_alaska,
 						       bool old_radar,
 						       Log* logg) : cfg_reader(cfg)
 {
+  alaska = false;
   radar = NULL;
   radar_cref = NULL;
+  radar_dual_pol_hc = NULL;
+  radar_dual_pol_hr = NULL;  
   rtma = NULL;
   cloud_class = NULL;
   this->logg = logg;
 
+  if (is_alaska)
+    alaska = true;
+  
   if (radar_file_pattern != "")
     { 
-      if(old_radar)
+      if (old_radar)
       {
 	Logg->write_time_info("Warning: using old MRMS radar format\n");
 	Logg->write_time_info("calling vdt_nssl_tiled_radar_dataset(%s)\n", radar_file_pattern.c_str());
@@ -80,6 +90,24 @@ vdt_probe_message_datasets::vdt_probe_message_datasets(const config_reader *cfg,
       radar_ds2->corner_tests();
       radar_cref = radar_ds2;
     }
+  if (radar_file_pattern_dual_pol_hc != "")
+    { 
+      Logg->write_time_info("calling vdt_dual_pol_tiled_radar_dataset(%s)\n", radar_file_pattern_dual_pol_hc.c_str());
+      vdt_dual_pol_tiled_radar_dataset* radar_ds3 = new vdt_dual_pol_tiled_radar_dataset(radar_file_pattern_dual_pol_hc.c_str(), 1, radar_rad, logg);
+      //Provides a print out of the reflectivity at the 4 bounding corners
+      radar_ds3->corner_tests();
+      radar_dual_pol_hc = radar_ds3;
+    }
+
+  if (radar_file_pattern_dual_pol_hr != "")
+    { 
+      Logg->write_time_info("calling vdt_dual_pol_tiled_radar_dataset3(%s)\n", radar_file_pattern_dual_pol_hr.c_str());
+      vdt_dual_pol_tiled_radar_dataset* radar_ds3 = new vdt_dual_pol_tiled_radar_dataset(radar_file_pattern_dual_pol_hr.c_str(), 0, radar_rad, logg);
+      //Provides a print out of the reflectivity at the 4 bounding corners
+      radar_ds3->corner_tests();
+      radar_dual_pol_hr = radar_ds3;
+    }
+  
   if (metar_file != "")
     {
       Logg->write_time_info("calling vdt_metar_file_reader(%s)\n", metar_file.c_str());
@@ -102,12 +130,26 @@ vdt_probe_message_datasets::vdt_probe_message_datasets(const config_reader *cfg,
     }
   if (rtma_file != "")
     {
-      Logg->write_time_info("calling rwx_rtma_dataset(%s)\n", rtma_file.c_str());
-      rtma = new rwx_rtma_dataset(rtma_file.c_str(), cfg->rtma_proj);
-      if (rtma->error != "")
+      if (alaska)
 	{
-	  Logg->write_time_warning("failed reading rtma file, error: %s\n", rtma->error.c_str());
-	  rtma = NULL;
+	  Logg->write_time_info("constructing rwx_ak_rtma_dataset(%s)\n", rtma_file.c_str());
+	  
+	  ak_rtma = new rwx_ak_rtma_dataset(rtma_file.c_str(), cfg->ak_rtma_proj_info);
+	  if (ak_rtma->error != "")
+	    {
+	      Logg->write_time_warning("failed reading ak_rtma file, error: %s\n", ak_rtma->error.c_str());
+	      ak_rtma = NULL;
+	    }
+	}
+      else
+	{
+	  Logg->write_time_info("constructing rwx_rtma_dataset(%s)\n", rtma_file.c_str());
+	  rtma = new rwx_rtma_dataset(rtma_file.c_str(), cfg->rtma_proj);
+	  if (rtma->error != "")
+	    {
+	      Logg->write_time_warning("failed reading rtma file, error: %s\n", rtma->error.c_str());
+	      rtma = NULL;
+	    }
 	}
     }
   if (cloud_class_file != "")
@@ -116,7 +158,6 @@ vdt_probe_message_datasets::vdt_probe_message_datasets(const config_reader *cfg,
       //Logg->write_time_info("calling vdt_cloud_mask_dataset(%s)\n", cloud_class_file.c_str());
       //cloud_class = new vdt_cloud_mask_dataset(cloud_class_file.c_str());
     }
-
 
   vdt_point::get_points_lle(obs, surface_station_latitude, surface_station_longitude, surface_station_elevation);
 
@@ -129,17 +170,38 @@ vdt_probe_message_datasets::~vdt_probe_message_datasets()
   if (radar != NULL)
     {
       delete radar;
+      radar = NULL;
     }
   if (radar_cref != NULL)
     {
       delete radar_cref;
+      radar_cref = NULL;
     }
+  if (radar_dual_pol_hc != NULL)
+    {
+      delete radar_dual_pol_hc;
+      radar_dual_pol_hc = NULL;
+    }
+  if (radar_dual_pol_hr != NULL)
+    {
+      delete radar_dual_pol_hr;
+      radar_dual_pol_hr = NULL;
+    }
+  
   if (rtma != NULL)
     {
       delete rtma;
+      rtma = NULL;
+    }
+
+  if (ak_rtma != NULL)
+    {
+      delete ak_rtma;
+      ak_rtma = NULL;
     }
 
   delete surface_obs_nearest_nbr;
+  surface_obs_nearest_nbr = NULL;
 }
 
 void vdt_probe_message_datasets::get_point_datasets(double obs_time, const vector<vdt_point> &vdt_points, vector<vdt_dataset> &datasets)
@@ -164,6 +226,8 @@ void vdt_probe_message_datasets::update_probe_messages(const config_reader& cfg,
       vdt_dataset ds = get_vdt_dataset(obs_time,  msg.get_point());
       qc_msg.set_radar_ref(ds.radar_ref);
       qc_msg.set_radar_cref(ds.radar_cref);
+      qc_msg.set_radar_dual_pol_hc(ds.radar_dual_pol_hc);
+      qc_msg.set_radar_dual_pol_hr(ds.radar_dual_pol_hr);            
       qc_msg.set_model_dewpoint(ds.model_dewpoint);
       qc_msg.set_model_air_temp(ds.model_air_temp);
       qc_msg.set_model_bar_press(ds.model_bar_press);
@@ -184,6 +248,8 @@ vdt_dataset vdt_probe_message_datasets::get_vdt_dataset(double obs_time, const v
 {
   float ref = vdt_const::FILL_VALUE;
   float cref = vdt_const::FILL_VALUE;
+  float dual_pol_hc_val = vdt_const::FILL_VALUE;
+  float dual_pol_hr_val = vdt_const::FILL_VALUE;    
   short radar_precip_flag = vdt_const::FILL_VALUE;
   short radar_precip_type = vdt_const::FILL_VALUE;
   float model_dewpoint = vdt_const::FILL_VALUE;
@@ -212,16 +278,48 @@ vdt_dataset vdt_probe_message_datasets::get_vdt_dataset(double obs_time, const v
 #ifdef DEBUG
       if(cref != vdt_const::FILL_VALUE)
       {
-	Logg->write_time("Debug: lon:%.2f,lat:%.2f,x:%d,y:%d,ref:%.2f\n",lon,lat,xcoord,ycoord,cref);
+	Logg->write_time("Debug: lon:%.2f,lat:%.2f,x:%d,y:%d,cref:%.2f\n",lon,lat,xcoord,ycoord,cref);
       }
 #endif
     }
-  if (rtma != NULL)
+
+    if (radar_dual_pol_hc != NULL)
+    {
+      radar_dual_pol_hc->get_reflectivity(lat, lon, dual_pol_hc_val, xcoord, ycoord);
+      //dual_pol_hc_val = 10.0;
+#ifdef DEBUG
+      if(dual_pol_hc_val != vdt_const::FILL_VALUE)
+      {
+	Logg->write_time("Debug: lon:%.2f,lat:%.2f,x:%d,y:%d,dual_pol_hc ref:%.2f\n",lon,lat,xcoord,ycoord,dual_pol_hc_val);
+      }
+#endif
+    }
+
+    if (radar_dual_pol_hr != NULL)
+    {
+      radar_dual_pol_hr->get_reflectivity(lat, lon, dual_pol_hr_val, xcoord, ycoord);
+      //dual_pol_hr_val = 10.0;
+#ifdef DEBUG
+      if(dual_pol_hr_val != vdt_const::FILL_VALUE)
+      {
+	Logg->write_time("Debug: lon:%.2f,lat:%.2f,x:%d,y:%d,dual_pol_hr ref:%.2f\n",lon,lat,xcoord,ycoord,dual_pol_hr_val);
+      }
+#endif
+    }
+    
+if (rtma != NULL)
     {
       rtma->get_dewpoint_celsius(lat, lon, model_dewpoint);
       rtma->get_temperature_celsius(lat, lon, model_temp);
       rtma->get_pressure_mb(lat, lon, model_press);
     }
+  else if (ak_rtma != NULL)
+    {
+      ak_rtma->get_dewpoint_celsius(lat, lon, model_dewpoint);
+      ak_rtma->get_temperature_celsius(lat, lon, model_temp);
+      ak_rtma->get_pressure_mb(lat, lon, model_press);
+    }
+
   /*
   if (cloud_class != NULL)
     {
@@ -246,6 +344,8 @@ vdt_dataset vdt_probe_message_datasets::get_vdt_dataset(double obs_time, const v
   ds.model_bar_press = model_press;
   ds.radar_ref = ref;
   ds.radar_cref = cref;
+  ds.radar_dual_pol_hc = dual_pol_hc_val;
+  ds.radar_dual_pol_hr = dual_pol_hr_val;  
   ds.radar_precip_flag = radar_precip_flag;
   ds.radar_precip_type = radar_precip_type;
 
@@ -264,6 +364,7 @@ vdt_dataset vdt_probe_message_datasets::get_vdt_dataset(double obs_time, const v
     //near[0] should be the nearest neighbor
     ds.pres_wx = near[0].get_pres_wx();
     ds.wx = near[0].get_wx();
+    ds.road_state_1 = near[0].get_road_state_1();
   }
 
   return ds;

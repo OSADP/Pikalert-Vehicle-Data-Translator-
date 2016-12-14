@@ -28,6 +28,7 @@
 #include <vector>
 #include <algorithm>
 #include <unordered_map>
+#include "rwx/rwx_ak_rtma_dataset.hh"
 #include "Proj4Wrap/Proj4Wrap.hh"
 
 #include "vdt4/vdt_exception.hh"
@@ -531,6 +532,8 @@ public:
   double rtma_lo1;
 
   p4w::Proj4Wrap *rtma_proj;
+
+  rwx_ak_rtma_proj_info_t ak_rtma_proj_info;
 
   /** @brief error error string */
   string error;

@@ -116,6 +116,15 @@ public:
     return getattr<double>("radar_cref");
   }
 
+  double& get_radar_dual_pol_hc()
+  {
+    return getattr<double>("radar_dual_pol_hc");
+  }
+  double& get_radar_dual_pol_hr()
+  {
+    return getattr<double>("radar_dual_pol_hr");
+  }  
+  
   int& get_radar_precip_flag()
   {
     return getattr<int>("radar_precip_flag");
@@ -856,6 +865,12 @@ public:
   string& get_wx()
   {
     return getattr<string>("wx");
+  }
+
+  //data from madis
+  int& get_road_state_1()
+  {
+    return getattr<int>("road_state_1");
   }
 
   //These appear to be used from the RWX but not the VDT

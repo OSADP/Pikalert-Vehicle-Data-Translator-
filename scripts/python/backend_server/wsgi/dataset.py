@@ -40,7 +40,8 @@ def get_dataset(input_dir, base_name, yyyymmddhhmm, suffix):
     if proc_stat_tuple[0] == processed_file.PROC_SUCCESS:
         dated_subdir = os.path.join(input_dir, yyyymmdd)
         output_path = os.path.join(dated_subdir, output_file)
-        return output_path
+        if os.path.exists(output_path):
+            return output_path
     return ""
 
 def main():

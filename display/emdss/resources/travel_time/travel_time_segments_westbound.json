@@ -1,0 +1,75 @@
+{
+    "westboundSegments": [
+        {
+            "from": "HEADER",
+            "route": "HEADER",
+            "to": "HEADER",
+            "name": "HEADER"
+        }, {
+            "from": "Pena_Blvd",
+            "route": "070W284",
+            "to": "I-225",
+            "name": "Peña Blvd"
+        }, {
+            "from": "I-225",
+            "route": "070W282",
+            "to": "I-270",
+            "name": "I-225"
+        }, {
+           "from": "I-270",
+            "route": "070W278",
+            "to": "I-25",
+            "name": "I-270"
+        }, {
+            "from": "I-25",
+            "route": "070W273",
+            "to": "I-76_Wadsworth",
+            "name": "I-25"
+        }, {
+            "from": "I-76_Wadsworth",
+            "route": "070W269",
+            "to": "Ward_Road",
+            "name": "I-76/Wadsworth"
+        }, {
+             "from": "Ward_Road",
+            "route": "070W266",
+            "to": "DEN_C-470",
+            "name": "Ward Road"
+        }, {
+            "from": "DEN_C-470",
+            "route": "070W259",
+            "to": "Idaho_Springs",
+            "name": "DEN/C-470"
+        }, {
+            "from": "Idaho_Springs",
+            "route": "070W239",
+            "to": "US_40_Empire",
+            "name": "Idaho Springs"
+        }, {
+           "from": "US_40_Empire",
+            "route": "070W232.4",
+            "to": "Georgetown",
+            "name": "US 40/Empire"
+        }, {
+           "from": "Georgetown",
+            "route": "070W227",
+            "to": "Tunnel",
+            "name": "Georgetown"
+        }, {
+            "from": "Tunnel",
+            "route": "070W215.1",
+            "to": "Silverthorne",
+            "name": "Tunnel"
+        }, {
+            "from": "Silverthorne",
+            "route": "070W205.2",
+            "to": "Vail",
+            "name": "Silverthorne"
+        }, {
+            "from": "Vail",
+            "route": "PLACEHOLDER",
+            "to": "Vail",
+            "name": "Vail"
+        }
+    ]
+}

@@ -193,6 +193,8 @@ def main():
     mid_lon = np.concatenate([mid_pt_lon_var[:], np_rwis_mid_pt_lon])
     elev = np.concatenate([elev_var[:], np_rwis_elev])
     point_type = np.concatenate([point_type_var, np_rwis_point_type])
+    print np_rwis_seg_name.shape
+    print len(seg_name_var)
     seg_name = np.concatenate([seg_name_var[:], np_rwis_seg_name])
 
     # Write output file

@@ -1,0 +1,24 @@
+div
+{
+  font-family: Avenir, Arial, Helvetica, sans-serif;
+  font-size: 1.0em;
+}
+
+.TimeSelectorConfiguration-RadioButton
+{
+  font-family: Avenir, Arial, Helvetica, sans-serif;
+  margin-left: 30px;
+}
+
+.TimeSelectorConfiguration-ConfigDetails
+{
+  width:90%;
+  height: 90%;
+  border: 1px solid black;
+  margin: 10px;
+  padding: 10px;
+}
+
+.TimeSelectorConfiguration-DateChooser
+{
+}

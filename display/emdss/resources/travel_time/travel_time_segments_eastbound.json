@@ -1,0 +1,53 @@
+{
+    "eastboundSegments": [
+        {
+            "from": "Vail",
+            "route": "070E177.2",
+            "to": "Silverthorne"
+        }, {
+            "from": "Silverthorne",
+            "route": "070E205",
+            "to": "Tunnel"
+        }, {
+            "from": "Tunnel",
+            "route": "070E214.1",
+            "to": "Georgetown"
+        }, {
+            "from": "Georgetown",
+            "route": "070E227",
+            "to": "US_40_Empire"
+        }, {
+            "from": "US_40_Empire",
+            "route": "070E232",
+            "to": "Idaho_Springs"
+        }, {
+            "from": "Idaho_Springs",
+            "route": "070E239.1",
+            "to": "DEN_C-470"
+        }, {
+            "from": "DEN_C-470",
+            "route": "070E259",
+            "to": "Ward_Road"
+        }, {
+            "from": "Ward_Road",
+            "route": "070E266",
+            "to": "I-76_Wadsworth"
+        }, {
+            "from": "I-76_Wadsworth",
+            "route": "070E269",
+            "to": "I-25"
+        }, {
+            "from": "I-25",
+            "route": "070E275",
+            "to": "I-270"
+        }, {
+            "from": "I-270",
+            "route": "070E280",
+            "to": "I-225"
+        }, {
+            "from": "I-225",
+            "route": "070E283",
+            "to": "Pena_Blvd"
+        }
+    ]
+}

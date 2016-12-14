@@ -65,6 +65,7 @@ arguments::arguments(int argc, char **argv)
   int errflg = 0;
 
   add_non_associated_segments = false;
+  alaska = false;
   begin_time = 0;
   begin_time_string = "";
   end_time = 0;
@@ -74,11 +75,14 @@ arguments::arguments(int argc, char **argv)
   metar_file = "";
   probe_message_qc_output = false;
   radar_file_pattern = "";
+  radar_file_pattern_dual_pol_hc = "";
+  radar_file_pattern_dual_pol_hr = "";  
   rwis_file = "";
   cloud_class_file = "";
   rtma_file = "";
   cfg_file = "";
   debug = 0;
+  radar_rad = 0;
   grid_cell_statistics_out_file = "";
   road_seg_file = "";
   probe_message_file = "";
@@ -89,10 +93,14 @@ arguments::arguments(int argc, char **argv)
   old_radar = false;
 
   // Parse command line options
-  while ((c = getopt(argc, argv, "B:d:g:H:l:m:nr:p:w:c:a:st")) != EOF)
+  while ((c = getopt(argc, argv, "AB:d:g:H:f:l:m:nr:p:h:w:c:a:R:st")) != EOF)
     {
       switch (c)
         {
+	case 'A':
+	  alaska = true;
+	  break;
+	  
         case 'a':
           rtma_file = optarg;
           break;
@@ -133,11 +141,23 @@ arguments::arguments(int argc, char **argv)
 	case 'p':
           radar_file_pattern_cref = optarg;
           break;
+
+	case 'h':
+          radar_file_pattern_dual_pol_hc = optarg;
+          break;
+
+	case 'f':
+          radar_file_pattern_dual_pol_hr = optarg;
+          break;	  	  
 	  
         case 'r':
           radar_file_pattern = optarg;
           break;
 
+	case 'R':
+	  radar_rad = atof(optarg);
+	  break;
+	  
 	case 's':
 	  add_non_associated_segments = true;
 	  break;
@@ -232,8 +252,9 @@ arguments::arguments(int argc, char **argv)
 
 void arguments::usage(char *program_name)
 {
-  fprintf(stderr, "usage: %s [-a rtma_file] [-c cloud_class_file] [-d debug] [-g grid_cell_statistics_file] [-H history_probe_message_file] [-m metar_file] [-l log_file] [-r radar_file_pattern] [-t] [-w rwis_file] config_file begin_time_string end_time_string road_seg_file probe_message_file probe_message_qc_out_file probe_message_qc_statistics_out_file\n", program_name);
+  fprintf(stderr, "usage: %s [-a rtma_file] [-c cloud_class_file] [-d debug] [-g grid_cell_statistics_file] [-H history_probe_message_file] [-m metar_file] [-l log_file] [-r radar_file_pattern] [-f radar_file_pattern] [-h radar_file_pattern] [-t] [-w rwis_file] [-R radar_radius] config_file begin_time_string end_time_string road_seg_file probe_message_file probe_message_qc_out_file probe_message_qc_statistics_out_file\n", program_name);
   fprintf(stderr, "-H history_probe_message_file: read history probe message file for performing persistence and step checks\n");
+  fprintf(stderr, "-A: read Alaska rtma model file\n");
   fprintf(stderr, "-a rtma_file: input file with rtma model data\n");
   fprintf(stderr, "-c cloud_class_file: input file with cloud classification data\n");
   fprintf(stderr, "-d debug_level: set debug diagnostic level\n");
@@ -243,8 +264,11 @@ void arguments::usage(char *program_name)
   fprintf(stderr, "-n: do not write probe message qc file\n");
   fprintf(stderr, "-p radar_file_pattern: input file for cref radar data\n");
   fprintf(stderr, "-r radar_file_pattern: input file for bref radar data\n");
+  fprintf(stderr, "-h radar_file_pattern: input file for dual pol hydrometeor classification radar data (HHC)\n");
+  fprintf(stderr, "-f radar_file_pattern: input file for dual pol digital hybrid reflectivity radar data (DHR)\n");  
   fprintf(stderr, "-s: add non-associated road segments to road segment stats calculations (useful when limited or no probe messages)\n");
   fprintf(stderr, "-t: run tests dictated by configuration file. Note if -t is specified, the configuration file is the only other command line parameter needed.\n");
   fprintf(stderr, "-w rwis_file: input file with rwis data \n");
+  fprintf(stderr, "-R radar_radius: radius to use to get surrounding radar values \n");  
   fprintf(stderr, "Note: begin_time_string and end_time_string are of form yyyymmddhhmm\n");
 }

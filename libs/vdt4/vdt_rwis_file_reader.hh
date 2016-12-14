@@ -113,6 +113,9 @@ public:
   
   /** @brief present weather dscription variable */
   const static char* PRES_WX;
+
+  /** @brief Road State - sensor 1 variable */
+  const static char* ROAD_STATE_1;
   
   /**
    * @brief constructor

@@ -32,6 +32,7 @@ public:
   double mid_point_latitude;
   double mid_point_longitude;
   std::string aux_id;
+  std::string seg_name;
   int point_type;
 };
 
