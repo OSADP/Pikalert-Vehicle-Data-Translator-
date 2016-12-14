@@ -12,5 +12,6 @@
 
 See build_install/INSTALL to get started!
 
-Version
+**Version**
+
 2016-12-14 Release v. 5.0
