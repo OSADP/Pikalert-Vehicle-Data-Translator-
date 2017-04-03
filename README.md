@@ -10,8 +10,7 @@
 
 ####README
 
-See build_install/INSTALL to get started!
+See build_install/vdt_installation_guide.1.docx to get started! It
+gives an overview of the entire installation. Section 5 provides the
+overall installation instructions.
 
-**Version**
-
-2016-12-14 Release v. 5.0
